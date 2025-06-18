@@ -2,99 +2,120 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import fetch from 'node-fetch';
-import { URL } from 'node:url'; // Explicitly import URL for Node.js environment
-
-// Pastikan Anda memiliki file src/data/videos.json yang berisi data video
+import { URL } from 'node:url';
 import videosData from '../src/data/videos.json';
-import { slugify } from '../src/utils/slugify.ts';
+import { slugify } from '../src/utils/slugify.ts'; // Ensure this has .ts
 
-// Definisikan struktur Video untuk type safety
 interface Video {
   id: string;
   title: string;
   description: string;
   category: string;
-  thumbnail: string; // Ini akan menjadi URL eksternal atau path lokal
+  thumbnail: string;
   embedUrl: string;
-  tags?: string; // Optional tags property
+  tags?: string;
   slug?: string;
 }
 
-// Tentukan direktori tempat thumbnail akan disimpan
-// Ini harus relatif ke root proyek, dan akan berakhir di `public/thumbnails`
 const PUBLIC_DIR = path.join(process.cwd(), 'public');
 const THUMBNAILS_DIR = path.join(PUBLIC_DIR, 'thumbnails');
 
 async function downloadAndProcessThumbnails() {
   console.log('[Thumbnail Downloader] Starting thumbnail download process...');
 
-  await fs.mkdir(THUMBNAILS_DIR, { recursive: true });
+  try { // <-- Add a try-catch block for the initial mkdir
+    await fs.mkdir(THUMBNAILS_DIR, { recursive: true });
+  } catch (mkdirError: any) {
+    console.error(`[Thumbnail Downloader] FATAL ERROR: Could not create thumbnail directory: ${mkdirError.message}`);
+    process.exit(1); // Exit with error if dir cannot be created
+  }
 
   let updatedVideosData: Video[] = [];
   let downloadedCount = 0;
   let skippedCount = 0;
+  let failedCount = 0; // <-- New counter for failed downloads
 
   for (const video of videosData as Video[]) {
     const originalThumbnailUrl = video.thumbnail;
-    let newThumbnailPath = originalThumbnailUrl; // Default to original
+    let newThumbnailPath = originalThumbnailUrl;
 
-    // Cek apakah thumbnail sudah berupa path lokal (misalnya, dimulai dengan /thumbnails/)
-    // Atau jika itu bukan URL HTTP/HTTPS (misalnya, placeholder atau lokal)
     const isExternalUrl = originalThumbnailUrl.startsWith('http://') || originalThumbnailUrl.startsWith('https://');
 
     if (isExternalUrl) {
       try {
         console.log(`[Thumbnail Downloader] Processing: ${video.title} from ${originalThumbnailUrl}`);
 
-        // Buat slug unik untuk nama file thumbnail
-        const baseSlug = video.slug || slugify(video.title);
-        let ext = path.extname(new URL(originalThumbnailUrl).pathname);
-        if (!ext || ext.length > 5 || ext.includes('/')) {
-            ext = '.jpg'; // Fallback
+        let fileName: string;
+        try { // <-- Nested try-catch for URL parsing and filename generation
+            const baseSlug = video.slug || slugify(video.title);
+            let ext = path.extname(new URL(originalThumbnailUrl).pathname);
+            if (!ext || ext.length > 5 || ext.includes('/')) {
+                ext = '.jpg'; // Fallback for invalid or missing extension
+            }
+            const uniqueHash = Math.random().toString(36).substring(2, 8);
+            fileName = `${baseSlug}-${uniqueHash}${ext}`;
+        } catch (urlParseError: any) {
+            console.error(`[Thumbnail Downloader] ERROR: Invalid URL or filename generation for ${video.title} (${originalThumbnailUrl}): ${urlParseError.message}`);
+            failedCount++;
+            continue; // Skip to next video if URL or filename is bad
         }
 
-        // Tambahkan hash unik agar thumbnail dari judul yang sama tidak konflik
-        const uniqueHash = Math.random().toString(36).substring(2, 8);
-        const fileName = `${baseSlug}-${uniqueHash}${ext}`;
+
         const filePath = path.join(THUMBNAILS_DIR, fileName);
 
         const response = await fetch(originalThumbnailUrl);
         if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status} from ${originalThumbnailUrl}`);
+          throw new Error(`HTTP error! Status: ${response.status} - ${response.statusText} from ${originalThumbnailUrl}`);
         }
 
         const imageBuffer = await response.arrayBuffer();
         await fs.writeFile(filePath, Buffer.from(imageBuffer));
 
-        // Path yang akan disimpan di data JSON (relatif ke folder public Astro)
         newThumbnailPath = `/thumbnails/${fileName}`;
         downloadedCount++;
         console.log(`[Thumbnail Downloader] Downloaded: ${video.title} to ${newThumbnailPath}`);
 
       } catch (error: any) {
-        console.error(`[Thumbnail Downloader] ERROR processing ${video.title}: ${error.message}`);
-        // Jika gagal mengunduh, biarkan URL thumbnail tetap eksternal atau gunakan fallback
-        console.warn(`[Thumbnail Downloader] Keeping original external URL for ${video.title} due to error.`);
+        console.error(`[Thumbnail Downloader] ERROR processing ${video.title} (${originalThumbnailUrl}): ${error.message}`);
+        failedCount++; // Increment failed count
+        // If download/save fails, keep original external URL or use a fallback.
+        // For now, we'll keep the original external URL so the site doesn't break if an image is missing.
+        newThumbnailPath = originalThumbnailUrl; // Revert to original if failed
+        console.warn(`[Thumbnail Downloader] Keeping original external URL for ${video.title} due to download/save error.`);
       }
     } else {
       skippedCount++;
-      // console.log(`[Thumbnail Downloader] Skipping local/non-HTTP thumbnail: ${video.title}`);
+      // If it's not an external URL, ensure the slug is still generated for consistency
+      newThumbnailPath = originalThumbnailUrl; // No change if it's already local or not external
     }
 
     updatedVideosData.push({
       ...video,
-      thumbnail: newThumbnailPath, // Perbarui path thumbnail
-      slug: video.slug || slugify(video.title) // Pastikan slug ada
+      thumbnail: newThumbnailPath,
+      slug: video.slug || slugify(video.title)
     });
   }
 
-  // Tulis kembali data JSON yang telah diperbarui
-  const jsonPath = path.join(process.cwd(), 'src', 'data', 'videos.json');
-  await fs.writeFile(jsonPath, JSON.stringify(updatedVideosData, null, 2));
+  // --- Final Step: Write back the updated JSON data ---
+  try {
+    const jsonPath = path.join(process.cwd(), 'src', 'data', 'videos.json');
+    await fs.writeFile(jsonPath, JSON.stringify(updatedVideosData, null, 2));
+    console.log(`[Thumbnail Downloader] src/data/videos.json updated with local thumbnail paths (Downloaded: ${downloadedCount}, Skipped: ${skippedCount}, Failed: ${failedCount}).`);
+  } catch (writeError: any) {
+    console.error(`[Thumbnail Downloader] FATAL ERROR: Could not write updated videos.json: ${writeError.message}`);
+    process.exit(1); // Exit with error if cannot write JSON
+  }
 
-  console.log(`[Thumbnail Downloader] Process finished. Downloaded: ${downloadedCount}, Skipped: ${skippedCount}`);
-  console.log('[Thumbnail Downloader] src/data/videos.json updated with local thumbnail paths.');
+  if (failedCount > 0) {
+      console.error(`[Thumbnail Downloader] WARNING: ${failedCount} thumbnails failed to download. Check logs above for details.`);
+      // Optionally, you could exit with a non-zero code here if you want the build to fail
+      // if any thumbnails didn't download. For now, we'll let it pass to avoid breaking builds
+      // over individual image failures.
+  }
 }
 
-// Jalankan skrip
-downloadAndProcessThumbnails().catch(console.error);
+// Global error handling for the entire script execution
+downloadAndProcessThumbnails().catch((err) => {
+  console.error('[Thumbnail Downloader] UNCAUGHT ERROR in script execution:', err);
+  process.exit(1); // Ensure the script exits with an error code if something truly unexpected happens
+});
