@@ -1,7 +1,6 @@
 // scripts/downloadThumbnails.ts
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import fetch from 'node-fetch';
 import { URL } from 'node:url';
 import videosData from '../src/data/videos.json';
 import { slugify } from '../src/utils/slugify.ts'; // Ensure this has .ts

@@ -5,20 +5,18 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "npm run download-thumbnails && astro build",
+    "build": "npm run compile-thumbnails && npm run download-thumbnails-js && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "download-thumbnails": "node --loader ts-node/esm scripts/downloadThumbnails.ts"
-  },
-  "dependencies": {
-    "astro": "^5.9.4",
-    "node-fetch": "^3.3.2"
+    "compile-thumbnails": "tsc --project ./scripts/tsconfig.json",
+    "download-thumbnails-js": "node scripts-build/downloadThumbnails.js"
   },
   "devDependencies": {
     "@astrojs/node": "^9.2.2",
     "@astrojs/sitemap": "^3.4.1",
     "@astrojs/tailwind": "^6.0.2",
     "@types/node": "^20.14.9",
+    "astro": "^5.9.4",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.4",
