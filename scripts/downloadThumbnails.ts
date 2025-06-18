@@ -6,7 +6,7 @@ import { URL } from 'node:url'; // Explicitly import URL for Node.js environment
 
 // Pastikan Anda memiliki file src/data/videos.json yang berisi data video
 import videosData from '../src/data/videos.json';
-import { slugify } from '../src/utils/slugify'; // Impor slugify helper
+import { slugify } from '../src/utils/slugify.ts';
 
 // Definisikan struktur Video untuk type safety
 interface Video {
