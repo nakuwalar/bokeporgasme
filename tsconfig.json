@@ -1,29 +1,26 @@
+// scripts/tsconfig.json
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
+    "outDir": "../scripts-build", // <-- This means "one level up from 'scripts', then into 'scripts-build'"
+    "rootDir": "../",             // <-- This means "the root of the project"
+    "module": "NodeNext",
     "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Bundler", // Or "Node", "Node16", "NodeNext" - keep what you have
-    "resolveJsonModule": true,       // <--- ENSURE THIS IS TRUE
-    "allowImportingTsExtensions": true, // <--- ENSURE THIS IS TRUE
-    "allowJs": true,
-    "checkJs": true,
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true,
+    "allowJs": true,
+    "checkJs": false,
     "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
+    "skipLibCheck": true,
     "strict": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
-    "baseUrl": ".",
-    "paths": {
-      "~/*": ["./src/*"]
-    }
+    "noEmit": false,             // <-- MUST be false to generate JS
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "emitDeclarationOnly": true,
+    "declaration": true
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.astro",
-    "scripts/**/*.ts" // Make sure this line is still present
+    "./downloadThumbnails.ts" // <-- Make sure this correctly points to your script
   ],
-  "exclude": ["node_modules", "dist", "scripts-build"] // Ensure scripts-build is excluded
+  "exclude": ["node_modules"]
 }
