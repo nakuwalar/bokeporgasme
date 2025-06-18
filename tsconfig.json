@@ -1,22 +1,29 @@
-// scripts/tsconfig.json
 {
-  "extends": "../tsconfig.json", // Mewarisi konfigurasi dasar dari tsconfig.json utama
   "compilerOptions": {
-    "outDir": "../scripts-build", // Lokasi output untuk file JavaScript yang dikompilasi
-    "rootDir": ".",               // Direktori root untuk kompilasi ini adalah folder 'scripts'
-    "module": "ESNext",
     "target": "ESNext",
-    "moduleResolution": "Node",  // Penting untuk Node.js ES Modules agar path relatif bekerja baik
-    "esModuleInterop": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler", // Or "Node", "Node16", "NodeNext" - keep what you have
+    "resolveJsonModule": true,       // <--- ENSURE THIS IS TRUE
+    "allowImportingTsExtensions": true, // <--- ENSURE THIS IS TRUE
     "allowJs": true,
-    "checkJs": false,             // Matikan checkJs untuk scripts jika tidak diperlukan
+    "checkJs": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
+    "isolatedModules": true,
     "strict": true,
-    "noEmit": false               // Pastikan ini false agar tsc menghasilkan file JS
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"]
+    }
   },
   "include": [
-    "./downloadThumbnails.ts"     // Hanya sertakan skrip ini
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.astro",
+    "scripts/**/*.ts" // Make sure this line is still present
   ],
-  "exclude": ["node_modules", "../dist"]
+  "exclude": ["node_modules", "dist", "scripts-build"] // Ensure scripts-build is excluded
 }

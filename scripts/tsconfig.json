@@ -1,22 +1,23 @@
-// scripts/tsconfig.json
 {
-  "extends": "../tsconfig.json", // Mewarisi konfigurasi dasar dari tsconfig.json utama
+  "extends": "../tsconfig.json", // This path is crucial. It means "one level up, then find tsconfig.json"
   "compilerOptions": {
-    "outDir": "../scripts-build", // Lokasi output untuk file JavaScript yang dikompilasi
-    "rootDir": ".",               // Direktori root untuk kompilasi ini adalah folder 'scripts'
+    "outDir": "../scripts-build",
+    "rootDir": "../", // <--- THIS MUST BE "../" (dot dot slash)
     "module": "ESNext",
     "target": "ESNext",
-    "moduleResolution": "Node",  // Penting untuk Node.js ES Modules agar path relatif bekerja baik
+    "moduleResolution": "Node", // Keep as Node or NodeNext for scripts
     "esModuleInterop": true,
     "allowJs": true,
-    "checkJs": false,             // Matikan checkJs untuk scripts jika tidak diperlukan
+    "checkJs": false,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "strict": true,
-    "noEmit": false               // Pastikan ini false agar tsc menghasilkan file JS
+    "noEmit": false,
+    "resolveJsonModule": true,       // <--- ENSURE THIS IS TRUE
+    "allowImportingTsExtensions": true // <--- ENSURE THIS IS TRUE
   },
   "include": [
-    "./downloadThumbnails.ts"     // Hanya sertakan skrip ini
+    "./downloadThumbnails.ts" // Only include the script itself
   ],
-  "exclude": ["node_modules", "../dist"]
+  "exclude": ["node_modules"] // No need for "../dist" here
 }
