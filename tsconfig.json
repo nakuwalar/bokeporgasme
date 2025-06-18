@@ -1,26 +1,25 @@
-// scripts/tsconfig.json
 {
-  "extends": "../tsconfig.json",
+  "extends": "astro/tsconfig/base",
   "compilerOptions": {
-    "outDir": "../scripts-build", // <-- This means "one level up from 'scripts', then into 'scripts-build'"
-    "rootDir": "../",             // <-- This means "the root of the project"
-    "module": "NodeNext",
-    "target": "ESNext",
-    "moduleResolution": "NodeNext",
-    "esModuleInterop": true,
-    "allowJs": true,
-    "checkJs": false,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": false,             // <-- MUST be false to generate JS
-    "resolveJsonModule": true,
-    "allowImportingTsExtensions": true,
-    "emitDeclarationOnly": true,
-    "declaration": true
+    "moduleResolution": "bundler", // Direkomendasikan untuk Astro
+    "jsx": "react-jsx", // Jika Anda menggunakan JSX di komponen Anda
+    "jsxImportSource": "react", // Atau 'preact', 'solid-js', dll.
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@pages/*": ["src/pages/*"]
+    },
+    // Pastikan ini diatur agar TypeScript mengabaikan folder 'dist' yang merupakan output build.
+    "outDir": "./dist",
+    "rootDir": "."
   },
   "include": [
-    "./downloadThumbnails.ts" // <-- Make sure this correctly points to your script
+    "src/**/*",
+    "videos.json" // Pastikan videos.json juga diinclude jika Anda mengimpornya ke dalam TypeScript/Astro
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
