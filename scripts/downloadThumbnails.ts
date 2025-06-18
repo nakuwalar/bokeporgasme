@@ -2,7 +2,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { URL } from 'node:url';
-import videosData from '../src/data/videos.json';
+import videosData from '../src/data/videos.json' with { type: 'json' };
 import { slugify } from '../src/utils/slugify.ts'; // Ensure this has .ts
 
 interface Video {
