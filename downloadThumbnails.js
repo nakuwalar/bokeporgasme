@@ -2,83 +2,50 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import sharp from 'sharp'; // Import the sharp library
+// Removed 'sharp' import as it's no longer needed for conversion/download
+// Menghilangkan impor 'sharp' karena tidak lagi diperlukan untuk konversi/pengunduhan
 
-// Resolve __dirname for ES modules
 // Resolusi __dirname untuk modul ES
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Path to your videos.json file
 // Path ke file videos.json Anda
 const VIDEOS_JSON_PATH = path.resolve(__dirname, './videos.json');
-// Path to the folder where thumbnails will be saved in Astro's public folder
-// Path ke folder tempat thumbnail akan disimpan di folder public Astro
+// Path ke folder tempat thumbnail akan disimpan (Tidak lagi digunakan untuk mengunduh,
+// tetapi bisa tetap ada jika ada file lain yang mengacu padanya)
 const OUTPUT_THUMBNAILS_DIR = path.resolve(__dirname, './public/thumbnails');
 
+
 /**
- * Converts a string into a URL/filename-friendly slug.
  * Mengubah string menjadi slug yang ramah URL/nama file.
- * @param {string} text - The input text.
- * @returns {string} - The generated slug.
+ * @param {string} text - Teks masukan.
+ * @returns {string} - Slug yang dihasilkan.
  */
 function slugify(text) {
   return text
     .toString()
     .toLowerCase()
     .trim()
-    .replace(/\s+/g, '-')       // Replace spaces with hyphens
-    .replace(/[^\w-]+/g, '')   // Remove all non-word characters
-    .replace(/--+/g, '-');      // Replace multiple hyphens with a single hyphen
+    .replace(/\s+/g, '-')       // Ganti spasi dengan tanda hubung
+    .replace(/[^\w-]+/g, '')   // Hapus semua karakter non-kata
+    .replace(/--+/g, '-');      // Ganti beberapa tanda hubung dengan satu tanda hubung
 }
 
-/**
- * Downloads a file from a URL, converts it to WebP, and saves it to the destination path.
- * Mengunduh file dari URL, mengonversinya ke WebP, dan menyimpannya ke path tujuan.
- * @param {string} url - The URL of the file to download.
- * @param {string} destPath - The destination path to save the file (filename should already have .webp extension).
- * @returns {Promise<void>}
- */
-async function downloadAndConvertToWebP(url, destPath) {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Failed to download ${url}: ${response.statusText}`);
-    }
-    const arrayBuffer = await response.arrayBuffer();
-    const imageBuffer = Buffer.from(arrayBuffer); // Get the original image buffer
-
-    // Convert the image to WebP using sharp
-    // Konversi gambar ke WebP menggunakan sharp
-    const webpBuffer = await sharp(imageBuffer)
-      .webp({ quality: 80 }) // Set WebP quality (0-100), 80 is a good value
-      .toBuffer();
-
-    await fs.writeFile(destPath, webpBuffer);
-    console.log(`Successfully downloaded and converted to WebP: ${url} to ${destPath}`);
-  } catch (error) {
-    console.error(`Error downloading or converting ${url}:`, error);
-    throw error; // Re-throw the error so the process knows if there was a failure
-  }
-}
+// Removed the downloadAndConvertToWebP function as we are now using external URLs directly
+// Menghilangkan fungsi downloadAndConvertToWebP karena kita sekarang menggunakan URL eksternal secara langsung
 
 async function main() {
-  console.log('Starting thumbnail download and WebP conversion process, ensuring unique slugs...');
-  // Memulai proses pengunduhan dan konversi thumbnail ke WebP, serta memastikan slug unik...
+  console.log('Memulai proses pembaruan slug unik di videos.json...');
 
   try {
-    // Ensure the output directory exists
-    // Pastikan direktori output ada
-    await fs.mkdir(OUTPUT_THUMBNAILS_DIR, { recursive: true });
-    console.log(`Ensured directory '${OUTPUT_THUMBNAILS_DIR}' exists.`);
+    // We no longer need to ensure the output directory for downloaded thumbnails
+    // Kita tidak lagi perlu memastikan direktori output untuk thumbnail yang diunduh
 
-    // Read videos.json data
     // Baca data videos.json
     let videosData = JSON.parse(await fs.readFile(VIDEOS_JSON_PATH, 'utf-8'));
-    console.log(`Successfully read ${VIDEOS_JSON_PATH}.`);
+    console.log(`Berhasil membaca ${VIDEOS_JSON_PATH}.`);
 
-    const usedSlugs = new Set(); // To track used slugs
-    // Untuk melacak slug yang sudah digunakan
+    const usedSlugs = new Set(); // Untuk melacak slug yang sudah digunakan
 
     const updatedVideosData = await Promise.all(
       videosData.map(async (video) => {
@@ -87,7 +54,7 @@ async function main() {
         // Jika tidak ada 'title', slug tidak akan dibuat untuk entri ini.
         if (!video.title || typeof video.title !== 'string') {
           console.warn(`Video dengan ID ${video.id || 'unknown'} tidak memiliki 'title' yang valid. Slug tidak akan dibuat.`);
-          return video; // Lewati pemrosesan slug dan thumbnail untuk video ini
+          return video; // Lewati pemrosesan slug untuk video ini
         }
 
         let baseSlug = slugify(video.title);
@@ -101,41 +68,29 @@ async function main() {
         }
         usedSlugs.add(uniqueSlug); // Tambahkan slug yang baru dihasilkan ke daftar yang sudah digunakan
 
-        // Menetapkan slug unik sebagai properti baru di objek video.
+        // Menetapkan slug unik sebagai properti baru di objek video
         // Ini adalah langkah krusial yang menambahkan 'slug' ke data JSON.
+        // Properti 'id' asli tidak diubah.
         video.slug = uniqueSlug;
         // --- AKHIR BAGIAN SLUG ---
 
-        if (video.thumbnail && video.thumbnail.startsWith('http')) {
-          const originalUrl = video.thumbnail;
-          // Nama file thumbnail sekarang berdasarkan slug yang telah dibuat
-          const newFileName = `${uniqueSlug}.webp`; // Menggunakan uniqueSlug untuk nama file
-          const newFilePath = path.join(OUTPUT_THUMBNAILS_DIR, newFileName);
-
-          try {
-            await downloadAndConvertToWebP(originalUrl, newFilePath);
-            // Perbarui path thumbnail di data video untuk menunjuk ke file WebP lokal
-            video.thumbnail = `/thumbnails/${newFileName}`;
-          } catch (error) {
-            console.warn(`Melewatkan konversi thumbnail untuk "${video.title}" (slug: ${uniqueSlug}) karena error. Menggunakan URL asli.`);
-            // Jika gagal mengunduh/mengonversi, biarkan URL thumbnail tetap URL aslinya.
-          }
-        }
-        // Jika video tidak memiliki thumbnail URL eksternal, atau tidak perlu diproses,
-        // properti 'thumbnail' akan tetap seperti adanya di JSON awal atau akan diabaikan
-        // jika sebelumnya kosong.
+        // IMPORTANT: We are no longer modifying the 'thumbnail' URL.
+        // It will remain as the external URL provided in videos.json.
+        // PENTING: Kami tidak lagi memodifikasi URL 'thumbnail'.
+        // Ini akan tetap menjadi URL eksternal yang disediakan di videos.json.
 
         return video;
       })
     );
 
-    // Tulis kembali data videos.json yang telah diperbarui dengan slug dan path thumbnail lokal
+    // Tulis kembali data videos.json yang telah diperbarui dengan slug unik
+    // Thumbnail URL akan tetap menggunakan URL eksternal yang ada di file JSON asli.
     await fs.writeFile(VIDEOS_JSON_PATH, JSON.stringify(updatedVideosData, null, 2), 'utf-8');
-    console.log(`File ${VIDEOS_JSON_PATH} telah diperbarui dengan slug unik dan path thumbnail lokal WebP.`);
-    console.log('Pengunduhan dan konversi thumbnail selesai.');
+    console.log(`File ${VIDEOS_JSON_PATH} telah diperbarui dengan slug unik.`);
+    console.log('Proses pembaruan slug selesai. Thumbnail URL eksternal tetap digunakan.');
 
   } catch (error) {
-    console.error('Terjadi error fatal saat memproses thumbnail:', error);
+    console.error('Terjadi error fatal saat memproses slug:', error);
     process.exit(1); // Keluar dengan kode error
   }
 }
