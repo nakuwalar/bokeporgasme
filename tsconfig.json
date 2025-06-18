@@ -1,22 +1,21 @@
 {
   "extends": "astro/tsconfig/base",
   "compilerOptions": {
-    "moduleResolution": "bundler", // Direkomendasikan untuk Astro
-    "jsx": "react-jsx", // Jika Anda menggunakan JSX di komponen Anda
-    "jsxImportSource": "react", // Atau 'preact', 'solid-js', dll.
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
     "baseUrl": ".",
     "paths": {
       "@components/*": ["src/components/*"],
       "@layouts/*": ["src/layouts/*"],
       "@pages/*": ["src/pages/*"]
     },
-    // Pastikan ini diatur agar TypeScript mengabaikan folder 'dist' yang merupakan output build.
     "outDir": "./dist",
     "rootDir": "."
   },
   "include": [
     "src/**/*",
-    "videos.json" // Pastikan videos.json juga diinclude jika Anda mengimpornya ke dalam TypeScript/Astro
+    "videos.json"
   ],
   "exclude": [
     "node_modules",
