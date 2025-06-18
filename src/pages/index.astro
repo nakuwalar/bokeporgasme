@@ -1,0 +1,53 @@
+---
+// src/pages/index.astro
+import Layout from '../layouts/Layout.astro';
+import VideoCard from '../components/VideoCard.astro';
+import videosData from '../data/videos.json'; // Impor data JSON
+export const prerender = true;
+// Ambil 10 video terbaru (misalnya, berdasarkan ID atau index, asumsikan yang terakhir ditambahkan adalah yang terbaru)
+const latestVideos = videosData.slice(0, 10);
+
+// Kelompokkan video berdasarkan kategori
+const videosByCategory: { [key: string]: typeof videosData } = {};
+videosData.forEach(video => {
+  if (!videosByCategory[video.category]) {
+    videosByCategory[video.category] = [];
+  }
+  videosByCategory[video.category].push(video);
+});
+
+// Ambil 3 video pertama dari setiap kategori untuk tampilan halaman utama
+const categoriesToShow = Object.keys(videosByCategory).map(category => ({
+  name: category,
+  videos: videosByCategory[category].slice(0, 10)
+}));
+---
+
+<Layout
+  title="Bokep Orgasme Video Bokep Indonesia Terbaru"
+  description="Nonton Video Bokep Indo Bocil Smp Sma Abg Ngentot Jilbab Tante Toket Gede Toge Memek Mulus."
+  image="/thumbnails/thumbnail.png"
+>
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-6 text-center">Video Terbaru</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {latestVideos.map((video) => (
+        <VideoCard {...video} />
+      ))}
+    </div>
+  </section>
+
+  {categoriesToShow.map((category) => (
+    <section class="mb-12">
+      <h2 class="text-3xl font-bold mb-6 text-center">Video Kategori: <a href={`/category/${encodeURIComponent(category.name.toLowerCase().replace(/\s+/g, '-'))}/`} class="text-blue-600 dark:text-blue-400 hover:underline">{category.name}</a></h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {category.videos.map((video) => (
+          <VideoCard {...video} />
+        ))}
+      </div>
+      <div class="text-center mt-6">
+        <a href={`/category/${encodeURIComponent(category.name.toLowerCase().replace(/\s+/g, '-'))}/`} class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-300">Lihat Semua di {category.name}</a>
+      </div>
+    </section>
+  ))}
+</Layout>

@@ -1,0 +1,54 @@
+---
+// src/components/VideoCard.astro
+import { slugify } from '../utils/slugify';
+
+interface Props {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  thumbnail: string;
+  tags: string;
+  slug?: string; // Slug might be pre-defined
+}
+
+const { id, title, description, category, thumbnail, slug } = Astro.props;
+
+// For VideoCard, we typically don't have access to ALL existing slugs in the build,
+// so if the 'slug' prop is provided (from getStaticPaths), use it.
+// If not, generate a basic slug from the title.
+// The uniqueness check is primarily done in getStaticPaths.
+const videoSlug = slug || slugify(title);
+
+const videoUrl = `/video/${videoSlug}/`;
+---
+
+<a
+  href={videoUrl}
+  class="block bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden group"
+>
+  <img
+    src={thumbnail}
+    alt={title}
+    class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+    loading="lazy"
+    width="640"
+    height="360"
+  />
+  <div class="p-4">
+    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+      {title}
+    </h3>
+    <p class="text-gray-600 dark:text-gray-400 text-sm line-clamp-3 mb-2">
+      {description}
+    </p>
+    <div class="text-xs font-medium">
+      <a
+        href={`/category/${encodeURIComponent(category.toLowerCase().replace(/\s+/g, '-'))}/`}
+        class="text-blue-600 dark:text-blue-400 hover:underline"
+      >
+        {category}
+      </a>
+    </div>
+  </div>
+</a>

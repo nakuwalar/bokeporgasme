@@ -1,0 +1,58 @@
+---
+// src/pages/search.astro
+import Layout from '../layouts/Layout.astro';
+import VideoCard from '../components/VideoCard.astro';
+import { CollectionEntry } from 'astro:content'; // Jika menggunakan content collection
+import type { APIRoute } from 'astro';
+
+// Ini akan dipanggil saat halaman diakses dengan query param (?q=...)
+// Astro akan merender ulang halaman di server (SSR) dengan hasil pencarian
+const query = Astro.url.searchParams.get('q');
+let searchResults: CollectionEntry<'videos'>[] = []; // Asumsikan tipe video Anda
+
+if (query) {
+  // Panggil API Route untuk mendapatkan hasil pencarian
+  // fetch harus dilakukan di server-side saat SSR
+  const response = await fetch(`${Astro.url.origin}/api/search?q=${encodeURIComponent(query)}`);
+  if (response.ok) {
+    searchResults = await response.json();
+  }
+}
+---
+
+<Layout
+  title={`Hasil Pencarian: ${query || ''}`}
+  description={`Temukan video yang relevan di Astro Video dengan kata kunci "${query || ''}".`}
+>
+  <h1 class="text-4xl font-bold mb-8 text-center">Cari Video</h1>
+
+  <form action="/search" method="GET" class="mb-8 flex justify-center">
+    <input
+      type="text"
+      name="q"
+      placeholder="Cari video..."
+      value={query || ''}
+      class="p-3 border border-gray-300 dark:border-gray-600 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full max-w-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+    />
+    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-r-lg transition-colors duration-300">
+      Cari
+    </button>
+  </form>
+
+  {query && (
+    <section>
+      {searchResults.length > 0 ? (
+        <>
+          <h2 class="text-2xl font-semibold mb-6">Hasil untuk "{query}" ({searchResults.length} video)</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {searchResults.map((video) => (
+              <VideoCard {...video} />
+            ))}
+          </div>
+        </>
+      ) : (
+        <p class="text-center text-lg text-gray-700 dark:text-gray-300">Tidak ada video yang ditemukan untuk "{query}".</p>
+      )}
+    </section>
+  )}
+</Layout>
