@@ -1,23 +1,25 @@
+// scripts/tsconfig.json
 {
-  "extends": "../tsconfig.json", // This path is crucial. It means "one level up, then find tsconfig.json"
+  "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "../scripts-build",
-    "rootDir": "../", // <--- THIS MUST BE "../" (dot dot slash)
-    "module": "ESNext",
+    "rootDir": "../",
+    "module": "NodeNext", // <--- CHANGE to "NodeNext" for better modern Node.js ESM handling
     "target": "ESNext",
-    "moduleResolution": "Node", // Keep as Node or NodeNext for scripts
+    "moduleResolution": "NodeNext", // <--- CHANGE to "NodeNext"
     "esModuleInterop": true,
     "allowJs": true,
     "checkJs": false,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "strict": true,
-    "noEmit": false,
-    "resolveJsonModule": true,       // <--- ENSURE THIS IS TRUE
-    "allowImportingTsExtensions": true // <--- ENSURE THIS IS TRUE
+    "noEmit": false, // Keep this as false, because we want to emit JS
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true // Keep this true
+    // NO NEED to add "emitDeclarationOnly": true here as we want actual JS files emitted
   },
   "include": [
-    "./downloadThumbnails.ts" // Only include the script itself
+    "./downloadThumbnails.ts"
   ],
-  "exclude": ["node_modules"] // No need for "../dist" here
+  "exclude": ["node_modules"]
 }
