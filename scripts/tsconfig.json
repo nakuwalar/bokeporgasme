@@ -13,10 +13,11 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "strict": true,
-    "noEmit": false, // Keep this as false, we want to emit JS
+    "noEmit": false,
     "resolveJsonModule": true,
-    "allowImportingTsExtensions": true, // Keep this true
-    "emitDeclarationOnly": true // <--- ADD THIS LINE
+    "allowImportingTsExtensions": true,
+    "emitDeclarationOnly": true, // Keep this true
+    "declaration": true // <--- ADD THIS LINE
   },
   "include": [
     "./downloadThumbnails.ts"
