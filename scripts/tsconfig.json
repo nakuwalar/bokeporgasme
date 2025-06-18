@@ -4,19 +4,19 @@
   "compilerOptions": {
     "outDir": "../scripts-build",
     "rootDir": "../",
-    "module": "NodeNext", // <--- CHANGE to "NodeNext" for better modern Node.js ESM handling
+    "module": "NodeNext",
     "target": "ESNext",
-    "moduleResolution": "NodeNext", // <--- CHANGE to "NodeNext"
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true,
     "allowJs": true,
     "checkJs": false,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "strict": true,
-    "noEmit": false, // Keep this as false, because we want to emit JS
+    "noEmit": false, // Keep this as false, we want to emit JS
     "resolveJsonModule": true,
-    "allowImportingTsExtensions": true // Keep this true
-    // NO NEED to add "emitDeclarationOnly": true here as we want actual JS files emitted
+    "allowImportingTsExtensions": true, // Keep this true
+    "emitDeclarationOnly": true // <--- ADD THIS LINE
   },
   "include": [
     "./downloadThumbnails.ts"
