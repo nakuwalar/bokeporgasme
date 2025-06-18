@@ -1,26 +1,18 @@
 {
-  "name": "astrolol",
+  "name": "klaten-video-hub",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "npm run compile-thumbnails && npm run download-thumbnails-js && astro build",
+    "prebuild": "node ./downloadThumbnails.js",
+    "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "compile-thumbnails": "tsc --project ./scripts/tsconfig.json",
-    "download-thumbnails-js": "node scripts-build/downloadThumbnails.js"
+    "astro": "astro"
   },
-  "devDependencies": {
-    "@astrojs/node": "^9.2.2",
+  "dependencies": {
     "@astrojs/sitemap": "^3.4.1",
     "@astrojs/tailwind": "^6.0.2",
-    "@types/node": "^20.14.9",
-    "astro": "^5.9.4",
-    "autoprefixer": "^10.4.21",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.4",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "sharp": "^0.34.2"
   }
 }

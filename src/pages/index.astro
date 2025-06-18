@@ -1,53 +1,177 @@
 ---
-// src/pages/index.astro
-import Layout from '../layouts/Layout.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 import VideoCard from '../components/VideoCard.astro';
-import videosData from '../data/videos.json'; // Impor data JSON
-export const prerender = true;
-// Ambil 10 video terbaru (misalnya, berdasarkan ID atau index, asumsikan yang terakhir ditambahkan adalah yang terbaru)
-const latestVideos = videosData.slice(0, 10);
+import videosData from '../../videos.json'; // Pastikan path ini sesuai dengan lokasi videos.json Anda
 
-// Kelompokkan video berdasarkan kategori
-const videosByCategory: { [key: string]: typeof videosData } = {};
-videosData.forEach(video => {
-  if (!videosByCategory[video.category]) {
-    videosByCategory[video.category] = [];
-  }
-  videosByCategory[video.category].push(video);
-});
+// Dapatkan 10 video terbaru (asumsi 10 pertama dalam array adalah yang terbaru jika tidak ada field tanggal)
+// Jika ada field 'datePublished' di videos.json, Anda akan mengurutkan:
+// const latestVideos = videosData.sort((a, b) => new Date(b.datePublished).getTime() - new Date(a.datePublished).getTime()).slice(0, 10);
+const latestVideos = videosData.slice(0, 10); // Ambil 10 video pertama
 
-// Ambil 3 video pertama dari setiap kategori untuk tampilan halaman utama
-const categoriesToShow = Object.keys(videosByCategory).map(category => ({
-  name: category,
-  videos: videosByCategory[category].slice(0, 10)
-}));
+// Dapatkan daftar kategori unik untuk navigasi atau tautan cepat
+const categories = [...new Set(videosData.map(video => video.category))];
+
+const pageTitle = "Koleksi Video Klaten - Terbaru & Terpopuler";
+const pageDescription = "Jelajahi video-video terbaru tentang budaya, kuliner, dan destinasi menarik di Klaten, Jawa Tengah. Temukan berdasarkan kategori dan cari dengan mudah.";
+const pageImage = "/images/default-og-image.jpg"; // Gambar default untuk Open Graph
+const pageUrl = "https://www.example.com/"; // URL homepage Anda
 ---
 
-<Layout
-  title="Bokep Orgasme Video Bokep Indonesia Terbaru"
-  description="Nonton Video Bokep Indo Bocil Smp Sma Abg Ngentot Jilbab Tante Toket Gede Toge Memek Mulus."
-  image="/thumbnails/thumbnail.png"
->
-  <section class="mb-12">
-    <h2 class="text-3xl font-bold mb-6 text-center">Video Terbaru</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      {latestVideos.map((video) => (
-        <VideoCard {...video} />
-      ))}
+<BaseLayout title={pageTitle} description={pageDescription} image={pageImage} url={pageUrl}>
+  <header class="bg-gray-900 text-white py-6 shadow-lg">
+    <div class="container mx-auto px-4 md:px-8 flex flex-col items-center">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-center mb-2">Klaten Video Hub</h1>
+      <p class="text-xl text-gray-300 text-center">Jelajahi keindahan Klaten melalui video</p>
     </div>
-  </section>
+  </header>
 
-  {categoriesToShow.map((category) => (
-    <section class="mb-12">
-      <h2 class="text-3xl font-bold mb-6 text-center">Video Kategori: <a href={`/category/${encodeURIComponent(category.name.toLowerCase().replace(/\s+/g, '-'))}/`} class="text-blue-600 dark:text-blue-400 hover:underline">{category.name}</a></h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {category.videos.map((video) => (
-          <VideoCard {...video} />
-        ))}
-      </div>
-      <div class="text-center mt-6">
-        <a href={`/category/${encodeURIComponent(category.name.toLowerCase().replace(/\s+/g, '-'))}/`} class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-300">Lihat Semua di {category.name}</a>
+  <main class="container mx-auto p-4 md:p-8">
+
+    <!-- Bagian Pencarian -->
+    <section class="mb-10 text-center bg-white p-6 rounded-xl shadow-lg">
+      <h2 class="text-3xl font-bold text-gray-800 mb-6">Cari Video</h2>
+      <div class="mb-6">
+        <label for="searchInput" class="sr-only">Cari video</label>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Cari video berdasarkan judul, deskripsi, tag, atau kategori..."
+          class="w-full max-w-2xl p-4 border border-gray-300 rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 text-lg"
+        />
       </div>
     </section>
-  ))}
-</Layout>
+
+    <!-- Bagian Video Terbaru -->
+    <section class="mb-10">
+      <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center rounded-lg p-3 bg-gradient-to-r from-green-100 to-teal-100 shadow-md">
+        Video Terbaru
+      </h2>
+      <div id="latestVideoList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {latestVideos.map((video) => (
+          <VideoCard video={video} />
+        ))}
+      </div>
+      <div class="text-center mt-8">
+        <a href="/category/all" class="inline-block bg-blue-600 text-white text-lg font-semibold px-8 py-3 rounded-full hover:bg-blue-700 transition-colors shadow-lg">Lihat Semua Video &rarr;</a>
+      </div>
+    </section>
+
+    <!-- Bagian Telusuri Berdasarkan Kategori -->
+    <section class="mb-10 text-center bg-white p-6 rounded-xl shadow-lg">
+      <h2 class="text-3xl font-bold text-gray-800 mb-6">Telusuri Berdasarkan Kategori</h2>
+      <div class="flex flex-wrap justify-center gap-3">
+        <a href="/category/all" class="bg-indigo-600 text-white px-5 py-2.5 rounded-full hover:bg-indigo-700 transition-colors shadow-md text-lg font-medium">Semua Video</a>
+        {categories.map(category => (
+          <a
+            href={`/category/${encodeURIComponent(category.toLowerCase().replace(/\s+/g, '-'))}`}
+            class="bg-purple-100 text-purple-800 px-5 py-2.5 rounded-full hover:bg-purple-200 transition-colors shadow-sm text-lg font-medium"
+          >
+            {category}
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Bagian hasil pencarian akan menggantikan "Latest Videos" atau ditampilkan terpisah -->
+    <section id="searchResults" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+      <h2 class="col-span-full text-3xl font-bold text-gray-800 mb-6 text-center">Hasil Pencarian</h2>
+      <!-- VideoCard akan dirender di sini oleh JavaScript -->
+    </section>
+    <div id="noResults" class="col-span-full text-center text-gray-500 text-lg py-10 hidden">Tidak ada video yang ditemukan.</div>
+
+
+    <script is:inline>
+      // Dapatkan data video langsung dari JSON yang sudah ada di bundle
+      const videos = {JSON.stringify(videosData)}; // videosData kini akan memiliki properti 'slug' setelah prebuild
+      const searchInput = document.getElementById('searchInput');
+      const latestVideoListContainer = document.getElementById('latestVideoList');
+      const searchResultsContainer = document.getElementById('searchResults');
+      const noResultsMessage = document.getElementById('noResults');
+
+      // Fungsi untuk merender kartu video
+      function renderVideoCards(container, filteredVideos) {
+        container.innerHTML = ''; // Kosongkan daftar video yang ada
+        if (filteredVideos.length === 0) {
+          // Tangani tampilan pesan "Tidak ada video ditemukan" di luar container grid
+          return false; // Mengindikasikan tidak ada hasil
+        }
+
+        filteredVideos.forEach(video => {
+          const videoCardHtml = `
+            <article class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-200">
+              <!-- PERHATIKAN: URL Tautan menggunakan video.slug -->
+              <a href="/${video.slug}" class="block"> {/* Diubah dari /video/${video.slug} menjadi /${video.slug} */}
+                <img
+                  src="${video.thumbnail}"
+                  alt="${video.title}"
+                  class="w-full h-48 object-cover object-center rounded-t-xl"
+                  loading="lazy"
+                />
+                <div class="p-4">
+                  <h2 class="text-xl font-semibold text-gray-800 mb-2 leading-tight">
+                    ${video.title}
+                  </h2>
+                  <p class="text-gray-600 text-sm mb-3 line-clamp-3">
+                    ${video.description}
+                  </p>
+                </div>
+              </a>
+              <div class="px-4 pb-4 flex flex-wrap gap-2">
+                <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                  ${video.category}
+                </span>
+                ${video.tags.map(tag => `<span class="bg-gray-100 text-gray-600 text-xs font-medium px-2.5 py-0.5 rounded-full">#${tag}</span>`).join('')}
+              </div>
+            </article>
+          `;
+          container.insertAdjacentHTML('beforeend', videoCardHtml);
+        });
+        return true; // Mengindikasikan ada hasil
+      }
+
+      // Handler untuk pencarian
+      searchInput.addEventListener('input', (event) => {
+        const query = event.target.value.toLowerCase().trim();
+
+        // Sembunyikan bagian video terbaru saat mencari
+        latestVideoListContainer.parentElement.style.display = 'none';
+
+        if (query === '') {
+          // Jika query kosong, tampilkan kembali video terbaru
+          latestVideoListContainer.parentElement.style.display = 'block';
+          searchResultsContainer.classList.add('hidden');
+          noResultsMessage.classList.add('hidden');
+          return;
+        }
+
+        const filteredVideos = videos.filter(video =>
+          video.title.toLowerCase().includes(query) ||
+          video.description.toLowerCase().includes(query) ||
+          video.tags.some(tag => tag.toLowerCase().includes(query)) ||
+          video.category.toLowerCase().includes(query)
+        );
+
+        const hasResults = renderVideoCards(searchResultsContainer, filteredVideos);
+
+        // Tampilkan atau sembunyikan container hasil pencarian dan pesan 'no results'
+        if (hasResults) {
+          searchResultsContainer.classList.remove('hidden');
+          noResultsMessage.classList.add('hidden');
+        } else {
+          searchResultsContainer.classList.add('hidden');
+          noResultsMessage.classList.remove('hidden');
+        }
+      });
+
+      // Konten `latestVideos` sudah dirender di server-side oleh Astro.
+      // Bagian JavaScript ini hanya untuk fungsionalitas pencarian.
+    </script>
+  </main>
+
+  <footer class="bg-gray-900 text-white py-8 mt-10 shadow-inner">
+    <div class="container mx-auto px-4 md:px-8 text-center text-gray-400">
+      <p>&copy; {new Date().getFullYear()} Klaten Video Hub. All rights reserved.</p>
+      <p class="text-sm mt-2">Dibuat dengan ❤️ untuk Klaten.</p>
+    </div>
+  </footer>
+</BaseLayout>

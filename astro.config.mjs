@@ -1,27 +1,14 @@
-// @ts-check
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
-import tailwindcss from '@tailwindcss/vite';
-
-import node from '@astrojs/node';
-
 import sitemap from '@astrojs/sitemap';
 
-// https://astro.build/config
+// Ganti dengan URL situs Anda yang sebenarnya!
+const SITE_URL = 'https://bokeporgasme.pages.dev/';
+
 export default defineConfig({
-  vite: {
-    plugins: [tailwindcss()]
-  },
-
-  output: 'server',
-
-  adapter: node({
-    mode: 'standalone'
-  }),
-  site: 'https://bokeporgasme.pages.dev',
+  site: SITE_URL,
   integrations: [
-    sitemap(),
     tailwind(),
+    sitemap(),
   ],
-  
 });
