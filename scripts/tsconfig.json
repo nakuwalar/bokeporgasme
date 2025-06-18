@@ -1,9 +1,9 @@
 // scripts/tsconfig.json
 {
-  "extends": "../tsconfig.json",
+  // REMOVE THIS LINE: "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "../scripts-build",
-    "rootDir": "../",
+    "rootDir": "../", // Keep this as "../" because your script imports from "../src"
     "module": "NodeNext",
     "target": "ESNext",
     "moduleResolution": "NodeNext",
@@ -16,11 +16,15 @@
     "noEmit": false,
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
-    "emitDeclarationOnly": true, // Keep this true
-    "declaration": true // <--- ADD THIS LINE
+    "emitDeclarationOnly": true,
+    "declaration": true
   },
   "include": [
-    "./downloadThumbnails.ts"
+    "./downloadThumbnails.ts",
+    // IMPORTANT: Since rootDir is now "../", we need to explicitly include the source files
+    // that this script directly imports from outside its immediate directory.
+    "../src/utils/slugify.ts",
+    "../src/data/videos.json" // Include the JSON file itself if it's treated as a source
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "../dist"] // Exclude the main node_modules and dist from this specific compilation
 }
