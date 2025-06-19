@@ -9,7 +9,7 @@ export const prerender = true; // Penting untuk memastikan halaman ini di-preren
 
 export async function getStaticPaths() {
   const allVideos: VideoData[] = await getAllVideos(); // Gunakan type VideoData
-  const videosPerPage = 12; // Sesuaikan jumlah video per halaman
+  const videosPerPage = 30; // Sesuaikan jumlah video per halaman
 
   const paths = [];
   const categories: { [key: string]: VideoData[] } = {}; // Tentukan tipe untuk categories
