@@ -2,9 +2,9 @@
 // src/pages/cari/[query]/[page].astro
 // Halaman Pencarian Utama dengan Paginasi Berbasis Path Parameter
 
-import Layout from '../../../layouts/BaseLayout.astro'; // Perbaiki path relatif
-import VideoCard from '../../../components/VideoCard.astro'; // Perbaiki path relatif
-import { getAllVideos, type VideoData } from '../../../utils/data.ts'; // Perbaiki path relatif
+import Layout from '../../../layouts/BaseLayout.astro';
+import VideoCard from '../../../components/VideoCard.astro';
+import { getAllVideos, type VideoData } from '../../../utils/data.ts';
 import { slugify } from '../../../utils/slugify.ts';
 
 // getStaticPaths ini diperlukan untuk memberitahu Astro bahwa ini adalah rute dinamis.
@@ -14,15 +14,21 @@ export async function getStaticPaths() {
   return [];
 }
 
-const { query, page } = Astro.params; // Sekarang kita punya 'query' DAN 'page' sebagai parameter terpisah
+const { query, page } = Astro.params;
 const originalQuery = query ? decodeURIComponent(query) : '';
 const currentPage = page ? parseInt(page) : 1;
 const videosPerPage = 30; // Sesuaikan jumlah video per halaman
 
-const normalizedQuery = originalQuery.toLowerCase().trim().replace(/-/g, ' ');
+// --- MODIFIKASI KUNCI DI SINI ---
+// Buat beberapa variasi kueri untuk pencarian yang lebih fleksibel
+const normalizedQuerySpace = originalQuery.toLowerCase().trim().replace(/-/g, ' '); // "keyword satu"
+const normalizedQueryHyphen = originalQuery.toLowerCase().trim().replace(/ /g, '-'); // "keyword-satu"
+const normalizedQueryRaw = originalQuery.toLowerCase().trim(); // "keyword-satu" (jika asli ada hyphen) atau "keyword satu" (jika asli ada spasi)
 
 console.log(`[CARI PAGE] Kueri asli dari URL: "${originalQuery}"`);
-console.log(`[CARI PAGE] Kueri yang dinormalisasi: "${normalizedQuery}"`);
+console.log(`[CARI PAGE] Kueri dinormalisasi (spasi): "${normalizedQuerySpace}"`);
+console.log(`[CARI PAGE] Kueri dinormalisasi (hyphen): "${normalizedQueryHyphen}"`);
+console.log(`[CARI PAGE] Kueri dinormalisasi (raw): "${normalizedQueryRaw}"`);
 console.log(`[CARI PAGE] Halaman saat ini: ${currentPage}`);
 
 let searchResults: VideoData[] = [];
@@ -31,16 +37,34 @@ let totalPages = 1;
 let paginatedResults: VideoData[] = [];
 
 // Hanya lakukan pencarian jika ada query (query path parameter selalu ada)
-if (normalizedQuery) {
+if (normalizedQueryRaw) { // Gunakan raw query untuk cek keberadaan
   try {
     const allVideos: VideoData[] = await getAllVideos();
 
-    searchResults = allVideos.filter(video =>
-      video.title.toLowerCase().includes(normalizedQuery) ||
-      video.description.toLowerCase().includes(normalizedQuery) ||
-      (typeof video.category === 'string' && video.category.toLowerCase().includes(normalizedQuery)) ||
-      (typeof video.tags === 'string' && video.tags.toLowerCase().includes(normalizedQuery))
-    );
+    searchResults = allVideos.filter(video => {
+      const videoTitleLower = video.title.toLowerCase();
+      const videoDescriptionLower = video.description.toLowerCase();
+      const videoCategoryLower = typeof video.category === 'string' ? video.category.toLowerCase() : '';
+      const videoTagsLower = typeof video.tags === 'string' ? video.tags.toLowerCase() : '';
+
+      // Coba cocokkan dengan semua variasi kueri
+      return (
+        videoTitleLower.includes(normalizedQuerySpace) ||
+        videoDescriptionLower.includes(normalizedQuerySpace) ||
+        videoCategoryLower.includes(normalizedQuerySpace) ||
+        videoTagsLower.includes(normalizedQuerySpace) ||
+
+        videoTitleLower.includes(normalizedQueryHyphen) ||
+        videoDescriptionLower.includes(normalizedQueryHyphen) ||
+        videoCategoryLower.includes(normalizedQueryHyphen) ||
+        videoTagsLower.includes(normalizedQueryHyphen) ||
+
+        videoTitleLower.includes(normalizedQueryRaw) ||
+        videoDescriptionLower.includes(normalizedQueryRaw) ||
+        videoCategoryLower.includes(normalizedQueryRaw) ||
+        videoTagsLower.includes(normalizedQueryRaw)
+      );
+    });
 
     searchResults.sort((a, b) => a.title.localeCompare(b.title));
 
@@ -113,11 +137,11 @@ const breadcrumbs = [
     <h1 class="search-results-title">{`Hasil Pencarian untuk: "${originalQuery}"`} <span class="page-info">(Halaman {currentPage} dari {totalPages})</span></h1>
 
     {originalQuery === '' ? (
-      <p class="no-videos-found">
+      <p class="no-results-message">
         Silakan masukkan kata kunci di kolom pencarian di atas untuk memulai pencarian video.
       </p>
     ) : paginatedResults.length === 0 ? (
-      <p class="no-videos-found">
+      <p class="no-results-message">
         Maaf, tidak ada video yang cocok dengan pencarian Anda. Coba kata kunci lain.
       </p>
     ) : (
@@ -146,7 +170,7 @@ const breadcrumbs = [
           </a>
         ))}
         {/* Tambahkan elipsis jika ada halaman yang diskip (contoh: 1 ... 5 6 [7] 8 9 ... 15) */}
-        {currentPage + 2 < totalPages && <span class="pagination-link ellipsis">...</span>}
+        {(currentPage + 2 < totalPages && totalPages > 5) && (currentPage < totalPages - 2) && <span class="pagination-link ellipsis">...</span>}
         {currentPage < totalPages && (
           <a href={`${baseSearchUrl}/${currentPage + 1}`} class="pagination-link">Berikutnya &raquo;</a>
         )}
@@ -156,62 +180,23 @@ const breadcrumbs = [
 </Layout>
 
 <style>
-  /* Pindahkan style ini ke file CSS global Anda (misalnya src/styles/global.css) jika Anda ingin menggunakannya di seluruh situs. */
-  /* Untuk contoh ini, saya biarkan di sini. */
-  .pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    gap: 8px; /* Jarak antar link */
-    flex-wrap: wrap; /* Pastikan responsif */
-  }
-
-  .pagination-link {
-    display: block;
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    text-decoration: none;
-    color: #007bff;
-    background-color: #fff;
-    transition: all 0.2s ease-in-out;
-    min-width: 40px;
+  /* Styles for the "no results" message, now using CSS variables */
+  .no-results-message {
     text-align: center;
-  }
-
-  .pagination-link:hover:not(.active) {
-    background-color: #e9ecef;
-    border-color: #007bff;
-  }
-
-  .pagination-link.active {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
-    cursor: default; /* Tidak bisa diklik jika aktif */
-  }
-
-  .page-info {
-    font-size: 0.8em;
-    color: #666;
-    margin-left: 10px;
-  }
-
-  .no-videos-found {
-    text-align: center;
-    padding: 40px 20px;
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5); /* Use spacing unit for padding */
+    background-color: var(--accent-color); /* Use accent color for background */
+    color: white; /* White text for contrast */
+    border: 1px solid var(--border-color); /* Use border color */
     border-radius: 8px;
-    margin: 30px auto;
+    margin: calc(var(--spacing-unit) * 2) auto; /* Use spacing unit for margin */
     max-width: 600px;
+    box-shadow: var(--shadow-light); /* Add a light shadow */
   }
+
   .pagination-link.ellipsis {
     background-color: transparent;
     border-color: transparent;
-    color: #6c757d;
+    color: var(--secondary-color);
     cursor: default;
   }
 </style>
