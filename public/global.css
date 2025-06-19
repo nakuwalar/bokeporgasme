@@ -1,21 +1,21 @@
 /*
-  src/styles/global.css
-*/
+ * src/styles/global.css
+ */
 
 :root {
   /* Warna Tema Terang (Default) */
-  --primary-color: #007bff;
-  --secondary-color: #6c757d;
-  --accent-color: #dc3545;
-  --background-color: #f8f9fa;
-  --text-color: #343a40;
-  --border-color: #dee2e6;
-  --card-bg: #ffffff;
+  --primary-color: #0056b3; /* Biru tua gelap */
+  --secondary-color: #5a6268; /* Sedikit lebih gelap dari abu-abu */
+  --accent-color: #b3001a; /* Merah gelap */
+  --background-color: #e6e9ed; /* Latar belakang terang yang sedikit lebih gelap */
+  --text-color: #212529; /* Teks sangat gelap */
+  --border-color: #c0c4c8; /* Border yang sedikit lebih gelap */
+  --card-bg: #f0f2f5; /* Latar belakang card sedikit lebih gelap */
 
   /* Shadows */
-  --shadow-light: 0 1px 3px rgba(0,0,0,0.1);
-  --shadow-medium: 0 4px 8px rgba(0,0,0,0.15);
-  --shadow-strong: 0 6px 12px rgba(0,0,0,0.2);
+  --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.15);
+  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.2);
+  --shadow-strong: 0 6px 12px rgba(0, 0, 0, 0.25);
 
   /* Spasi/Ukuran Font Dasar */
   --spacing-unit: 1rem;
@@ -25,18 +25,18 @@
 
 /* --- Dark Mode Variables --- */
 body.dark-mode {
-  --primary-color: #66b2ff; /* Biru lebih terang untuk dark mode */
-  --secondary-color: #a0a8b1;
-  --accent-color: #ff6b7d; /* Merah lebih terang */
-  --background-color: #1a1a1a; /* Latar belakang gelap */
-  --text-color: #e0e0e0; /* Teks terang */
-  --border-color: #333; /* Border lebih gelap */
-  --card-bg: #2b2b2b; /* Latar belakang card gelap */
+  --primary-color: #003366; /* Biru tua sangat gelap untuk dark mode */
+  --secondary-color: #8b949c;
+  --accent-color: #cc0022; /* Merah lebih terang dari primary */
+  --background-color: #0a0a0a; /* Latar belakang sangat gelap */
+  --text-color: #f0f0f0; /* Teks sangat terang */
+  --border-color: #222; /* Border sangat gelap */
+  --card-bg: #111111; /* Latar belakang card sangat gelap */
 
   /* Shadows untuk dark mode, bisa disesuaikan agar tidak terlalu mencolok */
-  --shadow-light: 0 1px 3px rgba(0,0,0,0.3);
-  --shadow-medium: 0 4px 8px rgba(0,0,0,0.4);
-  --shadow-strong: 0 6px 12px rgba(0,0,0,0.5);
+  --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.5);
+  --shadow-strong: 0 6px 12px rgba(0, 0, 0, 0.6);
 }
 
 /* Reset CSS Sederhana & Gaya Dasar */
@@ -98,7 +98,8 @@ header {
 }
 
 .main-nav {
-  max-width: 1200px;
+  /* max-width: 1200px; */ /* Removed for full width */
+  width: 100%; /* Set to full width */
   margin: 0 auto;
   padding: 0 15px;
   display: flex;
@@ -176,26 +177,27 @@ header {
 
 /* --- Dark Mode Toggle Button --- */
 .dark-mode-toggle {
-    background: none;
-    border: none;
-    font-size: 1.5rem; /* Ukuran ikon */
-    cursor: pointer;
-    color: white; /* Warna ikon agar terlihat di header */
-    margin-left: 15px;
-    padding: 5px;
-    border-radius: 5px;
-    transition: background-color 0.2s ease, color 0.2s ease;
+  background: none;
+  border: none;
+  font-size: 1.5rem; /* Ukuran ikon */
+  cursor: pointer;
+  color: white; /* Warna ikon agar terlihat di header */
+  margin-left: 15px;
+  padding: 5px;
+  border-radius: 5px;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .dark-mode-toggle:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: var(--accent-color); /* Contoh hover effect */
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--accent-color); /* Contoh hover effect */
 }
 
 
 /* --- Tata Letak Halaman Umum --- */
 main {
-  max-width: 1200px;
+  /* max-width: 1200px; */ /* Removed for full width */
+  width: 100%; /* Set to full width */
   margin: 30px auto;
   padding: 20px;
   background-color: var(--card-bg); /* Menggunakan variabel */
@@ -650,7 +652,7 @@ footer {
 @media (max-width: 992px) { /* Untuk tablet dan layar yang lebih kecil */
   main {
     padding: 15px;
-    margin: 20px auto;
+    /* margin: 20px auto; */ /* Removed for full width */
   }
 }
 
@@ -713,7 +715,7 @@ footer {
   }
   .categories-list-page {
     padding: 15px;
-    margin: 15px auto;
+    /* margin: 15px auto; */ /* Removed for full width */
   }
   .category-list {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
