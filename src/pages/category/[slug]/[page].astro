@@ -2,15 +2,17 @@
 // src/pages/category/[slug]/[page].astro
 import Layout from '../../../layouts/BaseLayout.astro';
 import VideoCard from '../../../components/VideoCard.astro';
-import { getAllVideos } from '../../../utils/data';
+import { getAllVideos, type VideoData } from '../../../utils/data'; // Import VideoData type
 import { slugify } from '../../../utils/slugify';
-export const prerender = true;
+
+export const prerender = true; // Penting untuk memastikan halaman ini di-prerender
+
 export async function getStaticPaths() {
-  const allVideos = await getAllVideos();
+  const allVideos: VideoData[] = await getAllVideos(); // Gunakan type VideoData
   const videosPerPage = 12; // Sesuaikan jumlah video per halaman
 
   const paths = [];
-  const categories: { [key: string]: typeof allVideos } = {};
+  const categories: { [key: string]: VideoData[] } = {}; // Tentukan tipe untuk categories
 
   // Kelompokkan video berdasarkan kategori
   allVideos.forEach(video => {
@@ -27,16 +29,40 @@ export async function getStaticPaths() {
     const totalPages = Math.ceil(categoryVideos.length / videosPerPage);
 
     for (let i = 1; i <= totalPages; i++) {
+      const startIndex = (i - 1) * videosPerPage;
+      const endIndex = startIndex + videosPerPage;
+      const paginatedVideosForPage = categoryVideos.slice(startIndex, endIndex);
+
+      // Kumpulkan domain preconnect hanya untuk video di halaman ini
+      const preconnectDomainsForPage = new Set<string>();
+      paginatedVideosForPage.forEach(video => {
+        try {
+          // Tambahkan validasi jika URL mungkin kosong atau tidak valid
+          if (video.thumbnail) {
+            preconnectDomainsForPage.add(new URL(video.thumbnail).origin);
+          }
+          if (video.embedUrl) { // *** PERBAIKAN: Gunakan embedUrl ***
+            preconnectDomainsForPage.add(new URL(video.embedUrl).origin);
+          }
+        } catch (e) {
+          // Log error dengan ID video untuk memudahkan identifikasi
+          // Pesan error dari Astro mungkin masih bilang CSV, tapi ini akan menunjukkan ID video JSON Anda
+          console.error(`[ERROR] URL tidak valid untuk video ID "${video.id}" di kategori "${video.category}" (paginasi kategori):`, e);
+          // Anda bisa memilih untuk tidak menambahkan domain ini atau mengabaikan video ini jika URL-nya kritis
+        }
+      });
+
       paths.push({
         params: {
           slug: categorySlug,
           page: i.toString(),
         },
         props: {
-          categoryName, // Teruskan nama kategori asli
+          categoryName,
           currentPage: i,
           totalPages,
-          categoryVideos, // Teruskan semua video dalam kategori ini (akan difilter di bawah)
+          videos: paginatedVideosForPage, // *** PERBAIKAN: Hanya kirim video yang dipaginasi ***
+          preconnectDomains: Array.from(preconnectDomainsForPage),
         },
       });
     }
@@ -44,28 +70,19 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { categoryName, currentPage, totalPages, categoryVideos } = Astro.props;
-const videosPerPage = 12; // Harus sama dengan di getStaticPaths
-const startIndex = (currentPage - 1) * videosPerPage;
-const endIndex = startIndex + videosPerPage;
-const paginatedVideos = categoryVideos.slice(startIndex, endIndex);
+// *** PERBAIKAN: Hanya ambil 'videos' dari props, bukan 'categoryVideos' yang lengkap ***
+const { categoryName, currentPage, totalPages, videos: paginatedVideos, preconnectDomains } = Astro.props;
 
-// Mendapatkan domain unik dari URL thumbnail dan video untuk preconnect
-const allDomains = new Set<string>();
-paginatedVideos.forEach(video => {
-  try {
-    allDomains.add(new URL(video.thumbnail).origin);
-    allDomains.add(new URL(video.videoUrl).origin);
-  } catch (e) {
-    console.error(`[ERROR] URL tidak valid di CSV untuk video ID ${video.id} (paginasi kategori):`, e);
-  }
-});
-const preconnectDomains = Array.from(allDomains);
+// *** HAPUS: Ini tidak lagi diperlukan karena sudah difilter di getStaticPaths ***
+// const videosPerPage = 12;
+// const startIndex = (currentPage - 1) * videosPerPage;
+// const endIndex = startIndex + videosPerPage;
+// const paginatedVideos = categoryVideos.slice(startIndex, endIndex);
 
 // Breadcrumb data
 const breadcrumbs = [
   { name: 'Beranda', url: '/' },
-  { name: 'Kategori', url: '/category/' }, // Asumsi ada halaman umum kategori
+  { name: 'Kategori', url: '/category/' },
   { name: categoryName, url: `/category/${slugify(categoryName)}/1` },
   { name: `Halaman ${currentPage}`, url: `/category/${slugify(categoryName)}/${currentPage}` },
 ];
