@@ -20,7 +20,7 @@ export async function getStaticPaths() {
 const { video, allVideos } = Astro.props;
 
 // --- LOGIKA UNTUK VIDEO TERKAIT ---
-const numberOfRelatedVideos = 30;
+const numberOfRelatedVideos = 10;
 const relatedVideos: VideoData[] = [];
 
 const sameCategoryVideos = allVideos.filter(v =>
