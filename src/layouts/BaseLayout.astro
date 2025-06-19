@@ -50,10 +50,10 @@ const ogImageFullUrl = new URL('/og-image.jpg', url).href;
     <link rel="stylesheet" href="/global.css" />
   </head>
   <body>
-    <header>More actions
+    <header>
       <nav class="main-nav">
         <a href="/" class="logo">{siteName}</a>
-        <form action="/cari/" method="get" class="search-form">
+        <form id="searchForm" action="/cari/" method="get" class="search-form"> {/* Add id="searchForm" */}
           <input type="search" name="query" placeholder="Cari video..." required />
           <button type="submit">Cari</button>
         </form>
@@ -69,5 +69,31 @@ const ogImageFullUrl = new URL('/og-image.jpg', url).href;
     <footer>
       <p>&copy; {new Date().getFullYear()} <a href={siteUrl}>{siteName}</a>. All rights reserved.</p>
     </footer>
+
+    {/* --- Crucial JavaScript for Clean Search URLs --- */}
+    <script is:inline>
+      document.addEventListener('DOMContentLoaded', () => {
+        const searchForm = document.getElementById('searchForm');
+        if (searchForm) {
+          searchForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission (which uses ?query=keyword)
+
+            const input = searchForm.querySelector('input[name="query"]');
+            const query = input ? input.value.trim() : '';
+
+            if (query) {
+              // Simple slugify: replace spaces with hyphens, convert to lowercase
+              const slugifiedQuery = query.toLowerCase().replace(/\s+/g, '-');
+              // Redirect to the clean path-based URL
+              window.location.href = `/cari/${slugifiedQuery}`; // This will be caught by /cari/[query]/index.astro
+            } else {
+              // If the search input is empty, you can redirect to a general search page or do nothing.
+              // For now, redirect to /cari/ which will likely show no results if not handled.
+              window.location.href = `/cari/`;
+            }
+          });
+        }
+      });
+    </script>
   </body>
 </html>
