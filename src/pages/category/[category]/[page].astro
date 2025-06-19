@@ -1,7 +1,8 @@
 ---
-// Perhatikan perubahan path ke components dan layouts
-// Sekarang kita berada di src/pages/category/[category]/[page].astro
-// Jadi, untuk keluar ke 'src/' kita perlu 3x '../'
+// Pastikan path ke komponen dan layout sudah benar untuk lokasi ini
+// Dari 'src/pages/category/[category]/[page].astro'
+// ke 'src/layouts/' perlu 3x '../'
+// ke 'src/components/' perlu 3x '../'
 import Layout from '../../../layouts/BaseLayout.astro';
 import path from 'path';
 import fs from 'fs';
@@ -19,9 +20,11 @@ interface VideoData {
   category: string;
 }
 
-// Definisikan VIDEOS_PER_PAGE di scope global frontmatter
-const VIDEOS_PER_PAGE = 12; // Anda bisa sesuaikan jumlah video per halaman
+// INI ADALAH POSISI KRUSIAL UNTUK VIDEOS_PER_PAGE
+// Pastikan ini adalah deklarasi pertama variabel di dalam frontmatter, setelah imports.
+const VIDEOS_PER_PAGE = 12; // Atur jumlah video per halaman di sini
 
+// getStaticPaths untuk menghasilkan halaman untuk setiap kategori unik
 export async function getStaticPaths() {
   const results: VideoData[] = [];
   const csvFilePath = path.resolve(process.cwd(), 'src/data/videos.csv');
@@ -47,6 +50,7 @@ export async function getStaticPaths() {
     const totalPages = Math.ceil(categoryVideos.length / VIDEOS_PER_PAGE);
 
     // Pastikan selalu ada setidaknya satu halaman, bahkan jika tidak ada video
+    // Ini penting agar kategori tanpa video tetap memiliki halaman /category/nama-kategori/1
     const pagesToGenerate = totalPages === 0 ? 1 : totalPages;
 
     for (let page = 1; page <= pagesToGenerate; page++) {
@@ -55,7 +59,7 @@ export async function getStaticPaths() {
       const paginatedVideos = categoryVideos.slice(startIndex, endIndex);
 
       paths.push({
-        // params harus cocok dengan nama folder dinamis: [category] dan [page]
+        // 'params' harus cocok dengan nama folder dinamis di URL: [category] dan [page]
         params: { category: sluggedCategory, page: page.toString() },
         props: {
           categoryName: category, // Nama kategori asli
@@ -104,7 +108,7 @@ const actualCategoryName = categoryName || "Semua Kategori";
         </li>
         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
           <span class="separator">/</span>
-          {/* Link ke halaman 1 kategori saat ini - HARUS /category/ */}
+          {/* Link ke halaman 1 kategori saat ini - Gunakan /category/ */}
           <a itemprop="item" href={`/category/${category}/1`}>
             <span itemprop="name">{actualCategoryName}</span>
           </a>
