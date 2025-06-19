@@ -1,0 +1,94 @@
+---
+// src/pages/video/[id]/[slug].astro
+import Layout from '../../../layouts/BaseLayout.astro';
+import { getAllVideos, type VideoData } from '../../../utils/data';
+import { slugify } from '../../../utils/slugify';
+
+export async function getStaticPaths() {
+  const allVideos: VideoData[] = await getAllVideos();
+
+  return allVideos.map(video => {
+    const videoSlug = slugify(video.title);
+    return {
+      params: { id: video.id, slug: videoSlug },
+      props: { video },
+    };
+  });
+}
+
+const { video } = Astro.props;
+
+const preconnectDomains: string[] = [];
+try {
+  preconnectDomains.push(new URL(video.thumbnail).origin);
+  preconnectDomains.push(new URL(video.embedUrl).origin);
+} catch (e) {
+  console.error(`[ERROR] URL tidak valid untuk video ID ${video.id} di halaman detail:`, e);
+}
+
+// Pisahkan string tags menjadi array
+const videoTags = video.tags ? video.tags.split(',').map(tag => tag.trim()) : [];
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: video.category, url: `/category/${slugify(video.category)}/1` },
+  { name: video.title, url: `/video/${video.id}/${slugify(video.title)}` },
+];
+---
+
+<Layout
+  title={video.title + " | BokepOrgasme"}
+  description={video.description}
+  preconnectDomains={preconnectDomains}
+>
+  <main class="video-detail-page">
+    <nav class="breadcrumb" aria-label="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+      <ol>
+        {breadcrumbs.map((item, index) => (
+          <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            {index > 0 && <span class="separator">/</span>}
+            {item.url ? (
+              <a itemprop="item" href={item.url}>
+                <span itemprop="name">{item.name}</span>
+              </a>
+            ) : (
+              <span itemprop="name">{item.name}</span>
+            )}
+            <meta itemprop="position" content={(index + 1).toString()} />
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <article class="video-container">
+      <h1 class="video-title">{video.title}</h1>
+      <div class="video-player-wrapper">
+        <iframe
+          src={video.embedUrl}
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy"
+        ></iframe>
+      </div>
+      <div class="video-meta">
+        <p class="video-category">Kategori: <a href={`/category/${slugify(video.category)}/1`}>{video.category}</a></p>
+      </div>
+      <div class="video-description">
+        <h2>Deskripsi:</h2>
+        <p>{video.description}</p>
+      </div>
+
+      {videoTags.length > 0 && (
+        <div class="video-tags-container">
+          <h2>Tags:</h2>
+          <div class="tags-list">
+            {videoTags.map(tag => (
+              <a href={`/cari/${slugify(tag)}`} class="tag-item">{tag}</a>
+            ))}
+          </div>
+        </div>
+      )}
+    </article>
+  </main>
+</Layout>

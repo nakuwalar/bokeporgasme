@@ -1,0 +1,137 @@
+---
+// src/pages/index.astro
+import Layout from '../layouts/BaseLayout.astro';
+import VideoCard from '../components/VideoCard.astro';
+import { slugify } from '../utils/slugify';
+import { getAllVideos, type VideoData } from '../utils/data'; // Import type juga
+
+// Ini memberitahu Astro untuk membuat HTML statis untuk halaman ini saat build
+export const prerender = true;
+
+// Ambil semua video dari fungsi utilitas yang diimpor
+// Ini akan berjalan di server pada waktu build.
+const allVideos = await getAllVideos();
+
+// --- LOGIKA UNTUK 10 VIDEO TERBARU SECARA KESELURUHAN ---
+// Asumsi: video terbaru adalah 10 video terakhir yang ditambahkan ke CSV (baris terakhir)
+const latestVideos = allVideos.slice(-10).reverse(); // Ambil 10 terakhir dan reverse agar terbaru di depan
+
+// Kelompokkan video berdasarkan category dan batasi hingga 10 per category
+const videosByCategory: { [key: string]: VideoData[] } = {};
+
+allVideos.forEach(video => {
+  if (!videosByCategory[video.category]) {
+    videosByCategory[video.category] = [];
+  }
+  // Hanya tambahkan jika jumlah video untuk category tersebut belum mencapai 10
+  // dan pastikan tidak ada duplikasi jika allVideos berisi duplikasi (berdasarkan ID)
+  const isVideoAlreadyAdded = videosByCategory[video.category].some(v => v.id === video.id);
+  if (videosByCategory[video.category].length < 10 && !isVideoAlreadyAdded) {
+    videosByCategory[video.category].push(video);
+  }
+});
+
+// Urutkan category secara alfabetis untuk tampilan yang konsisten
+const sortedCategories = Object.keys(videosByCategory).sort();
+
+// Mendapatkan domain unik dari URL thumbnail dan video untuk preconnect
+const allDomains = new Set<string>();
+latestVideos.forEach(video => {
+  try {
+    allDomains.add(new URL(video.thumbnail).origin);
+    allDomains.add(new URL(video.videoUrl).origin);
+  } catch (e) {
+    console.error(`[ERROR] URL thumbnail/video tidak valid di CSV untuk video ID ${video.id} (latestVideos):`, e);
+  }
+});
+Object.values(videosByCategory).flat().forEach(video => {
+  try {
+    allDomains.add(new URL(video.thumbnail).origin);
+    allDomains.add(new URL(video.videoUrl).origin);
+  } catch (e) {
+    console.error(`[ERROR] URL thumbnail/video tidak valid di CSV untuk video ID ${video.id} (videosByCategory):`, e);
+  }
+});
+const preconnectDomains = Array.from(allDomains);
+
+// Breadcrumb data untuk halaman utama
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+];
+---
+
+<Layout
+  title="{siteName} - Video Bokep Indo Terbaru"
+  description="Temukan berbagai video bokep indonesia mulai bokep bocil sampai ngentot tante!"
+  preconnectDomains={preconnectDomains}
+>
+  <main class="home-page">
+    <nav class="breadcrumb" aria-label="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+      <ol>
+        {breadcrumbs.map((item, index) => (
+          <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            {index > 0 && <span class="separator">/</span>}
+            {item.url ? (
+              <a itemprop="item" href={item.url}>
+                <span itemprop="name">{item.name}</span>
+              </a>
+            ) : (
+              <span itemprop="name">{item.name}</span>
+            )}
+            <meta itemprop="position" content={(index + 1).toString()} />
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <section class="hero-section">
+      <h1>Selamat Datang di {siteName}!</h1>
+      <p>Video bokep indonesia mulai bokep bocil sampai ngentot tante. Tonton sekarang juga!</p>
+    </section>
+
+    {/* --- SEKSI BARU UNTUK 10 VIDEO TERBARU --- */}
+    {latestVideos.length > 0 && (
+      <section class="latest-videos-section">
+        <h2 class="section-title">Video Terbaru</h2>
+        <div class="video-grid">
+          {latestVideos.map((video) => (
+            <VideoCard video={video} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section class="all-categories-section">
+      {sortedCategories.length === 0 ? (
+        <p class="no-videos-overall">Belum ada video yang tersedia di portal ini.</p>
+      ) : (
+        sortedCategories.map(categoryName => (
+          <div class="category-group">
+            <h2 class="category-title">
+              {/* Penting: arahkan ke halaman 1 paginasi kategori */}
+              <a href={`/category/${slugify(categoryName)}/1`} class="category-link">
+                {categoryName} &rarr;
+              </a>
+            </h2>
+            <div class="video-grid">
+              {videosByCategory[categoryName].length === 0 ? (
+                <p class="no-videos-in-category">Tidak ada video dalam kategori ini.</p>
+              ) : (
+                videosByCategory[categoryName].map((video) => (
+                  <VideoCard video={video} />
+                ))
+              )}
+            </div>
+            {/* Tampilkan tombol "Lihat Semua" jika ada lebih dari 10 video di kategori tersebut */}
+            {allVideos.filter(v => v.category === categoryName).length > 10 && (
+              <div class="view-all-button-container">
+                {/* Penting: arahkan ke halaman 1 paginasi kategori */}
+                <a href={`/category/${slugify(categoryName)}/1`} class="view-all-button">Lihat Semua di kategori {categoryName}</a>
+              </div>
+            )}
+          </div>
+        ))
+      )}
+    </section>
+  </main>
+</Layout>

@@ -1,0 +1,67 @@
+---
+import { nama, desk ,url } from '../utils/site.ts';
+export interface Props {
+  title: string;
+  description: string;
+  preconnectDomains?: string[];
+}
+
+const {
+  title,
+  description,
+  preconnectDomains = []
+  } = Astro.props;
+
+const ogImageFullUrl = new URL('/og-image.jpg', url).href;
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+    {/* Meta Tags untuk SEO dan Sosial Media */}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {/* Gunakan siteUrl untuk og:url jika diperlukan, atau Astro.url.href untuk halaman spesifik */}
+    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={ogImageFullUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageFullUrl} />
+
+    {preconnectDomains.map(domain => (
+      <link rel="preconnect" href={domain} crossorigin>
+    ))}
+
+    <link rel="stylesheet" href="/src/styles/global.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="main-nav">
+        <a href="/" class="logo">{nama}</a>
+        <form action="/cari/" method="get" class="search-form">
+          <input type="search" name="query" placeholder="Cari video..." required />
+          <button type="submit">Cari</button>
+        </form>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/category/">Category</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <slot />
+
+    <footer>
+      <p>&copy; {new Date().getFullYear()} <a href={url}>{nama}</a>. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

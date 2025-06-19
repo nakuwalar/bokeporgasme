@@ -1,18 +1,15 @@
 // astro.config.mjs
 import { defineConfig } from 'astro/config';
-import sitemap from '@astrojs/sitemap'; // Import the sitemap integration
 import cloudflare from '@astrojs/cloudflare';
-// https://astro.build/config
-export default defineConfig({
-  // Output mode default adalah 'static' (SSG), ini yang kita inginkan
-  output: 'server',
-  adapter: cloudflare(),
-  // WAJIB: Ganti dengan URL situs Anda yang sebenarnya
-  site: 'https://bokeporgasme.pages.dev', // Replace with your actual website domain for SEO
-  
-  trailingSlash: 'never',
 
-  integrations: [
-    sitemap(), // Add the sitemap integration here
-  ],
+export default defineConfig({
+  output: 'server', // Mengaktifkan Server-Side Rendering (SSR)
+  adapter: cloudflare(), // Adapter untuk deployment di Cloudflare Pages/Workers
+
+  // Jika Anda memiliki masalah CORS, Anda bisa mencoba menambahkan ini (opsional)
+  // server: {
+  //   host: true, // Mengizinkan akses dari jaringan lokal (untuk dev)
+  //   port: 4321,
+  //   cors: true, // Mengaktifkan CORS headers untuk semua request (hati-hati di produksi)
+  // },
 });
