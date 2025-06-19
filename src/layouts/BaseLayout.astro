@@ -13,11 +13,10 @@ const {
   title,
   description,
   preconnectDomains = [],
-  siteName = nama, // Using 'nama' from utils/site.ts
-  siteUrl = url // Using 'url' from utils/site.ts
+  siteName = nama,
+  siteUrl = url
 } = Astro.props;
 
-// Ensure ogImageFullUrl is correctly formed from the base URL
 const ogImageFullUrl = new URL('/og-image.jpg', url).href;
 ---
 
@@ -34,7 +33,6 @@ const ogImageFullUrl = new URL('/og-image.jpg', url).href;
     {/* Meta Tags for SEO and Social Media */}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    {/* Use Astro.url.href for specific page URL */}
     <meta property="og:url" content={Astro.url.href} />
     <meta property="og:type" content="website" />
     <meta property="og:image" content={ogImageFullUrl} />
@@ -53,13 +51,18 @@ const ogImageFullUrl = new URL('/og-image.jpg', url).href;
     <header>
       <nav class="main-nav">
         <a href="/" class="logo">{siteName}</a>
-        <form id="searchForm" action="/cari/" method="get" class="search-form"> {/* Add id="searchForm" */}
+        <form id="searchForm" action="/cari/" method="get" class="search-form">
           <input type="search" name="query" placeholder="Cari video..." required />
           <button type="submit">Cari</button>
         </form>
         <ul class="nav-links">
           <li><a href="/">Home</a></li>
           <li><a href="/category/">Category</a></li>
+          <li>
+            <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+              ☀️ {/* Ikon matahari (terang) */}
+            </button>
+          </li>
         </ul>
       </nav>
     </header>
@@ -73,24 +76,60 @@ const ogImageFullUrl = new URL('/og-image.jpg', url).href;
     {/* --- Crucial JavaScript for Clean Search URLs --- */}
     <script is:inline>
       document.addEventListener('DOMContentLoaded', () => {
+        // --- Search Form Logic ---
         const searchForm = document.getElementById('searchForm');
         if (searchForm) {
           searchForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission (which uses ?query=keyword)
+            event.preventDefault();
 
             const input = searchForm.querySelector('input[name="query"]');
             const query = input ? input.value.trim() : '';
 
             if (query) {
-              // Simple slugify: replace spaces with hyphens, convert to lowercase
               const slugifiedQuery = query.toLowerCase().replace(/\s+/g, '-');
-              // Redirect to the clean path-based URL
-              window.location.href = `/cari/${slugifiedQuery}`; // This will be caught by /cari/[query]/index.astro
+              window.location.href = `/cari/${slugifiedQuery}`;
             } else {
-              // If the search input is empty, you can redirect to a general search page or do nothing.
-              // For now, redirect to /cari/ which will likely show no results if not handled.
               window.location.href = `/cari/`;
             }
+          });
+        }
+
+        // --- Dark Mode Toggle Logic ---
+        const toggleButton = document.getElementById('darkModeToggle');
+        const body = document.body;
+        const LIGHT_ICON = '☀️';
+        const DARK_ICON = '🌙';
+        const STORAGE_KEY = 'darkModeEnabled';
+
+        // Fungsi untuk menerapkan tema
+        function applyTheme(isDarkMode) {
+          if (isDarkMode) {
+            body.classList.add('dark-mode');
+            toggleButton.textContent = DARK_ICON;
+          } else {
+            body.classList.remove('dark-mode');
+            toggleButton.textContent = LIGHT_ICON;
+          }
+        }
+
+        // Cek preferensi dari localStorage saat halaman dimuat
+        const savedMode = localStorage.getItem(STORAGE_KEY);
+        if (savedMode === 'true') {
+          applyTheme(true);
+        } else if (savedMode === null && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          // Jika belum ada preferensi, cek preferensi sistem operasi
+          applyTheme(true);
+        } else {
+          applyTheme(false); // Default ke light mode jika tidak ada preferensi atau preferensi sistem terang
+        }
+
+        // Event listener untuk tombol toggle
+        if (toggleButton) {
+          toggleButton.addEventListener('click', () => {
+            const isCurrentlyDarkMode = body.classList.contains('dark-mode');
+            const newMode = !isCurrentlyDarkMode;
+            applyTheme(newMode);
+            localStorage.setItem(STORAGE_KEY, newMode); // Simpan preferensi
           });
         }
       });
