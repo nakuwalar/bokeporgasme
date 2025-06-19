@@ -1,0 +1,668 @@
+/*
+  src/styles/global.css
+
+  Ini adalah file CSS global Anda yang akan diimpor di BaseLayout.astro.
+  Semua gaya dasar, variabel CSS, dan gaya umum untuk komponen
+  serta halaman akan ditempatkan di sini.
+*/
+
+:root {
+  /* Warna */
+  --primary-color: #007bff; /* Biru cerah, untuk tautan, judul utama */
+  --secondary-color: #6c757d; /* Abu-abu sedang, untuk teks sekunder */
+  --accent-color: #dc3545; /* Merah, untuk tombol aksi atau highlight */
+  --background-color: #f8f9fa; /* Abu-abu sangat terang, untuk latar belakang halaman */
+  --text-color: #343a40; /* Hitam gelap, untuk teks utama */
+  --border-color: #dee2e6; /* Abu-abu terang, untuk garis pemisah */
+  --card-bg: #ffffff; /* Putih, untuk latar belakang card/konten */
+
+  /* Shadows */
+  --shadow-light: 0 1px 3px rgba(0,0,0,0.1);
+  --shadow-medium: 0 4px 8px rgba(0,0,0,0.15);
+  --shadow-strong: 0 6px 12px rgba(0,0,0,0.2);
+
+  /* Spasi/Ukuran Font Dasar */
+  --spacing-unit: 1rem; /* Umumnya 16px */
+  --font-body: 'Arial', sans-serif;
+  --font-heading: 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Reset CSS Sederhana & Gaya Dasar */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tautan Global */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+a:hover {
+  color: #0056b3; /* Sedikit lebih gelap dari primary-color */
+  text-decoration: underline;
+}
+
+/* Tombol Global */
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+/* --- Header & Navigasi --- */
+header {
+  background-color: var(--primary-color);
+  padding: 1rem 0;
+  box-shadow: var(--shadow-medium);
+  position: sticky; /* Membuat header tetap di atas saat scroll */
+  top: 0;
+  z-index: 1000; /* Pastikan header di atas konten lain */
+}
+
+.main-nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.logo {
+  color: white;
+  text-decoration: none;
+  font-size: 1.8rem;
+  font-weight: bold;
+  white-space: nowrap; /* Mencegah logo pecah baris */
+}
+
+.search-form {
+  display: flex;
+  flex-grow: 1;
+  margin: 10px 20px; /* Jarak atas/bawah dan samping */
+  max-width: 400px;
+  order: 2; /* Mengubah urutan agar di bawah logo/nav di mobile */
+}
+
+.search-form input[type="search"] {
+  flex-grow: 1;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px 0 0 5px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.search-form button {
+  background-color: var(--accent-color);
+  color: white;
+  border-radius: 0 5px 5px 0;
+  font-weight: bold;
+}
+
+.search-form button:hover {
+  background-color: #c82333;
+}
+
+.nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  order: 3; /* Mengubah urutan */
+}
+
+.nav-links li {
+  margin-left: 20px;
+}
+
+.nav-links a {
+  color: white;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.nav-links a:hover {
+  color: #e2e6ea;
+}
+
+/* --- Tata Letak Halaman Umum --- */
+main {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: var(--shadow-medium);
+}
+
+/* --- Breadcrumbs --- */
+.breadcrumb {
+  margin-bottom: 20px;
+  font-size: 0.9em;
+  color: var(--secondary-color);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.breadcrumb ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.breadcrumb li {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb a {
+  color: var(--primary-color);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb .separator {
+  margin: 0 8px;
+  color: #999;
+}
+
+/* --- Judul Halaman / Seksi --- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--text-color);
+  margin-bottom: 0.8em;
+  line-height: 1.2;
+}
+
+.page-title, .section-title, .category-title-header, .search-results-title {
+  font-size: clamp(2em, 4vw, 3.5em); /* Responsive font size */
+  color: var(--primary-color);
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 3px solid var(--accent-color);
+  padding-bottom: 15px;
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.category-title { /* Untuk judul kategori di halaman utama */
+  font-size: clamp(1.8em, 3.5vw, 2.5em);
+  text-align: left;
+  margin-bottom: 25px;
+  color: #333;
+  position: relative;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--accent-color);
+  display: inline-block;
+  padding-right: 15px;
+}
+
+.category-title .category-link {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
+.category-title .category-link:hover {
+  color: var(--primary-color);
+}
+
+.page-info {
+  font-size: 0.6em;
+  color: var(--secondary-color);
+  display: block;
+  margin-top: 5px;
+}
+
+/* --- Grid Video (Digunakan di banyak halaman) --- */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  margin-bottom: 40px; /* Tambahkan margin bawah untuk konsistensi */
+}
+
+/* --- Video Card Component --- */
+.video-card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-light);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+}
+
+.video-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-medium);
+}
+
+.thumbnail-container {
+  width: 100%;
+  padding-bottom: 56.25%; /* Rasio aspek 16:9 */
+  position: relative;
+  overflow: hidden;
+}
+
+.thumbnail-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.video-card:hover .thumbnail-container img {
+  transform: scale(1.05);
+}
+
+.duration { /* Jika Anda memutuskan untuk menambahkannya kembali ke JSON */
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8em;
+}
+
+.video-info {
+  padding: 15px;
+}
+
+.video-title {
+  font-size: 1.1em;
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: var(--text-color);
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.video-category {
+  font-size: 0.9em;
+  color: var(--secondary-color);
+  margin-bottom: 5px;
+}
+
+/* --- Halaman Beranda (Index) --- */
+.hero-section {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 40px 20px;
+  background: linear-gradient(to right, var(--primary-color), #0056b3);
+  color: white;
+  border-radius: 8px;
+  box-shadow: var(--shadow-medium);
+}
+
+.hero-section h1 {
+  font-size: clamp(2.5em, 5vw, 4em);
+  margin-bottom: 10px;
+  line-height: 1.2;
+  color: white; /* Pastikan judul putih di hero */
+}
+
+.hero-section p {
+  font-size: clamp(1em, 2.5vw, 1.5em);
+  opacity: 0.9;
+}
+
+.latest-videos-section,
+.all-categories-section {
+  margin-top: 50px;
+}
+
+.category-group {
+  margin-bottom: 60px;
+}
+
+.no-videos-overall, .no-videos-in-category, .no-videos-found, .no-categories {
+  grid-column: 1 / -1; /* Membuat teks menempati seluruh lebar grid */
+  text-align: center;
+  font-size: 1.2em;
+  color: #999;
+  padding: 50px 0;
+}
+
+.view-all-button-container {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.view-all-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: var(--accent-color);
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease;
+  box-shadow: var(--shadow-light);
+}
+
+.view-all-button:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+}
+
+/* --- Halaman Detail Video --- */
+.video-player-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* Rasio aspek 16:9 */
+  background-color: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.video-player-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.video-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 10px 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.95em;
+  color: var(--secondary-color);
+}
+
+.video-meta p {
+  margin: 0;
+}
+
+.video-meta a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.video-meta a:hover {
+  text-decoration: underline;
+}
+
+.video-description h2, .video-tags-container h2 {
+  font-size: 1.5em;
+  color: var(--text-color);
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.video-description p {
+  color: var(--text-color);
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+
+.video-tags-container {
+  margin-top: 30px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 20px;
+}
+
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tag-item {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-size: 0.9em;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.tag-item:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+/* --- Halaman Kategori (Paginasi) --- */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 30px;
+  padding: 15px;
+  background-color: var(--background-color);
+  border-radius: 8px;
+  box-shadow: var(--shadow-light);
+}
+
+.pagination-link {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 10px;
+  text-decoration: none;
+  color: var(--primary-color);
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+  font-weight: 500;
+}
+
+.pagination-link:hover {
+  background-color: var(--primary-color);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.pagination-link.active {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: bold;
+  border-color: var(--primary-color);
+  cursor: default;
+}
+
+.pagination-link.active:hover {
+  transform: none;
+}
+
+/* --- Daftar Kategori (category/index.astro) --- */
+.category-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+.category-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 25px;
+  text-align: center;
+  text-decoration: none;
+  color: var(--text-color);
+  box-shadow: var(--shadow-light);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.category-item:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-medium);
+  background-color: #f0f4f7;
+}
+
+.category-item-title {
+  font-size: 1.6em;
+  color: var(--primary-color);
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.category-item-count {
+  font-size: 1.1em;
+  color: var(--secondary-color);
+  margin: 0;
+}
+
+
+/* --- Footer --- */
+footer {
+  background-color: var(--text-color);
+  color: white;
+  text-align: center;
+  padding: 1.5rem 20px;
+  margin-top: 40px;
+  font-size: 0.9rem;
+}
+
+/* --- Responsiveness --- */
+@media (max-width: 992px) { /* Untuk tablet dan layar yang lebih kecil */
+  main {
+    padding: 15px;
+    margin: 20px auto;
+  }
+}
+
+@media (max-width: 768px) { /* Untuk mobile dan tablet potret */
+  .main-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .logo {
+    margin-bottom: 10px;
+    width: 100%;
+    text-align: center;
+  }
+  .search-form {
+    width: 100%;
+    margin: 10px 0;
+    order: 1; /* Pindahkan search form ke atas di mobile */
+  }
+  .nav-links {
+    width: 100%;
+    justify-content: center;
+    margin-top: 10px;
+    order: 2; /* Pindahkan nav links ke bawah search form */
+  }
+  .nav-links li {
+    margin-left: 0;
+    margin: 0 10px; /* Spasi antar item nav */
+  }
+
+  .video-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .page-title, .section-title, .category-title-header, .search-results-title {
+      text-align: center;
+      display: block;
+      width: 100%;
+  }
+  .category-title {
+      text-align: center;
+      display: block;
+      width: 100%;
+      padding-right: 0;
+  }
+
+  .view-all-button-container {
+    text-align: center;
+  }
+  .video-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  .categories-list-page {
+    padding: 15px;
+    margin: 15px auto;
+  }
+  .category-list {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+  }
+  .category-item {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) { /* Untuk mobile yang lebih kecil */
+  .video-grid {
+    grid-template-columns: 1fr; /* Satu kolom untuk layar sangat kecil */
+  }
+  .pagination {
+    padding: 10px;
+    gap: 8px;
+  }
+  .pagination-link {
+    min-width: 35px;
+    height: 35px;
+    font-size: 0.9em;
+  }
+}
