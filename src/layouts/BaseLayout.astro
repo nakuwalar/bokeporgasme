@@ -1,5 +1,6 @@
 ---
-import { nama, desk ,url } from '../utils/site.ts';
+import { nama, desk, url } from '../utils/site.ts';
+
 export interface Props {
   title: string;
   description: string;
@@ -12,10 +13,11 @@ const {
   title,
   description,
   preconnectDomains = [],
-  siteName = 'BokepOrgasme',
-  siteUrl = 'https://bokeporgasme.pages.dev'
-  } = Astro.props;
+  siteName = nama, // Using 'nama' from utils/site.ts
+  siteUrl = url // Using 'url' from utils/site.ts
+} = Astro.props;
 
+// Ensure ogImageFullUrl is correctly formed from the base URL
 const ogImageFullUrl = new URL('/og-image.jpg', url).href;
 ---
 
@@ -29,10 +31,10 @@ const ogImageFullUrl = new URL('/og-image.jpg', url).href;
     <meta name="robots" content="index, follow" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
-    {/* Meta Tags untuk SEO dan Sosial Media */}
+    {/* Meta Tags for SEO and Social Media */}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    {/* Gunakan siteUrl untuk og:url jika diperlukan, atau Astro.url.href untuk halaman spesifik */}
+    {/* Use Astro.url.href for specific page URL */}
     <meta property="og:url" content={Astro.url.href} />
     <meta property="og:type" content="website" />
     <meta property="og:image" content={ogImageFullUrl} />
@@ -51,7 +53,7 @@ const ogImageFullUrl = new URL('/og-image.jpg', url).href;
     <header>
       <nav class="main-nav">
         <a href="/" class="logo">{siteName}</a>
-        <form action="/cari/" method="get" class="search-form">
+        <form id="searchForm" action="/cari/" method="get" class="search-form"> {/* Add id="searchForm" */}
           <input type="search" name="query" placeholder="Cari video..." required />
           <button type="submit">Cari</button>
         </form>
@@ -67,5 +69,31 @@ const ogImageFullUrl = new URL('/og-image.jpg', url).href;
     <footer>
       <p>&copy; {new Date().getFullYear()} <a href={siteUrl}>{siteName}</a>. All rights reserved.</p>
     </footer>
+
+    {/* --- Crucial JavaScript for Clean Search URLs --- */}
+    <script is:inline>
+      document.addEventListener('DOMContentLoaded', () => {
+        const searchForm = document.getElementById('searchForm');
+        if (searchForm) {
+          searchForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission (which uses ?query=keyword)
+
+            const input = searchForm.querySelector('input[name="query"]');
+            const query = input ? input.value.trim() : '';
+
+            if (query) {
+              // Simple slugify: replace spaces with hyphens, convert to lowercase
+              const slugifiedQuery = query.toLowerCase().replace(/\s+/g, '-');
+              // Redirect to the clean path-based URL
+              window.location.href = `/cari/${slugifiedQuery}`; // This will be caught by /cari/[query]/index.astro
+            } else {
+              // If the search input is empty, you can redirect to a general search page or do nothing.
+              // For now, redirect to /cari/ which will likely show no results if not handled.
+              window.location.href = `/cari/`;
+            }
+          });
+        }
+      });
+    </script>
   </body>
 </html>
