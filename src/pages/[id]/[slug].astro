@@ -1,10 +1,9 @@
 ---
 // src/pages/[id]/[slug].astro
-// (Dulunya src/pages/video/[id]/[slug].astro)
 
-import Layout from '../../layouts/BaseLayout.astro'; // Path relatif berubah!
-import VideoCard from '../../components/VideoCard.astro'; // Path relatif berubah!
-import { getAllVideos, type VideoData } from '../../utils/data'; // Path relatif berubah!
+import Layout from '../../layouts/BaseLayout.astro';
+import VideoCard from '../../components/VideoCard.astro';
+import { getAllVideos, type VideoData } from '../../utils/data';
 import { slugify } from '../../utils/slugify';
 import { nama, desk, url } from '../../utils/site.ts';
 
@@ -14,22 +13,20 @@ export async function getStaticPaths() {
   const allVideos: VideoData[] = await getAllVideos();
   return allVideos.map(video => ({
     params: { id: video.id, slug: slugify(video.title) },
-    props: { video, allVideos }, // Pass the specific video AND allVideos for related logic
+    props: { video, allVideos },
   }));
 }
 
-const { video, allVideos } = Astro.props; // Get the current video and all videos
+const { video, allVideos } = Astro.props;
 
 // --- LOGIKA UNTUK VIDEO TERKAIT ---
-const numberOfRelatedVideos = 6; // Jumlah video terkait yang ingin ditampilkan
+const numberOfRelatedVideos = 6;
 const relatedVideos: VideoData[] = [];
 
-// Strategi 1: Video dari kategori yang sama (paling prioritas)
 const sameCategoryVideos = allVideos.filter(v =>
-  v.category === video.category && v.id !== video.id // Exclude current video
+  v.category === video.category && v.id !== video.id
 );
 
-// Ambil beberapa video dari kategori yang sama
 for (const v of sameCategoryVideos) {
   if (relatedVideos.length < numberOfRelatedVideos) {
     relatedVideos.push(v);
@@ -38,16 +35,14 @@ for (const v of sameCategoryVideos) {
   }
 }
 
-// Strategi 2: Jika masih kurang, cari berdasarkan tags (jika ada)
 if (relatedVideos.length < numberOfRelatedVideos && video.tags && video.tags.length > 0) {
-  const videoTags = new Set(video.tags.map(tag => tag.toLowerCase()));
+  const videoTagsSet = new Set(video.tags.map(tag => tag.toLowerCase())); // Use a different name to avoid conflict
   const tagMatchedVideos = allVideos.filter(v =>
-    v.id !== video.id && // Exclude current video
-    !relatedVideos.some(rv => rv.id === v.id) && // Exclude already added videos
-    v.tags && v.tags.some(tag => videoTags.has(tag.toLowerCase())) // Check for shared tags
+    v.id !== video.id &&
+    !relatedVideos.some(rv => rv.id === v.id) &&
+    v.tags && v.tags.some(tag => videoTagsSet.has(tag.toLowerCase()))
   );
 
-  // Ambil sisa video dari tag yang cocok
   for (const v of tagMatchedVideos) {
     if (relatedVideos.length < numberOfRelatedVideos) {
       relatedVideos.push(v);
@@ -57,32 +52,26 @@ if (relatedVideos.length < numberOfRelatedVideos && video.tags && video.tags.len
   }
 }
 
-// Strategi 3: Jika masih kurang, ambil acak dari semua video (fallback)
 if (relatedVideos.length < numberOfRelatedVideos) {
   const remainingSlots = numberOfRelatedVideos - relatedVideos.length;
   const otherVideos = allVideos.filter(v =>
-    v.id !== video.id && // Exclude current video
-    !relatedVideos.some(rv => rv.id === v.id) // Exclude already added videos
+    v.id !== video.id &&
+    !relatedVideos.some(rv => rv.id === v.id)
   );
-  // Kocok video dan ambil beberapa
   const shuffledOthers = otherVideos.sort(() => 0.5 - Math.random());
   relatedVideos.push(...shuffledOthers.slice(0, remainingSlots));
 }
 
-// Opsional: Kocok relatedVideos agar tidak selalu urut
 relatedVideos.sort(() => 0.5 - Math.random());
-
 
 // Mendapatkan domain unik dari URL thumbnail dan embedUrl untuk preconnect
 const allDomains = new Set<string>();
-// Add domains for the current video
 try {
   if (video.thumbnail) allDomains.add(new URL(video.thumbnail).origin);
   if (video.embedUrl) allDomains.add(new URL(video.embedUrl).origin);
 } catch (e) {
   console.error(`[ERROR] URL thumbnail/video tidak valid untuk video ID ${video.id} (current video):`, e);
 }
-// Add domains for related videos
 relatedVideos.forEach(v => {
   try {
     if (v.thumbnail) allDomains.add(new URL(v.thumbnail).origin);
@@ -97,9 +86,13 @@ const preconnectDomains = Array.from(allDomains);
 const breadcrumbs = [
   { name: 'Home', url: '/' },
   { name: video.category, url: `/category/${slugify(video.category)}/1` },
-  // === MODIFIED === Update the URL for the current video in breadcrumbs
   { name: video.title, url: `/${video.id}/${slugify(video.title)}` },
 ];
+
+// === NEW === Define videoTags here
+// Ensure video.tags exists and is an array, then filter out empty tags
+const currentVideoTags = Array.isArray(video.tags) ? video.tags.filter(tag => tag && typeof tag === 'string') : [];
+
 ---
 
 <Layout
@@ -128,7 +121,6 @@ const breadcrumbs = [
       </ol>
     </nav>
 
-
     <div class="video-player-container">
       <iframe
         src={video.embedUrl}
@@ -144,22 +136,24 @@ const breadcrumbs = [
     <h1 class="video-title">{video.title}</h1>
 
     <p class="video-description">{video.description}</p>
-      {videoTags.length > 0 && (Add commentMore actions
-        <div class="video-tags-container">
-          <h2>Tags:</h2>
-          <div class="tags-list">
-            {videoTags.map(tag => (
-              <a href={`/cari/${slugify(tag)}`} class="tag-item">{tag}</a>
-            ))}
-          </div>
+
+    {/* === NEW/FIXED === Tags Section */}
+    {currentVideoTags.length > 0 && (
+      <div class="video-tags-container">
+        <h2>Tags:</h2>
+        <div class="tags-list">
+          {currentVideoTags.map(tag => (
+            <a href={`/cari/${slugify(tag)}`} class="tag-item">{tag}</a>
+          ))}
         </div>
-      )}
+      </div>
+    )}
+
     {relatedVideos.length > 0 && (
       <section class="related-videos-section">
         <h2 class="section-title">Video Terkait</h2>
         <div class="video-grid">
           {relatedVideos.map((relatedVideo) => (
-            // === MODIFIED === Update the URL for related video cards
             <VideoCard video={relatedVideo} videoDetailPath={`/${relatedVideo.id}/${slugify(relatedVideo.title)}`} />
           ))}
         </div>
