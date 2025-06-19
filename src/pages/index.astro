@@ -26,7 +26,7 @@ allVideos.forEach(video => {
   }
   // Hanya tambahkan jika jumlah video untuk category tersebut belum mencapai 10
   // Asumsi: allVideos sudah unik berdasarkan ID, jadi tidak perlu isVideoAlreadyAdded check
-  if (videosByCategory[video.category].length < 15) {
+  if (videosByCategory[video.category].length < 10) {
     videosByCategory[video.category].push(video);
   }
 });
