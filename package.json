@@ -1,18 +1,22 @@
 {
-  "name": "klaten-video-hub",
+  "name": "viastro",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "prebuild": "node ./downloadThumbnails.js",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.4.1",
-    "@astrojs/tailwind": "^6.0.2",
-    "sharp": "^0.34.2"
+    "@astrojs/ts-plugin": "^1.8.4",
+    "astro": "^4.11.5",
+    "csv-parser": "^3.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "typescript": "^5.5.3"
   }
 }

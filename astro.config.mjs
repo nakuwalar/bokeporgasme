@@ -1,14 +1,18 @@
+// astro.config.mjs
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
-import sitemap from '@astrojs/sitemap';
+import sitemap from '@astrojs/sitemap'; // Import the sitemap integration
 
-// Ganti dengan URL situs Anda yang sebenarnya!
-const SITE_URL = 'https://bokeporgasme.pages.dev/';
-
+// https://astro.build/config
 export default defineConfig({
-  site: SITE_URL,
+  // Output mode default adalah 'static' (SSG), ini yang kita inginkan
+  output: 'static',
+  
+  // WAJIB: Ganti dengan URL situs Anda yang sebenarnya
+  site: 'https://bokeporgasme.pages.dev', // Replace with your actual website domain for SEO
+  
+  trailingSlash: 'never',
+
   integrations: [
-    tailwind(),
-    sitemap(),
+    sitemap(), // Add the sitemap integration here
   ],
 });
