@@ -5,16 +5,16 @@ import Layout from '../../layouts/BaseLayout.astro';
 import VideoCard from '../../components/VideoCard.astro';
 import { getAllVideos, type VideoData } from '../../utils/data';
 import { slugify } from '../../utils/slugify';
-import { nama, desk, url } from '../../utils/site.ts';
+import { nama, desk, url } from '../../utils/site.ts'; // Mengambil nama, desk, url situs
 
 export const prerender = true;
 
 export async function getStaticPaths() {
-  const allVideos: VideoData[] = await getAllVideos();
-  return allVideos.map(video => ({
-    params: { id: video.id, slug: slugify(video.title) },
-    props: { video, allVideos },
-  }));
+  const allVideos: VideoData[] = await getAllVideos();
+  return allVideos.map(video => ({
+    params: { id: video.id, slug: slugify(video.title) },
+    props: { video, allVideos },
+  }));
 }
 
 const { video, allVideos } = Astro.props;
@@ -24,50 +24,50 @@ const numberOfRelatedVideos = 30;
 const relatedVideos: VideoData[] = [];
 
 const sameCategoryVideos = allVideos.filter(v =>
-  v.category === video.category && v.id !== video.id
+  v.category === video.category && v.id !== video.id
 );
 
 for (const v of sameCategoryVideos) {
-  if (relatedVideos.length < numberOfRelatedVideos) {
-    relatedVideos.push(v);
-  } else {
-    break;
-  }
+  if (relatedVideos.length < numberOfRelatedVideos) {
+    relatedVideos.push(v);
+  } else {
+    break;
+  }
 }
 
 // === MODIFIKASI UNTUK TAGS DI SINI ===
 // Konversi string tags menjadi array untuk logika pencarian terkait
 // Asumsi video.tags adalah string seperti "tag1, tag2"
 const videoTagsForSearch = typeof video.tags === 'string'
-    ? video.tags.split(',').map(tag => tag.trim().toLowerCase())
-    : [];
+    ? video.tags.split(',').map(tag => tag.trim().toLowerCase())
+    : [];
 
 if (relatedVideos.length < numberOfRelatedVideos && videoTagsForSearch.length > 0) {
-  const tagMatchedVideos = allVideos.filter(v =>
-    v.id !== video.id &&
-    !relatedVideos.some(rv => rv.id === v.id) &&
-    // Pastikan tags video lain juga string dan pecah dulu
-    typeof v.tags === 'string' && v.tags.split(',').map(tag => tag.trim().toLowerCase()).some(tag => videoTagsForSearch.includes(tag))
-  );
+  const tagMatchedVideos = allVideos.filter(v =>
+    v.id !== video.id &&
+    !relatedVideos.some(rv => rv.id === v.id) &&
+    // Pastikan tags video lain juga string dan pecah dulu
+    typeof v.tags === 'string' && v.tags.split(',').map(tag => tag.trim().toLowerCase()).some(tag => videoTagsForSearch.includes(tag))
+  );
 
-  for (const v of tagMatchedVideos) {
-    if (relatedVideos.length < numberOfRelatedVideos) {
-      relatedVideos.push(v);
-    } else {
-      break;
-    }
-  }
+  for (const v of tagMatchedVideos) {
+    if (relatedVideos.length < numberOfRelatedVideos) {
+      relatedVideos.push(v);
+    } else {
+      break;
+    }
+  }
 }
 
 // Strategi 3: Jika masih kurang, ambil acak dari semua video (fallback)
 if (relatedVideos.length < numberOfRelatedVideos) {
-  const remainingSlots = numberOfRelatedVideos - relatedVideos.length;
-  const otherVideos = allVideos.filter(v =>
-    v.id !== video.id &&
-    !relatedVideos.some(rv => rv.id === v.id)
-  );
-  const shuffledOthers = otherVideos.sort(() => 0.5 - Math.random());
-  relatedVideos.push(...shuffledOthers.slice(0, remainingSlots));
+  const remainingSlots = numberOfRelatedVideos - relatedVideos.length;
+  const otherVideos = allVideos.filter(v =>
+    v.id !== video.id &&
+    !relatedVideos.some(rv => rv.id === v.id)
+  );
+  const shuffledOthers = otherVideos.sort(() => 0.5 - Math.random());
+  relatedVideos.push(...shuffledOthers.slice(0, remainingSlots));
 }
 
 relatedVideos.sort(() => 0.5 - Math.random());
@@ -76,119 +76,150 @@ relatedVideos.sort(() => 0.5 - Math.random());
 // Mendapatkan domain unik dari URL thumbnail dan embedUrl untuk preconnect
 const allDomains = new Set<string>();
 try {
-  if (video.thumbnail) allDomains.add(new URL(video.thumbnail).origin);
-  if (video.embedUrl) allDomains.add(new URL(video.embedUrl).origin);
+  if (video.thumbnail) allDomains.add(new URL(video.thumbnail).origin);
+  if (video.embedUrl) allDomains.add(new URL(video.embedUrl).origin);
 } catch (e) {
-  console.error(`[ERROR] URL thumbnail/video tidak valid untuk video ID ${video.id} (current video):`, e);
+  console.error(`[ERROR] URL thumbnail/video tidak valid untuk video ID ${video.id} (current video):`, e);
 }
 relatedVideos.forEach(v => {
-  try {
-    if (v.thumbnail) allDomains.add(new URL(v.thumbnail).origin);
-    if (v.embedUrl) allDomains.add(new URL(v.embedUrl).origin);
-  } catch (e) {
-    console.error(`[ERROR] URL thumbnail/video tidak valid untuk video ID ${v.id} (related video):`, e);
-  }
+  try {
+    if (v.thumbnail) allDomains.add(new URL(v.thumbnail).origin);
+    if (v.embedUrl) allDomains.add(new URL(v.embedUrl).origin);
+  } catch (e) {
+    console.error(`[ERROR] URL thumbnail/video tidak valid untuk video ID ${v.id} (related video):`, e);
+  }
 });
 
 const preconnectDomains = Array.from(allDomains);
 
 const breadcrumbs = [
-  { name: 'Home', url: '/' },
-  { name: video.category, url: `/category/${slugify(video.category)}/1` },
-  { name: video.title, url: `/${video.id}/${slugify(video.title)}` },
+  { name: 'Home', url: '/' },
+  { name: video.category, url: `/category/${slugify(video.category)}/1` },
+  { name: video.title, url: `/${video.id}/${slugify(video.title)}` },
 ];
 
 // === MODIFIKASI UTAMA DI SINI ===
 // Konversi string video.tags menjadi array untuk ditampilkan
 const displayTags = typeof video.tags === 'string'
-    ? video.tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0)
-    : [];
+    ? video.tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0)
+    : [];
+
+// --- Tambahkan logika untuk tanggal (jika ada di data video Anda) ---
+// Asumsi: video.datePublished dan video.dateModified tersedia dan dalam format yang valid (e.g., ISO 8601)
+// Jika tidak, Anda mungkin perlu menambahkan properti ini ke data video Anda atau menggunakan tanggal statis.
+const datePublished = video.datePublished || '2023-01-01T00:00:00Z'; // Ganti dengan tanggal sebenarnya
+const dateModified = video.dateModified || new Date().toISOString(); // Ganti dengan tanggal update terakhir atau current date
+
 
 ---
 
 <Layout
-  title={`${video.title} - ${nama}`}
-  description={video.description}
-  preconnectDomains={preconnectDomains}
-  siteName={nama}
-  siteUrl={url}
+  title={`${video.title} - ${nama}`}
+  description={video.description}
+  preconnectDomains={preconnectDomains}
+  siteName={nama}
+  siteUrl={url}
 >
-  <main class="video-detail-page">
-    <nav class="breadcrumb" aria-label="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
-      <ol>
-        {breadcrumbs.map((item, index) => (
-          <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-            {index > 0 && <span class="separator">/</span>}
-            {item.url ? (
-              <a itemprop="item" href={item.url}>
-                <span itemprop="name">{item.name}</span>
-              </a>
-            ) : (
-              <span itemprop="name">{item.name}</span>
-            )}
-            <meta itemprop="position" content={(index + 1).toString()} />
-          </li>
-        ))}
-      </ol>
-    </nav>
-
-    <div class="video-player-container">
-      <iframe
-        src={video.embedUrl}
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-        loading="lazy"
-        width="100%"
-        height="500"
-        title={video.title}
-      ></iframe>
+  {/* Schema untuk WebPage (mewakili halaman secara keseluruhan) */}
+  <div itemscope itemtype="http://schema.org/WebPage">
+    <meta itemprop="url" content={`${url}/${video.id}/${slugify(video.title)}`} />
+    <meta itemprop="name" content={`${video.title} - ${nama}`} />
+    <meta itemprop="description" content={video.description} />
+    {/* Schema Publisher / Author */}
+    <div itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content={nama} />
+      {/* Jika Anda memiliki logo, tambahkan di sini */}
+      {/* <div itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+        <meta itemprop="url" content={`${url}/path/to/your/logo.png`} />
+        <meta itemprop="width" content="600" />
+        <meta itemprop="height" content="60" />
+      </div> */}
     </div>
-    <h1 class="video-title">{video.title}</h1>
-<!-- JuicyAds PopUnders v3 Start -->
+    {/* Tanggal publikasi dan modifikasi halaman */}
+    <meta itemprop="datePublished" content={datePublished} />
+    <meta itemprop="dateModified" content={dateModified} />
+
+  <main class="video-detail-page">
+    <nav class="breadcrumb" aria-label="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+      <ol>
+        {breadcrumbs.map((item, index) => (
+          <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            {index > 0 && <span class="separator">/</span>}
+            {item.url ? (
+              <a itemprop="item" href={item.url}>
+                <span itemprop="name">{item.name}</span>
+              </a>
+            ) : (
+              <span itemprop="name">{item.name}</span>
+            )}
+            <meta itemprop="position" content={(index + 1).toString()} />
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    {/* Schema untuk VideoObject */}
+    <div class="video-player-container" itemscope itemtype="http://schema.org/VideoObject">
+      <meta itemprop="name" content={video.title} />
+      <meta itemprop="description" content={video.description} />
+      <meta itemprop="uploadDate" content={datePublished} /> {/* Gunakan tanggal publikasi video */}
+      <meta itemprop="embedUrl" content={video.embedUrl} />
+      <meta itemprop="thumbnailUrl" content={video.thumbnail} />
+      {/* Tambahkan properti opsional lainnya jika tersedia dalam data video Anda */}
+      {/* <meta itemprop="duration" content="PT1M33S" />  Misalnya, durasi video dalam format ISO 8601 */}
+      {/* <meta itemprop="interactionCount" content="5000" /> Contoh jumlah tayang */}
+      {/* <meta itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+        <meta itemprop="name" content={nama} />
+      </meta> */}
+
+      <iframe
+        src={video.embedUrl}
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        loading="lazy"
+        width="100%"
+        height="500"
+        title={video.title}
+      ></iframe>
+    </div>
+    <h1 class="video-title" itemprop="headline">{video.title}</h1> {/* headline untuk WebPage/Article */}
 <script type="text/javascript" src="https://js.juicyads.com/jp.php?c=947403z2v256s2x2w2e4z2e4&u=https%3A%2F%2Fwww.juicyads.rocks"></script>
-<!-- JuicyAds PopUnders v3 End -->
-<!-- JuicyAds v3.2P Start -->
 <script type="text/javascript">
 var juicy_tags = ['a', 'img'];
 </script>
 <script type="text/javascript" src="https://js.juicyads.com/jp.php?c=947403z2v256s2x2w2e4z2e4&u=https%3A%2F%2Fwww.juicyads.rocks"></script>
-<!-- JuicyAds v3.2P End -->
-<!-- JuicyAds v3.0 -->
 <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
 <ins id="1055940" data-width="308" data-height="298"></ins>
 <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1055940});</script>
-<!--JuicyAds END-->
+    <p class="video-description" itemprop="articleBody">{video.description}</p> {/* articleBody untuk WebPage/Article */}
 
-    <p class="video-description">{video.description}</p>
+    {/* === PENGGUNAAN displayTags DI SINI === */}
+    {displayTags.length > 0 && (
+      <div class="video-tags-container">
+        <h2>Tags:</h2>
+        <div class="tags-list">
+          {displayTags.map(tag => (
+            <a href={`/cari/${slugify(tag)}`} class="tag-item">{tag}</a>
+          ))}
+        </div>
+      </div>
+    )}
 
-    {/* === PENGGUNAAN displayTags DI SINI === */}
-    {displayTags.length > 0 && (
-      <div class="video-tags-container">
-        <h2>Tags:</h2>
-        <div class="tags-list">
-          {displayTags.map(tag => (
-            <a href={`/cari/${slugify(tag)}`} class="tag-item">{tag}</a>
-          ))}
-        </div>
-      </div>
-    )}
-
-    {relatedVideos.length > 0 && (
-      <section class="related-videos-section">
-<!-- JuicyAds v3.0 -->
+    {relatedVideos.length > 0 && (
+      <section class="related-videos-section">
 <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
 <ins id="1055940" data-width="308" data-height="298"></ins>
 <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1055940});</script>
-<!--JuicyAds END-->
-        <h2 class="section-title">Video Terkait {video.title}</h2>
+        <h2 class="section-title">Video Terkait {video.title}</h2>
 
-        <div class="video-grid">
-          {relatedVideos.map((relatedVideo) => (
-            <VideoCard video={relatedVideo} videoDetailPath={`/${relatedVideo.id}/${slugify(relatedVideo.title)}`} />
-          ))}
-        </div>
-      </section>
-    )}
-  </main>
+        <div class="video-grid">
+          {relatedVideos.map((relatedVideo) => (
+            <VideoCard video={relatedVideo} videoDetailPath={`/${relatedVideo.id}/${slugify(relatedVideo.title)}`} />
+          ))}
+        </div>
+      </section>
+    )}
+  </main>
+  </div> {/* Tutup div itemscope WebPage */}
 </Layout>
