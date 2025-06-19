@@ -7,5 +7,8 @@ export default defineConfig({
   output: 'server',
   adapter: cloudflare(),
   site: 'https://bokeporgasme.pages.dev',
-  integrations: [sitemap()],
+  integrations: [sitemap({
+    changefreq: 'monthly',
+    priority: 1,
+    })],
 });
