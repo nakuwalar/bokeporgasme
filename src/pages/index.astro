@@ -14,7 +14,7 @@ const allVideos: VideoData[] = await getAllVideos(); // Gunakan type VideoData
 
 // --- LOGIKA UNTUK 10 VIDEO TERBARU SECARA KESELURUHAN ---
 // Asumsi: video terbaru adalah 10 video terakhir yang ditambahkan ke JSON (baris terakhir)
-const numberOfLatestVideos = 10;
+const numberOfLatestVideos = 15;
 const latestVideos = allVideos.slice(-numberOfLatestVideos).reverse(); // Ambil 10 terakhir dan reverse agar terbaru di depan
 
 // Kelompokkan video berdasarkan category dan batasi hingga 10 per category
@@ -26,7 +26,7 @@ allVideos.forEach(video => {
   }
   // Hanya tambahkan jika jumlah video untuk category tersebut belum mencapai 10
   // Asumsi: allVideos sudah unik berdasarkan ID, jadi tidak perlu isVideoAlreadyAdded check
-  if (videosByCategory[video.category].length < 10) {
+  if (videosByCategory[video.category].length < 15) {
     videosByCategory[video.category].push(video);
   }
 });
@@ -140,7 +140,7 @@ const { siteName } = Astro.props;
               )}
             </div>
             {/* Tampilkan tombol "Lihat Semua" jika ada lebih dari 10 video di kategori tersebut */}
-            {allVideos.filter(v => v.category === categoryName).length > 10 && (
+            {allVideos.filter(v => v.category === categoryName).length > 15 && (
               <div class="view-all-button-container">
                 {/* Penting: arahkan ke halaman 1 paginasi kategori */}
                 <a href={`/category/${slugify(categoryName)}/1`} class="view-all-button">Lihat Semua di kategori {categoryName}</a>
