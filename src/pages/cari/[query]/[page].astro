@@ -116,7 +116,7 @@ const breadcrumbs = [
               <a itemprop="item" href={item.url}>
                 <span itemprop="name">{item.name}</span>
               </a>
-            )
+            ): (<span itemprop="name">{item.name}</span>
             )}
             <meta itemprop="position" content={(index + 1).toString()} />
           </li>
