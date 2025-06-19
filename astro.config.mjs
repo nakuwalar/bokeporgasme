@@ -4,6 +4,7 @@ import sitemap from '@astrojs/sitemap';
 
 
 export default defineConfig({
+  site: 'https://bokeporgasme.pages.dev',
   output: 'server',
   adapter: cloudflare(),
   integrations: [sitemap({
