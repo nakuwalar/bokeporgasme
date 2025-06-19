@@ -6,7 +6,7 @@ import csv from 'csv-parser';
 import { slugify } from '../../utils/slugify';
 import { findRelatedVideos } from '../../utils/relatedVideos';
 import VideoCard from '../../components/VideoCard.astro';
-
+export const prerender = true;
 interface VideoData {
   id: string;
   title: string;
