@@ -102,7 +102,7 @@ const breadcrumbs = [
 ---
 
 <Layout
-  title={`Hasil Pencarian untuk "${JSON.stringify(searchWords)}" - Halaman ${currentPage}`}
+  title={`Hasil Pencarian untuk "${searchWords}" - Halaman ${currentPage}`}
   description={`Video yang cocok dengan kata kunci: ${originalQuery}. Halaman ${currentPage}.`}
   preconnectDomains={preconnectDomains}
 >
@@ -125,7 +125,7 @@ const breadcrumbs = [
       </ol>
     </nav>
 
-    <h1 class="search-results-title">{`Hasil Pencarian untuk: "${originalQuery}"`} <span class="page-info">(Halaman {currentPage} dari {totalPages})</span></h1>
+    <h1 class="search-results-title">{`Hasil Pencarian untuk: "${query}"`} <span class="page-info">(Halaman {currentPage} dari {totalPages})</span></h1>
 
     {originalQuery === '' ? (
       <p class="no-results-message">
