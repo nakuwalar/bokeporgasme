@@ -9,7 +9,9 @@ export interface Props {
 const {
   title,
   description,
-  preconnectDomains = []
+  preconnectDomains = [],
+  siteName = 'BokepOrgasme',
+  siteUrl = 'https://bokeporgasme.pages.dev'
   } = Astro.props;
 
 const ogImageFullUrl = new URL('/og-image.jpg', url).href;
@@ -46,7 +48,7 @@ const ogImageFullUrl = new URL('/og-image.jpg', url).href;
   <body>
     <header>
       <nav class="main-nav">
-        <a href="/" class="logo">{nama}</a>
+        <a href="/" class="logo">{siteName}</a>
         <form action="/cari/" method="get" class="search-form">
           <input type="search" name="query" placeholder="Cari video..." required />
           <button type="submit">Cari</button>
@@ -61,7 +63,7 @@ const ogImageFullUrl = new URL('/og-image.jpg', url).href;
     <slot />
 
     <footer>
-      <p>&copy; {new Date().getFullYear()} <a href={url}>{nama}</a>. All rights reserved.</p>
+      <p>&copy; {new Date().getFullYear()} <a href={siteUrl}>{siteName}</a>. All rights reserved.</p>
     </footer>
   </body>
 </html>
