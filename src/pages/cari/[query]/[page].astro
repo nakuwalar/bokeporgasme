@@ -1,20 +1,16 @@
 ---
 // src/pages/cari/[query]/[page].astro
-import Layout from '../../../layouts/BaseLayout.astro'; // Path relatif berubah!
-import VideoCard from '../../../components/VideoCard.astro'; // Path relatif berubah!
-import { getAllVideos, type VideoData } from '../../../utils/data'; // Path relatif berubah!
+import Layout from '../../../layouts/BaseLayout.astro';
+import VideoCard from '../../../components/VideoCard.astro';
+import { getAllVideos, type VideoData } from '../../../utils/data';
 import { slugify } from '../../../utils/slugify';
-import Paginasi from '../../../components/Paginasi.astro'; // Kita akan buat komponen ini
+// import Paginasi from '../../../components/Paginasi.astro'; // Hapus import ini
 
-export async function getStaticPaths() {
-  // Karena ini SSR on-demand, kita tidak perlu menentukan paths di sini.
-  // Astro akan membuat path ini saat runtime berdasarkan permintaan URL.
-  return [];
-}
+// export async function getStaticPaths() { return []; } // Pertahankan ini untuk SSR on-demand, jangan prerender
 
 const { query, page } = Astro.params;
 const currentPage = page ? parseInt(page) : 1; // Ambil nomor halaman dari URL, default ke 1
-const videosPerPage = 12; // Anda bisa atur berapa video per halaman
+const videosPerPage = 12; // Sesuaikan jumlah video per halaman
 
 const originalQuery = query ? decodeURIComponent(query) : '';
 const normalizedQuery = originalQuery.toLowerCase().trim().replace(/-/g, ' ');
@@ -108,7 +104,7 @@ const breadcrumbs = [
       </ol>
     </nav>
 
-    <h1 class="search-results-title">Hasil Pencarian untuk: "{originalQuery}"</h1>
+    <h1 class="search-results-title">{`Hasil Pencarian untuk: "${originalQuery}"`} <span class="page-info">(Halaman {currentPage} dari {totalPages})</span></h1>
 
     {paginatedResults.length === 0 ? (
       <p class="no-videos-found">
@@ -122,13 +118,67 @@ const breadcrumbs = [
       </div>
     )}
 
-    {/* --- Komponen Paginasi --- */}
-    {searchResults.length > videosPerPage && ( // Hanya tampilkan paginasi jika ada lebih dari 1 halaman
-      <Paginasi
-        currentPage={currentPage}
-        totalPages={totalPages}
-        basePath={`/cari/${query}`} // Contoh: /cari/bokep-jepang
-      />
+    {/* --- Paginasi Langsung di Dalam Halaman --- */}
+    {totalPages > 1 && (
+      <nav class="pagination" aria-label="Navigasi Halaman Pencarian">
+        {currentPage > 1 && (
+          <a href={`/cari/${query}/${currentPage - 1}`} class="pagination-link">&laquo; Sebelumnya</a>
+        )}
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNumber => (
+          <a
+            href={`/cari/${query}/${pageNumber}`}
+            class={`pagination-link ${pageNumber === currentPage ? 'active' : ''}`}
+          >
+            {pageNumber}
+          </a>
+        ))}
+        {currentPage < totalPages && (
+          <a href={`/cari/${query}/${currentPage + 1}`} class="pagination-link">Berikutnya &raquo;</a>
+        )}
+      </nav>
     )}
   </main>
 </Layout>
+
+<style>
+  /* Tambahkan style ini ke file CSS global Anda (atau di sini, tapi global lebih baik) */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    gap: 8px; /* Jarak antar link */
+    flex-wrap: wrap; /* Pastikan responsif */
+  }
+
+  .pagination-link {
+    display: block;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #007bff;
+    background-color: #fff;
+    transition: all 0.2s ease-in-out;
+    min-width: 40px;
+    text-align: center;
+  }
+
+  .pagination-link:hover:not(.active) {
+    background-color: #e9ecef;
+    border-color: #007bff;
+  }
+
+  .pagination-link.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    cursor: default; /* Tidak bisa diklik jika aktif */
+  }
+
+  .page-info {
+    font-size: 0.8em;
+    color: #666;
+    margin-left: 10px;
+  }
+</style>
