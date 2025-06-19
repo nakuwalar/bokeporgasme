@@ -7,7 +7,6 @@ import { getAllVideos, type VideoData } from '../../utils/data.ts';
 import { slugify } from '../../utils/slugify.ts';
 import { nama, desk, url } from '../../utils/site.ts'; // Opsional, jika digunakan untuk meta
 
-export const prerender = true; // Penting: Halaman ini harus di-prerender agar bisa diindeks
 
 // Ambil semua tags unik saat build time
 const allVideos: VideoData[] = await getAllVideos();
