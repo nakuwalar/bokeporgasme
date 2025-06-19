@@ -26,7 +26,7 @@ allVideos.forEach(video => {
   }
   // Hanya tambahkan jika jumlah video untuk category tersebut belum mencapai 10
   // Asumsi: allVideos sudah unik berdasarkan ID, jadi tidak perlu isVideoAlreadyAdded check
-  if (videosByCategory[video.category].length < 10) {
+  if (videosByCategory[video.category].length < 15) {
     videosByCategory[video.category].push(video);
   }
 });
@@ -83,24 +83,6 @@ const { siteName } = Astro.props;
   preconnectDomains={preconnectDomains}
 >
   <main class="home-page">
-    <nav class="breadcrumb" aria-label="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
-      <ol>
-        {breadcrumbs.map((item, index) => (
-          <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-            {index > 0 && <span class="separator">/</span>}
-            {item.url ? (
-              <a itemprop="item" href={item.url}>
-                <span itemprop="name">{item.name}</span>
-              </a>
-            ) : (
-              <span itemprop="name">{item.name}</span>
-            )}
-            <meta itemprop="position" content={(index + 1).toString()} />
-          </li>
-        ))}
-      </ol>
-    </nav>
-
     <section class="hero-section">
       <h1>Selamat Datang di {nama}!</h1>
       <p>Video bokep indonesia mulai bokep bocil sampai ngentot tante. Tonton sekarang juga!</p>
