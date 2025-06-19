@@ -35,12 +35,19 @@ for (const v of sameCategoryVideos) {
   }
 }
 
-if (relatedVideos.length < numberOfRelatedVideos && video.tags && video.tags.length > 0) {
-  const videoTagsSet = new Set(video.tags.map(tag => tag.toLowerCase())); // Use a different name to avoid conflict
+// === MODIFIKASI UNTUK TAGS DI SINI ===
+// Konversi string tags menjadi array untuk logika pencarian terkait
+// Asumsi video.tags adalah string seperti "tag1, tag2"
+const videoTagsForSearch = typeof video.tags === 'string'
+    ? video.tags.split(',').map(tag => tag.trim().toLowerCase())
+    : [];
+
+if (relatedVideos.length < numberOfRelatedVideos && videoTagsForSearch.length > 0) {
   const tagMatchedVideos = allVideos.filter(v =>
     v.id !== video.id &&
     !relatedVideos.some(rv => rv.id === v.id) &&
-    v.tags && v.tags.some(tag => videoTagsSet.has(tag.toLowerCase()))
+    // Pastikan tags video lain juga string dan pecah dulu
+    typeof v.tags === 'string' && v.tags.split(',').map(tag => tag.trim().toLowerCase()).some(tag => videoTagsForSearch.includes(tag))
   );
 
   for (const v of tagMatchedVideos) {
@@ -52,6 +59,7 @@ if (relatedVideos.length < numberOfRelatedVideos && video.tags && video.tags.len
   }
 }
 
+// Strategi 3: Jika masih kurang, ambil acak dari semua video (fallback)
 if (relatedVideos.length < numberOfRelatedVideos) {
   const remainingSlots = numberOfRelatedVideos - relatedVideos.length;
   const otherVideos = allVideos.filter(v =>
@@ -63,6 +71,7 @@ if (relatedVideos.length < numberOfRelatedVideos) {
 }
 
 relatedVideos.sort(() => 0.5 - Math.random());
+
 
 // Mendapatkan domain unik dari URL thumbnail dan embedUrl untuk preconnect
 const allDomains = new Set<string>();
@@ -89,9 +98,11 @@ const breadcrumbs = [
   { name: video.title, url: `/${video.id}/${slugify(video.title)}` },
 ];
 
-// === NEW === Define videoTags here
-// Ensure video.tags exists and is an array, then filter out empty tags
-const currentVideoTags = Array.isArray(video.tags) ? video.tags.filter(tag => tag && typeof tag === 'string') : [];
+// === MODIFIKASI UTAMA DI SINI ===
+// Konversi string video.tags menjadi array untuk ditampilkan
+const displayTags = typeof video.tags === 'string'
+    ? video.tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0)
+    : [];
 
 ---
 
@@ -137,12 +148,12 @@ const currentVideoTags = Array.isArray(video.tags) ? video.tags.filter(tag => ta
 
     <p class="video-description">{video.description}</p>
 
-    {/* === NEW/FIXED === Tags Section */}
-    {currentVideoTags.length > 0 && (
+    {/* === PENGGUNAAN displayTags DI SINI === */}
+    {displayTags.length > 0 && (
       <div class="video-tags-container">
         <h2>Tags:</h2>
         <div class="tags-list">
-          {currentVideoTags.map(tag => (
+          {displayTags.map(tag => (
             <a href={`/cari/${slugify(tag)}`} class="tag-item">{tag}</a>
           ))}
         </div>
