@@ -21,13 +21,24 @@ async function getAllVideos(): Promise<VideoData[]> {
   const results: VideoData[] = [];
   const csvFilePath = path.resolve(process.cwd(), 'src/data/videos.csv');
 
+  // --- LOGGING ---
+  console.log(`[CARI PAGE] Memulai getAllVideos. Mencoba membaca dari: ${csvFilePath}`);
+  // --- END LOGGING ---
+
   return new Promise((resolve, reject) => {
     fs.createReadStream(csvFilePath)
       .pipe(csv({ separator: ';' }))
       .on('data', (data: VideoData) => results.push(data))
-      .on('end', () => resolve(results))
+      .on('end', () => {
+        // --- LOGGING ---
+        console.log(`[CARI PAGE] getAllVideos selesai. Total video ditemukan: ${results.length}`);
+        // --- END LOGGING ---
+        resolve(results);
+      })
       .on('error', (error) => {
-        console.error("Error reading CSV for search:", error);
+        // --- LOGGING ---
+        console.error("[CARI PAGE ERROR] Gagal membaca file CSV di getAllVideos:", error);
+        // --- END LOGGING ---
         reject(error);
       });
   });
@@ -35,18 +46,15 @@ async function getAllVideos(): Promise<VideoData[]> {
 
 // getStaticPaths untuk rute dinamis pencarian
 export async function getStaticPaths() {
-  // Dalam kasus pencarian, kita tidak bisa menghasilkan semua kemungkinan kueri
-  // secara statis karena itu tidak terbatas. Astro akan jatuh kembali ke
-  // SSR (Server-Side Rendering) untuk rute dinamis yang tidak cocok dengan path statis.
-  // Oleh karena itu, kita tidak perlu mengembalikan path di sini untuk pencarian dinamis.
-  // Astro akan membiarkan kita mengakses params.query pada waktu build (jika ingin pre-render)
-  // atau pada waktu permintaan (default jika tidak ada paths).
-
-  // Untuk memastikan bahwa tidak ada halaman hasil pencarian yang pre-rendered
-  // dengan konten kosong (yang buruk untuk SEO), kita bisa mengembalikan array kosong.
-  return [];
+  // --- LOGGING ---
+  console.log("[CARI PAGE] getStaticPaths dipanggil (ini hanya dipanggil saat build, bukan saat runtime SSR).");
+  // --- END LOGGING ---
+  return []; // Ini yang menyebabkan SSR
 }
 
+// --- LOGGING ---
+console.log(`[CARI PAGE] Astro.params.query: "${Astro.params.query}"`);
+// --- END LOGGING ---
 
 const { query } = Astro.params; // Dapatkan kueri dari URL
 
@@ -54,11 +62,20 @@ const { query } = Astro.params; // Dapatkan kueri dari URL
 const decodedQuery = decodeURIComponent(query || '').replace(/-/g, ' '); // Ganti hyphen dengan spasi
 const normalizedQuery = decodedQuery.toLowerCase().trim();
 
+// --- LOGGING ---
+console.log(`[CARI PAGE] Kueri asli dari URL: "${query}"`);
+console.log(`[CARI PAGE] Kueri yang didekode & dinormalisasi: "${normalizedQuery}"`);
+// --- END LOGGING ---
+
 let searchResults: VideoData[] = [];
 let allVideos: VideoData[] = [];
 
 try {
   allVideos = await getAllVideos();
+
+  // --- LOGGING ---
+  console.log(`[CARI PAGE] Jumlah semua video yang dibaca: ${allVideos.length}`);
+  // --- END LOGGING ---
 
   if (normalizedQuery) {
     searchResults = allVideos.filter(video =>
@@ -67,8 +84,17 @@ try {
       video.category.toLowerCase().includes(normalizedQuery)
     );
   }
+
+  // --- LOGGING ---
+  console.log(`[CARI PAGE] Jumlah hasil pencarian untuk "${normalizedQuery}": ${searchResults.length}`);
+  if (searchResults.length > 0) {
+    console.log("[CARI PAGE] Contoh hasil pertama:", searchResults[0].title);
+    console.log("[CARI PAGE] Detail hasil pertama:", searchResults[0]); // Lihat semua data video pertama
+  }
+  // --- END LOGGING ---
+
 } catch (e) {
-  console.error("Failed to perform search:", e);
+  console.error("[CARI PAGE ERROR] Gagal melakukan pencarian di blok try/catch utama:", e);
   // Tangani error, mungkin tampilkan pesan di UI
 }
 
@@ -128,7 +154,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href; // URL kanoni
       )}
       <p>Ditemukan {searchResults.length} video.</p>
       {/* Formulir pencarian duplikat (opsional) untuk kemudahan di halaman hasil */}
-      <form action="/cari/" method="get" class="search-form-page">
+      <form action="/cari/" method="get" class="search-form-page" id="searchFormPage">
         <input
           type="text"
           name="q"
@@ -154,6 +180,37 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href; // URL kanoni
     </section>
   </main>
 </Layout>
+
+<script is:inline>
+  // Script untuk formulir pencarian di halaman hasil (mirip dengan di layout utama)
+  const searchFormPage = document.getElementById('searchFormPage');
+  if (searchFormPage) {
+    searchFormPage.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const input = searchFormPage.querySelector('input[name="q"]');
+      const query = input ? input.value.trim() : '';
+
+      function slugify(text) {
+        return text
+          .toString()
+          .toLowerCase()
+          .trim()
+          .replace(/\s+/g, '-')
+          .replace(/[^\w-]+/g, '')
+          .replace(/--+/g, '-')
+          .replace(/^-+/, '')
+          .replace(/-+$/, '');
+      }
+
+      if (query) {
+        const searchSlug = slugify(query);
+        window.location.href = `/cari/${searchSlug}`;
+      } else {
+        window.location.href = '/cari/';
+      }
+    });
+  }
+</script>
 
 <style>
   .search-page {
