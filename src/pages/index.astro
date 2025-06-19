@@ -10,11 +10,12 @@ export const prerender = true;
 
 // Ambil semua video dari fungsi utilitas yang diimpor
 // Ini akan berjalan di server pada waktu build.
-const allVideos = await getAllVideos();
+const allVideos: VideoData[] = await getAllVideos(); // Gunakan type VideoData
 
 // --- LOGIKA UNTUK 10 VIDEO TERBARU SECARA KESELURUHAN ---
-// Asumsi: video terbaru adalah 10 video terakhir yang ditambahkan ke CSV (baris terakhir)
-const latestVideos = allVideos.slice(-10).reverse(); // Ambil 10 terakhir dan reverse agar terbaru di depan
+// Asumsi: video terbaru adalah 10 video terakhir yang ditambahkan ke JSON (baris terakhir)
+const numberOfLatestVideos = 10;
+const latestVideos = allVideos.slice(-numberOfLatestVideos).reverse(); // Ambil 10 terakhir dan reverse agar terbaru di depan
 
 // Kelompokkan video berdasarkan category dan batasi hingga 10 per category
 const videosByCategory: { [key: string]: VideoData[] } = {};
@@ -24,9 +25,8 @@ allVideos.forEach(video => {
     videosByCategory[video.category] = [];
   }
   // Hanya tambahkan jika jumlah video untuk category tersebut belum mencapai 10
-  // dan pastikan tidak ada duplikasi jika allVideos berisi duplikasi (berdasarkan ID)
-  const isVideoAlreadyAdded = videosByCategory[video.category].some(v => v.id === video.id);
-  if (videosByCategory[video.category].length < 10 && !isVideoAlreadyAdded) {
+  // Asumsi: allVideos sudah unik berdasarkan ID, jadi tidak perlu isVideoAlreadyAdded check
+  if (videosByCategory[video.category].length < 10) {
     videosByCategory[video.category].push(video);
   }
 });
@@ -34,34 +34,51 @@ allVideos.forEach(video => {
 // Urutkan category secara alfabetis untuk tampilan yang konsisten
 const sortedCategories = Object.keys(videosByCategory).sort();
 
-// Mendapatkan domain unik dari URL thumbnail dan video untuk preconnect
+// Mendapatkan domain unik dari URL thumbnail dan embedUrl untuk preconnect
 const allDomains = new Set<string>();
+
+// Periksa latestVideos
 latestVideos.forEach(video => {
   try {
-    allDomains.add(new URL(video.thumbnail).origin);
-    allDomains.add(new URL(video.videoUrl).origin);
+    if (video.thumbnail) {
+      allDomains.add(new URL(video.thumbnail).origin);
+    }
+    if (video.embedUrl) { // <-- PERBAIKAN: Gunakan embedUrl
+      allDomains.add(new URL(video.embedUrl).origin); // <-- PERBAIKAN: Gunakan embedUrl
+    }
   } catch (e) {
-    console.error(`[ERROR] URL thumbnail/video tidak valid di CSV untuk video ID ${video.id} (latestVideos):`, e);
+    console.error(`[ERROR] URL thumbnail/video tidak valid untuk video ID ${video.id} (latestVideos):`, e);
   }
 });
+
+// Periksa videosByCategory
 Object.values(videosByCategory).flat().forEach(video => {
   try {
-    allDomains.add(new URL(video.thumbnail).origin);
-    allDomains.add(new URL(video.videoUrl).origin);
+    if (video.thumbnail) {
+      allDomains.add(new URL(video.thumbnail).origin);
+    }
+    if (video.embedUrl) { // <-- PERBAIKAN: Gunakan embedUrl
+      allDomains.add(new URL(video.embedUrl).origin); // <-- PERBAIKAN: Gunakan embedUrl
+    }
   } catch (e) {
-    console.error(`[ERROR] URL thumbnail/video tidak valid di CSV untuk video ID ${video.id} (videosByCategory):`, e);
+    console.error(`[ERROR] URL thumbnail/video tidak valid untuk video ID ${video.id} (videosByCategory):`, e);
   }
 });
+
 const preconnectDomains = Array.from(allDomains);
 
 // Breadcrumb data untuk halaman utama
 const breadcrumbs = [
   { name: 'Home', url: '/' },
 ];
+
+// Dapatkan siteName dari Astro.props, yang akan diisi oleh BaseLayout
+// Jika BaseLayout tidak meneruskannya, akan menggunakan nilai default dari BaseLayout
+const { siteName } = Astro.props;
 ---
 
 <Layout
-  title="{siteName} - Video Bokep Indo Terbaru"
+  title={`${siteName} - Video Bokep Indo Terbaru`} {/* PERBAIKAN DI SINI */}
   description="Temukan berbagai video bokep indonesia mulai bokep bocil sampai ngentot tante!"
   preconnectDomains={preconnectDomains}
 >
