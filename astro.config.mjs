@@ -7,7 +7,7 @@ export default defineConfig({
   output: 'server',
   adapter: cloudflare(),
   integrations: [sitemap({
-    changefreq: 'monthly',
+    changefreq: 'daily',
     priority: 1,
     })],
 });
