@@ -1,7 +1,7 @@
 ---
 // src/pages/cari/[query]/[page].astro
 // Halaman Pencarian Utama dengan Paginasi Berbasis Path Parameter
-
+import { nama, desk, url } from '../utils/site.ts';
 import Layout from '../../../layouts/BaseLayout.astro';
 import VideoCard from '../../../components/VideoCard.astro';
 import { getAllVideos, type VideoData } from '../../../utils/data.ts';
@@ -102,8 +102,8 @@ const breadcrumbs = [
 ---
 
 <Layout
-  title={`Hasil Pencarian untuk "${searchWords}" - Halaman ${currentPage}`}
-  description={`Video yang cocok dengan kata kunci: ${originalQuery}. Halaman ${currentPage}.`}
+  title={`${searchWords} Cari ${nama}`}
+  description={`Nonton Streaming Bokep Terbaru ${originalQuery}. Halaman ${currentPage}.`}
   preconnectDomains={preconnectDomains}
 >
   <main class="search-page">
@@ -116,8 +116,7 @@ const breadcrumbs = [
               <a itemprop="item" href={item.url}>
                 <span itemprop="name">{item.name}</span>
               </a>
-            ) : (
-              <span itemprop="name">{item.name}</span>
+            )
             )}
             <meta itemprop="position" content={(index + 1).toString()} />
           </li>
@@ -125,7 +124,7 @@ const breadcrumbs = [
       </ol>
     </nav>
 
-    <h1 class="search-results-title">{`Hasil Pencarian untuk: "${searchWords}"`} <span class="page-info">(Halaman {currentPage} dari {totalPages})</span></h1>
+    <h1 class="search-results-title">{`${searchWords} Cari ${nama}`} <span class="page-info">(Halaman {currentPage} dari {totalPages})</span></h1>
 
     {originalQuery === '' ? (
       <p class="no-results-message">
