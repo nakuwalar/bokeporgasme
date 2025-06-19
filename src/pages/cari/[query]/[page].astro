@@ -20,15 +20,19 @@ const currentPage = page ? parseInt(page) : 1;
 const videosPerPage = 30; // Sesuaikan jumlah video per halaman
 
 // --- MODIFIKASI KUNCI DI SINI ---
-// Buat beberapa variasi kueri untuk pencarian yang lebih fleksibel
-const normalizedQuerySpace = originalQuery.toLowerCase().trim().replace(/-/g, ' '); // "keyword satu"
-const normalizedQueryHyphen = originalQuery.toLowerCase().trim().replace(/ /g, '-'); // "keyword-satu"
-const normalizedQueryRaw = originalQuery.toLowerCase().trim(); // "keyword-satu" (jika asli ada hyphen) atau "keyword satu" (jika asli ada spasi)
+// 1. Ambil kueri mentah dan pastikan lowercase & trim
+const searchInput = originalQuery.toLowerCase().trim();
+
+// 2. Buat array kata-kata dari kueri, tangani spasi dan hyphen
+//    Misal: "keyword-satu" -> ["keyword", "satu"]
+//    Misal: "keyword satu" -> ["keyword", "satu"]
+const searchWords = searchInput
+    .replace(/-/g, ' ') // Ganti hyphen dengan spasi
+    .split(/\s+/)      // Pisahkan berdasarkan satu atau lebih spasi
+    .filter(word => word.length > 0); // Hapus kata kosong
 
 console.log(`[CARI PAGE] Kueri asli dari URL: "${originalQuery}"`);
-console.log(`[CARI PAGE] Kueri dinormalisasi (spasi): "${normalizedQuerySpace}"`);
-console.log(`[CARI PAGE] Kueri dinormalisasi (hyphen): "${normalizedQueryHyphen}"`);
-console.log(`[CARI PAGE] Kueri dinormalisasi (raw): "${normalizedQueryRaw}"`);
+console.log(`[CARI PAGE] Kata-kata pencarian terurai: ${JSON.stringify(searchWords)}`);
 console.log(`[CARI PAGE] Halaman saat ini: ${currentPage}`);
 
 let searchResults: VideoData[] = [];
@@ -37,33 +41,20 @@ let totalPages = 1;
 let paginatedResults: VideoData[] = [];
 
 // Hanya lakukan pencarian jika ada query (query path parameter selalu ada)
-if (normalizedQueryRaw) { // Gunakan raw query untuk cek keberadaan
+if (searchWords.length > 0) {
   try {
     const allVideos: VideoData[] = await getAllVideos();
 
     searchResults = allVideos.filter(video => {
-      const videoTitleLower = video.title.toLowerCase();
-      const videoDescriptionLower = video.description.toLowerCase();
-      const videoCategoryLower = typeof video.category === 'string' ? video.category.toLowerCase() : '';
-      const videoTagsLower = typeof video.tags === 'string' ? video.tags.toLowerCase() : '';
+      const videoContent = [
+        video.title.toLowerCase(),
+        video.description.toLowerCase(),
+        typeof video.category === 'string' ? video.category.toLowerCase() : '',
+        typeof video.tags === 'string' ? video.tags.toLowerCase() : ''
+      ].join(' '); // Gabungkan semua konten yang dapat dicari menjadi satu string besar
 
-      // Coba cocokkan dengan semua variasi kueri
-      return (
-        videoTitleLower.includes(normalizedQuerySpace) ||
-        videoDescriptionLower.includes(normalizedQuerySpace) ||
-        videoCategoryLower.includes(normalizedQuerySpace) ||
-        videoTagsLower.includes(normalizedQuerySpace) ||
-
-        videoTitleLower.includes(normalizedQueryHyphen) ||
-        videoDescriptionLower.includes(normalizedQueryHyphen) ||
-        videoCategoryLower.includes(normalizedQueryHyphen) ||
-        videoTagsLower.includes(normalizedQueryHyphen) ||
-
-        videoTitleLower.includes(normalizedQueryRaw) ||
-        videoDescriptionLower.includes(normalizedQueryRaw) ||
-        videoCategoryLower.includes(normalizedQueryRaw) ||
-        videoTagsLower.includes(normalizedQueryRaw)
-      );
+      // Cek apakah SEMUA kata dari searchWords ada di videoContent
+      return searchWords.every(word => videoContent.includes(word));
     });
 
     searchResults.sort((a, b) => a.title.localeCompare(b.title));
