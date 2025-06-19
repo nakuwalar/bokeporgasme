@@ -6,7 +6,7 @@ import Layout from '../../layouts/BaseLayout.astro';
 import { getAllVideos, type VideoData } from '../../utils/data.ts';
 import { slugify } from '../../utils/slugify.ts';
 import { nama, desk, url } from '../../utils/site.ts'; // Opsional, jika digunakan untuk meta
-
+export const prerender = true;
 
 // Ambil semua tags unik saat build time
 const allVideos: VideoData[] = await getAllVideos();
