@@ -1,0 +1,217 @@
+---
+// src/pages/cari/[query]/[page].astro
+// Halaman Pencarian Utama dengan Paginasi Berbasis Path Parameter
+
+import Layout from '../../../../layouts/BaseLayout.astro'; // Perbaiki path relatif
+import VideoCard from '../../../../components/VideoCard.astro'; // Perbaiki path relatif
+import { getAllVideos, type VideoData } from '../../../../utils/data'; // Perbaiki path relatif
+import { slugify } from '../../../../utils/slugify';
+
+// getStaticPaths ini diperlukan untuk memberitahu Astro bahwa ini adalah rute dinamis.
+// Tetap kosong untuk SSR on-demand, agar tidak di-prerender.
+// Ini penting karena Anda tidak bisa memprediksi semua kueri pencarian saat build time.
+export async function getStaticPaths() {
+  return [];
+}
+
+const { query, page } = Astro.params; // Sekarang kita punya 'query' DAN 'page' sebagai parameter terpisah
+const originalQuery = query ? decodeURIComponent(query) : '';
+const currentPage = page ? parseInt(page) : 1;
+const videosPerPage = 12; // Sesuaikan jumlah video per halaman
+
+const normalizedQuery = originalQuery.toLowerCase().trim().replace(/-/g, ' ');
+
+console.log(`[CARI PAGE] Kueri asli dari URL: "${originalQuery}"`);
+console.log(`[CARI PAGE] Kueri yang dinormalisasi: "${normalizedQuery}"`);
+console.log(`[CARI PAGE] Halaman saat ini: ${currentPage}`);
+
+let searchResults: VideoData[] = [];
+let preconnectDomains: string[] = [];
+let totalPages = 1;
+let paginatedResults: VideoData[] = [];
+
+// Hanya lakukan pencarian jika ada query (query path parameter selalu ada)
+if (normalizedQuery) {
+  try {
+    const allVideos: VideoData[] = await getAllVideos();
+
+    searchResults = allVideos.filter(video =>
+      video.title.toLowerCase().includes(normalizedQuery) ||
+      video.description.toLowerCase().includes(normalizedQuery) ||
+      (typeof video.category === 'string' && video.category.toLowerCase().includes(normalizedQuery)) ||
+      (typeof video.tags === 'string' && video.tags.toLowerCase().includes(normalizedQuery))
+    );
+
+    searchResults.sort((a, b) => a.title.localeCompare(b.title));
+
+    totalPages = Math.ceil(searchResults.length / videosPerPage);
+    const validCurrentPage = Math.max(1, Math.min(currentPage, totalPages)); // Pastikan halaman valid
+
+    const startIndex = (validCurrentPage - 1) * videosPerPage;
+    const endIndex = startIndex + videosPerPage;
+    paginatedResults = searchResults.slice(startIndex, endIndex);
+
+    console.log(`[CARI PAGE] Jumlah total hasil: ${searchResults.length}`);
+    console.log(`[CARI PAGE] Total halaman: ${totalPages}`);
+    console.log(`[CARI PAGE] Hasil paginasi di halaman ${validCurrentPage}: ${paginatedResults.length} video`);
+
+
+    if (paginatedResults.length > 0) {
+      const domainsSet = new Set<string>();
+      paginatedResults.forEach(video => {
+        try {
+          if (video.thumbnail) domainsSet.add(new URL(video.thumbnail).origin);
+          if (video.embedUrl) domainsSet.add(new URL(video.embedUrl).origin);
+        } catch (e) {
+          console.error(`[ERROR] URL tidak valid di JSON untuk video ID ${video.id} (pencarian paginasi):`, e);
+        }
+      });
+      preconnectDomains = Array.from(domainsSet);
+    }
+
+  } catch (error) {
+    console.error('[CARI PAGE ERROR] Gagal melakukan pencarian:', error);
+    searchResults = [];
+    paginatedResults = []; // Pastikan ini juga kosong jika ada error
+  }
+}
+
+// URL dasar untuk paginasi (tanpa nomor halaman)
+const baseSearchUrl = `/cari/${originalQuery}`;
+
+const breadcrumbs = [
+  { name: 'Beranda', url: '/' },
+  { name: `Cari: ${originalQuery}`, url: `${baseSearchUrl}/1` }, // Link ke halaman 1
+  { name: `Halaman ${currentPage}`, url: `${baseSearchUrl}/${currentPage}` },
+];
+---
+
+<Layout
+  title={`Hasil Pencarian untuk "${originalQuery}" - Halaman ${currentPage}`}
+  description={`Video yang cocok dengan kata kunci: ${originalQuery}. Halaman ${currentPage}.`}
+  preconnectDomains={preconnectDomains}
+>
+  <main class="search-page">
+    <nav class="breadcrumb" aria-label="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+      <ol>
+        {breadcrumbs.map((item, index) => (
+          <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            {index > 0 && <span class="separator">/</span>}
+            {item.url ? (
+              <a itemprop="item" href={item.url}>
+                <span itemprop="name">{item.name}</span>
+              </a>
+            ) : (
+              <span itemprop="name">{item.name}</span>
+            )}
+            <meta itemprop="position" content={(index + 1).toString()} />
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <h1 class="search-results-title">{`Hasil Pencarian untuk: "${originalQuery}"`} <span class="page-info">(Halaman {currentPage} dari {totalPages})</span></h1>
+
+    {originalQuery === '' ? (
+      <p class="no-videos-found">
+        Silakan masukkan kata kunci di kolom pencarian di atas untuk memulai pencarian video.
+      </p>
+    ) : paginatedResults.length === 0 ? (
+      <p class="no-videos-found">
+        Maaf, tidak ada video yang cocok dengan pencarian Anda. Coba kata kunci lain.
+      </p>
+    ) : (
+      <div class="video-grid">
+        {paginatedResults.map((video) => (
+          <VideoCard video={video} videoDetailPath={`/${video.id}/${slugify(video.title)}`} />
+        ))}
+      </div>
+    )}
+
+    {/* --- Paginasi Langsung di Dalam Halaman --- */}
+    {totalPages > 1 && (
+      <nav class="pagination" aria-label="Navigasi Halaman Pencarian">
+        {currentPage > 1 && (
+          <a href={`${baseSearchUrl}/${currentPage - 1}`} class="pagination-link">&laquo; Sebelumnya</a>
+        )}
+        {/* Filter halaman untuk menampilkan hanya halaman yang relevan (1, terakhir, dan sekitar halaman saat ini) */}
+        {Array.from({ length: totalPages }, (_, i) => i + 1).filter(p =>
+          p === 1 || p === totalPages || (p >= currentPage - 2 && p <= currentPage + 2)
+        ).map(pageNumber => (
+          <a
+            href={`${baseSearchUrl}/${pageNumber}`}
+            class={`pagination-link ${pageNumber === currentPage ? 'active' : ''}`}
+          >
+            {pageNumber}
+          </a>
+        ))}
+        {/* Tambahkan elipsis jika ada halaman yang diskip (contoh: 1 ... 5 6 [7] 8 9 ... 15) */}
+        {currentPage + 2 < totalPages && <span class="pagination-link ellipsis">...</span>}
+        {currentPage < totalPages && (
+          <a href={`${baseSearchUrl}/${currentPage + 1}`} class="pagination-link">Berikutnya &raquo;</a>
+        )}
+      </nav>
+    )}
+  </main>
+</Layout>
+
+<style>
+  /* Pindahkan style ini ke file CSS global Anda (misalnya src/styles/global.css) jika Anda ingin menggunakannya di seluruh situs. */
+  /* Untuk contoh ini, saya biarkan di sini. */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    gap: 8px; /* Jarak antar link */
+    flex-wrap: wrap; /* Pastikan responsif */
+  }
+
+  .pagination-link {
+    display: block;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #007bff;
+    background-color: #fff;
+    transition: all 0.2s ease-in-out;
+    min-width: 40px;
+    text-align: center;
+  }
+
+  .pagination-link:hover:not(.active) {
+    background-color: #e9ecef;
+    border-color: #007bff;
+  }
+
+  .pagination-link.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    cursor: default; /* Tidak bisa diklik jika aktif */
+  }
+
+  .page-info {
+    font-size: 0.8em;
+    color: #666;
+    margin-left: 10px;
+  }
+
+  .no-videos-found {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    margin: 30px auto;
+    max-width: 600px;
+  }
+  .pagination-link.ellipsis {
+    background-color: transparent;
+    border-color: transparent;
+    color: #6c757d;
+    cursor: default;
+  }
+</style>
