@@ -1,10 +1,10 @@
 ---
-import Layout from '../layouts/BaseLayout.astro';
+import Layout from '../../layouts/BaseLayout.astro';
 import path from 'path';
 import fs from 'fs';
 import csv from 'csv-parser';
-import VideoCard from '../components/VideoCard.astro';
-import { slugify } from '../utils/slugify';
+import VideoCard from '../../components/VideoCard.astro';
+import { slugify } from '../../utils/slugify';
 
 interface VideoData {
   id: string;
