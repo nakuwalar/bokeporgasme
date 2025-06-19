@@ -2,10 +2,10 @@
 // src/pages/cari/[query]/[page].astro
 // Halaman Pencarian Utama dengan Paginasi Berbasis Path Parameter
 
-import Layout from '../../../../layouts/BaseLayout.astro'; // Perbaiki path relatif
-import VideoCard from '../../../../components/VideoCard.astro'; // Perbaiki path relatif
-import { getAllVideos, type VideoData } from '../../../../utils/data.ts'; // Perbaiki path relatif
-import { slugify } from '../../../../utils/slugify.ts';
+import Layout from '../../../layouts/BaseLayout.astro'; // Perbaiki path relatif
+import VideoCard from '../../../components/VideoCard.astro'; // Perbaiki path relatif
+import { getAllVideos, type VideoData } from '../../../utils/data.ts'; // Perbaiki path relatif
+import { slugify } from '../../../utils/slugify.ts';
 
 // getStaticPaths ini diperlukan untuk memberitahu Astro bahwa ini adalah rute dinamis.
 // Tetap kosong untuk SSR on-demand, agar tidak di-prerender.
