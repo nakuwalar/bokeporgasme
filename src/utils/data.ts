@@ -11,10 +11,6 @@ export interface VideoData {
   tags: string; // Tipe data diubah menjadi string
 }
 
-export async function getAllVideos(): Promise<VideoData[]> {
-  console.log(`[getAllVideos] Data video dimuat. Total video: ${videosData.length}`);
-  return videosData as VideoData[];
-}
 // src/utils/data.ts (Contoh, pastikan fungsi ini ada dan benar)
 export async function getAllVideos() {
   const response = await fetch('http://localhost:4321/data/videos.json'); // Sesuaikan URL atau path ke file JSON Anda
@@ -23,7 +19,7 @@ export async function getAllVideos() {
   // const fileContent = await fs.promises.readFile(filePath, 'utf-8');
   // return JSON.parse(fileContent);
   const data = await response.json();
-  return data;
+  return videosData as VideoData[];
 }
 
 // src/utils/slugify.ts (Contoh, pastikan fungsi ini ada dan benar)
