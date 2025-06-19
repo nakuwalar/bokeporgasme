@@ -100,30 +100,19 @@ const actualCategoryName = categoryName || (videos && videos.length > 0 ? videos
     <meta itemprop="mainEntityOfPage" content={Astro.url.href} />
 
     {/* Breadcrumb untuk Halaman Kategori */}
-    <nav class="breadcrumb" aria-label="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
-      <ol>
-        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-          <a itemprop="item" href="/">
-            <span itemprop="name">Beranda</span>
-          </a>
-          <meta itemprop="position" content="1" />
-        </li>
-        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-          <span class="separator">/</span>
-          <a itemprop="item" href={`/category/${category}/1`}>
-            <span itemprop="name">{actualCategoryName}</span>
-          </a>
-          <meta itemprop="position" content="2" />
-        </li>
-        {totalPages > 1 && (
-          <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-            <span class="separator">/</span>
-            <span itemprop="name">Halaman {currentPage}</span>
-            <meta itemprop="position" content="3" />
-          </li>
-        )}
-      </ol>
-    </nav>
+<nav class="breadcrumb" aria-label="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+  <ol>
+    {/* ... */}
+    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+      <span class="separator">/</span>
+      <a itemprop="item" href={`/kategori/${category}/1`}> {/* Changed to /kategori/ */}
+        <span itemprop="name">{actualCategoryName}</span>
+      </a>
+      <meta itemprop="position" content="2" />
+    </li>
+    {/* ... */}
+  </ol>
+</nav>
 
     <section class="category-header">
       <h1 itemprop="about" content={actualCategoryName}>Kategori: {actualCategoryName}</h1>
@@ -144,41 +133,41 @@ const actualCategoryName = categoryName || (videos && videos.length > 0 ? videos
       </div>
 
       {/* Paginasi */}
-      {totalPages > 1 && (
-        <nav class="pagination" aria-label="Halaman Kategori">
-          <ul>
-            <li>
-              <a
-                href={currentPage > 1 ? `/category/${category}/${currentPage - 1}` : '#'}
-                class={`page-link ${currentPage === 1 ? 'disabled' : ''}`}
-                aria-disabled={currentPage === 1}
-              >
-                Sebelumnya
-              </a>
-            </li>
-            {[...Array(totalPages)].map((_, i) => (
-              <li>
-                <a
-                  href={`/category/${category}/${i + 1}`}
-                  class={`page-link ${currentPage === i + 1 ? 'active' : ''}`}
-                  aria-current={currentPage === i + 1 ? 'page' : undefined}
-                >
-                  {i + 1}
-                </a>
-              </li>
-            ))}
-            <li>
-              <a
-                href={currentPage < totalPages ? `/category/${category}/${currentPage + 1}` : '#'}
-                class={`page-link ${currentPage === totalPages ? 'disabled' : ''}`}
-                aria-disabled={currentPage === totalPages}
-              >
-                Berikutnya
-              </a>
-            </li>
-          </ul>
-        </nav>
-      )}
+{totalPages > 1 && (
+  <nav class="pagination" aria-label="Halaman Kategori">
+    <ul>
+      <li>
+        <a
+          href={currentPage > 1 ? `/kategori/<span class="math-inline">\{category\}/</span>{currentPage - 1}` : '#'} {/* Changed to /kategori/ */}
+          class={`page-link ${currentPage === 1 ? 'disabled' : ''}`}
+          aria-disabled={currentPage === 1}
+        >
+          Sebelumnya
+        </a>
+      </li>
+      {[...Array(totalPages)].map((_, i) => (
+        <li>
+          <a
+            href={`/kategori/<span class="math-inline">\{category\}/</span>{i + 1}`} {/* Changed to /kategori/ */}
+            class={`page-link ${currentPage === i + 1 ? 'active' : ''}`}
+            aria-current={currentPage === i + 1 ? 'page' : undefined}
+          >
+            {i + 1}
+          </a>
+        </li>
+      ))}
+      <li>
+        <a
+          href={currentPage < totalPages ? `/kategori/<span class="math-inline">\{category\}/</span>{currentPage + 1}` : '#'} {/* Changed to /kategori/ */}
+          class={`page-link ${currentPage === totalPages ? 'disabled' : ''}`}
+          aria-disabled={currentPage === totalPages}
+        >
+          Berikutnya
+        </a>
+      </li>
+    </ul>
+  </nav>
+)}
     </section>
   </main>
 </Layout>
