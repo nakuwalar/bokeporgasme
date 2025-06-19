@@ -96,14 +96,14 @@ const baseSearchUrl = `/cari/${originalQuery}`;
 
 const breadcrumbs = [
   { name: 'Beranda', url: '/' },
-  { name: `Cari: ${originalQuery}`, url: `${baseSearchUrl}/1` }, // Link ke halaman 1
-  { name: `Halaman ${currentPage}`, url: `${baseSearchUrl}/${currentPage}` },
+  { name: `${originalQuery}`, url: `${baseSearchUrl}/1` }, // Link ke halaman 1
+  { name: `Halaman ${currentPage}` },
 ];
 ---
 
 <Layout
   title={`${searchWords} Cari ${nama}`}
-  description={`Nonton Streaming Bokep Terbaru ${originalQuery}. Halaman ${currentPage}.`}
+  description={`Nonton Streaming Bokep Terbaru ${searchWords}. Halaman ${currentPage}.`}
   preconnectDomains={preconnectDomains}
 >
   <main class="search-page">
@@ -116,7 +116,8 @@ const breadcrumbs = [
               <a itemprop="item" href={item.url}>
                 <span itemprop="name">{item.name}</span>
               </a>
-            ): (<span itemprop="name">{item.name}</span>
+            ) : (
+              <span itemprop="name">{item.name}</span>
             )}
             <meta itemprop="position" content={(index + 1).toString()} />
           </li>
