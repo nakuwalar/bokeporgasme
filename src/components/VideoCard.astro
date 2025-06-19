@@ -11,7 +11,7 @@ const { video } = Astro.props;
 const videoSlug = slugify(video.title);
 ---
 
-<a href={`/video/${video.id}/${videoSlug}`} class="video-card">
+<a href={`/${video.id}/${videoSlug}`} class="video-card">
   <div class="thumbnail-container">
     <img src={video.thumbnail} alt={video.title} loading="lazy" />
     </div>
