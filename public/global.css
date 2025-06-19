@@ -2,63 +2,15 @@
   src/styles/global.css
 */
 
-/* --- BASE CSS: Normalize.css v3.0.3, HTML5 Boilerplate, dan gaya Bootstrap-like --- */
-/*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
-html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
-body{margin:0}
-article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section,summary{display:block}
-audio,canvas,progress,video{display:inline-block;vertical-align:baseline}
-audio:not([controls]){display:none;height:0}
-[hidden],template{display:none}
-a{background-color:transparent}
-a:active,a:hover{outline:0}
-abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}
-b,strong{font-weight:700}
-dfn{font-style:italic}
-h1{font-size:2em;margin:.67em 0}
-mark{background:#ff0;color:#000}
-small{font-size:80%}
-sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
-sup{top:-.5em}
-sub{bottom:-.25em}
-img{border:0}
-svg:not(:root){overflow:hidden}
-figure{margin:1em 40px}
-hr{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;height:0}
-pre{overflow:auto}
-code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}
-button,input,optgroup,select,textarea{color:inherit;font:inherit;margin:0}
-button{overflow:visible}
-button,select{text-transform:none}
-button,html input[type=button],input[type=reset],input[type=submit]{-webkit-appearance:button;cursor:pointer}
-button[disabled],html input[disabled]{cursor:default}
-button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
-input{line-height:normal}
-input[type=checkbox],input[type=radio]{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0}
-input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{height:auto}
-input[type=search]{-webkit-appearance:textfield;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box}
-input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-search-decoration{-webkit-appearance:none}
-fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
-legend{border:0;padding:0}
-textarea{overflow:auto}
-optgroup{font-weight:700}
-table{border-collapse:collapse;border-spacing:0}
-td,th{padding:0}
-
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */
-@media print{*,:after,:before{color:#000!important;text-shadow:none!important;background:0 0!important;-webkit-box-shadow:none!important;-moz-box-shadow:none!important;box-shadow:none!important}a,a:visited{text-decoration:underline}a[href]:after{content:" (" attr(href) ")"}abbr[title]:after{content:" (" attr(title) ")"}a[href^="#"]:after,a[href^="javascript:"]:after{content:""}blockquote,pre{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}img,tr{page-break-inside:avoid}img{max-width:100%!important}h2,h3,p{orphans:3;widows:3}h2,h3{page-break-after:avoid}.navbar{display:none}.btn>.caret,.dropup>.btn>.caret{border-top-color:#000!important}.label{border:1px solid #000}.table{border-collapse:collapse!important}.table td,.table th{background-color:#fff!important}.table-bordered td,.table-bordered th{border:1px solid #ddd!important}}
-*{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}:after,:before{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
-html{font-size:10px;-webkit-tap-highlight-color:rgba(0,0,0,0)}
-
-/* --- Definisi Variabel CSS Tema (Ini adalah mode TERANG secara default) --- */
 :root {
-  --primary-color: #007bff; /* Biru utama */
-  --secondary-color: #6c757d; /* Abu-abu sekunder */
-  --accent-color: #dc3545; /* Merah aksen */
-  --background-color: #f8f9fa; /* Latar belakang terang */
-  --text-color: #343a40; /* Teks gelap */
-  --border-color: #dee2e6; /* Border terang */
-  --card-bg: #ffffff; /* Latar belakang kartu terang */
+  /* Warna Tema Terang (Default) */
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+  --accent-color: #dc3545;
+  --background-color: #f8f9fa;
+  --text-color: #343a40;
+  --border-color: #dee2e6;
+  --card-bg: #ffffff;
 
   /* Shadows */
   --shadow-light: 0 1px 3px rgba(0,0,0,0.1);
@@ -67,19 +19,19 @@ html{font-size:10px;-webkit-tap-highlight-color:rgba(0,0,0,0)}
 
   /* Spasi/Ukuran Font Dasar */
   --spacing-unit: 1rem;
-  --font-body: 'Arial', "Helvetica Neue", Helvetica, sans-serif;
+  --font-body: 'Arial', sans-serif;
   --font-heading: 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* --- Variabel untuk Dark Mode --- */
+/* --- Dark Mode Variables --- */
 body.dark-mode {
   --primary-color: #66b2ff; /* Biru lebih terang untuk dark mode */
-  --secondary-color: #a0a8b1; /* Abu-abu lebih terang */
+  --secondary-color: #a0a8b1;
   --accent-color: #ff6b7d; /* Merah lebih terang */
   --background-color: #1a1a1a; /* Latar belakang gelap */
   --text-color: #e0e0e0; /* Teks terang */
   --border-color: #333; /* Border lebih gelap */
-  --card-bg: #2b2b2b; /* Latar belakang kartu gelap */
+  --card-bg: #2b2b2b; /* Latar belakang card gelap */
 
   /* Shadows untuk dark mode, bisa disesuaikan agar tidak terlalu mencolok */
   --shadow-light: 0 1px 3px rgba(0,0,0,0.3);
@@ -87,137 +39,7 @@ body.dark-mode {
   --shadow-strong: 0 6px 12px rgba(0,0,0,0.5);
 }
 
-/* --- Gaya Body & Global yang Menggunakan Variabel Tema --- */
-/* Timpa gaya body dari CSS yang Anda berikan untuk menggunakan variabel */
-body{
-  font-family: var(--font-body);
-  font-size: 1.2rem; /* Disesuaikan untuk penskalaan yang lebih baik, 1.2 * 10px = 12px */
-  line-height: 1.6; /* Disesuaikan untuk keterbacaan */
-  color: var(--text-color);
-  background-color: var(--background-color);
-  margin:0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.3s ease, color 0.3s ease; /* Transisi yang halus */
-}
-
-/* Terapkan transisi ke semua elemen untuk perubahan tema yang mulus */
-* {
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* --- Gaya Elemen Global (Menimpa / Mengadaptasi CSS Dasar) --- */
-a {
-  color: var(--primary-color); /* Sekarang peka tema */
-  text-decoration: none;
-}
-a:focus,a:hover {
-  color: var(--primary-color); /* Pastikan hover menghormati tema */
-  text-decoration: underline;
-}
-
-/* Tombol Global */
-button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 5px; /* Menggunakan 5px untuk tampilan modern */
-  cursor: pointer;
-  font-size: 1rem;
-  background-color: var(--primary-color); /* Latar belakang tombol default */
-  color: white; /* Warna teks tombol default */
-}
-
-button:hover {
-  filter: brightness(1.1); /* Sedikit lebih cerah saat hover */
-  transform: translateY(-1px);
-}
-
-/* Adaptasi gaya tombol spesifik dari CSS dasar agar peka tema */
-.btn-primary {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
-  color: white;
-}
-.btn-primary.focus, .btn-primary:focus, .btn-primary:hover {
-  background-color: var(--primary-color);
-  filter: brightness(0.9); /* Sedikit gelap saat hover/focus */
-  border-color: var(--primary-color);
-}
-.btn-danger {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
-  color: white;
-}
-.btn-danger:focus, .btn-danger:hover {
-  background-color: var(--accent-color);
-  filter: brightness(0.9);
-  border-color: var(--accent-color);
-}
-
-/* Judul - gunakan text-color */
-h1, h2, h3, h4, h5, h6,
-.h1,.h2,.h3,.h4,.h5,.h6 { /* Termasuk kelas dari CSS yang Anda berikan */
-  font-family: var(--font-heading);
-  color: var(--text-color); /* Buat judul peka tema */
-  line-height: 1.2;
-  margin-top: 0.8em; /* Disesuaikan untuk spasi yang lebih baik */
-  margin-bottom: 0.8em; /* Disesuaikan untuk spasi yang lebih baik */
-}
-/* Pastikan teks kecil dalam judul juga bertema */
-.h1 .small,.h1 small,.h2 .small,.h2 small,.h3 .small,.h3 small,.h4 .small,.h4 small,.h5 .small,.h5 small,.h6 .small,.h6 small,
-h1 .small,h1 small,h2 .small,h2 small,h3 .small,h3 small,h4 .small,h4 small,h5 .small,h5 small,h6 .small,h6 small {
-  color: var(--secondary-color); /* Gunakan warna sekunder untuk teks yang lebih kecil */
-}
-
-/* Kontrol Form - sesuaikan dengan dark mode */
-.form-control {
-  color: var(--text-color); /* Warna teks input */
-  background-color: var(--card-bg); /* Latar belakang input */
-  border: 1px solid var(--border-color); /* Border input */
-  /* Pertahankan properti lain dari form-control asli */
-  height: 28px;
-  padding: 6px 12px;
-  font-size: 1rem; /* Disesuaikan dari 12px untuk ukuran relatif yang lebih baik */
-  line-height: 1.2;
-  background-image: none;
-  -webkit-border-radius: 0;-moz-border-radius: 0;border-radius: 0;
-  -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075);-moz-box-shadow:inset 0 1px 1px rgba(0,0,0,.075);box-shadow:inset 0 1px 1px rgba(0,0,0,.075);
-  -webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;-o-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;-webkit-transition:border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;-moz-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s,-moz-box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s,-moz-box-shadow ease-in-out .15s;
-}
-
-.form-control:focus {
-  border-color: var(--primary-color); /* Warna border fokus */
-  outline: 0;
-  -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px var(--primary-color);
-  -moz-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px var(--primary-color);
-  box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px var(--primary-color);
-}
-
-.form-control::-moz-placeholder,
-.form-control:-ms-input-placeholder,
-.form-control::-webkit-input-placeholder {
-  color: var(--secondary-color); /* Warna placeholder */
-  opacity: 1;
-}
-
-/* Pastikan ini juga peka tema jika digunakan */
-.text-muted { color: var(--secondary-color); }
-.text-primary { color: var(--primary-color); }
-.text-danger { color: var(--accent-color); } /* Warna merah bahaya */
-
-.bg-primary { background-color: var(--primary-color); color: white; }
-.bg-danger { background-color: var(--accent-color); color: white; }
-.bg-success { background-color: var(--primary-color); /* Menggunakan kembali primary untuk sukses atau mendefinisikan --success-color baru */ color: white; }
-
-
-/* --- Akhir adaptasi CSS Dasar --- */
-
-
-/* --- Gaya Situs Astro Kustom --- */
-
-/* Reset CSS Sederhana & Gaya Dasar (beberapa redundansi dengan normalize, tetapi memastikan variabel diterapkan) */
-/* Sebagian besar sudah ditangani di bagian atas dengan variabel. */
-/* Tetap pertahankan untuk box-sizing dan scroll-behavior jika ada kebutuhan spesifik yang tidak dicakup oleh base CSS. */
+/* Reset CSS Sederhana & Gaya Dasar */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -228,12 +50,48 @@ html {
   scroll-behavior: smooth;
 }
 
+body {
+  font-family: var(--font-body);
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color); /* Menggunakan variabel */
+  color: var(--text-color); /* Menggunakan variabel */
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tautan Global */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+a:hover {
+  color: var(--primary-color); /* Tetap gunakan primary-color yang sudah berubah */
+  text-decoration: underline;
+}
+
+/* Tombol Global */
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease, transform 0.1s ease, color 0.2s ease; /* Tambah color */
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
 
 /* --- Header & Navigasi --- */
 header {
-  background-color: var(--primary-color);
+  background-color: var(--primary-color); /* Menggunakan variabel */
   padding: 1rem 0;
-  box-shadow: var(--shadow-medium);
+  box-shadow: var(--shadow-medium); /* Menggunakan variabel */
   position: static;
   top: 0;
   z-index: 1000;
@@ -280,6 +138,7 @@ header {
   color: var(--secondary-color);
 }
 
+
 .search-form button {
   background-color: var(--accent-color); /* Menggunakan variabel */
   color: white;
@@ -315,7 +174,7 @@ header {
   color: #e2e6ea;
 }
 
-/* --- Tombol Toggle Dark Mode --- */
+/* --- Dark Mode Toggle Button --- */
 .dark-mode-toggle {
     background: none;
     border: none;
@@ -330,7 +189,7 @@ header {
 
 .dark-mode-toggle:hover {
     background-color: rgba(255, 255, 255, 0.1);
-    color: var(--accent-color); /* Contoh efek hover */
+    color: var(--accent-color); /* Contoh hover effect */
 }
 
 
@@ -339,18 +198,18 @@ main {
   max-width: 1200px;
   margin: 30px auto;
   padding: 20px;
-  background-color: var(--card-bg);
+  background-color: var(--card-bg); /* Menggunakan variabel */
   border-radius: 8px;
-  box-shadow: var(--shadow-medium);
+  box-shadow: var(--shadow-medium); /* Menggunakan variabel */
 }
 
 /* --- Breadcrumbs --- */
 .breadcrumb {
   margin-bottom: 20px;
   font-size: 0.9em;
-  color: var(--secondary-color);
+  color: var(--secondary-color); /* Menggunakan variabel */
   padding: 10px 0;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color); /* Menggunakan variabel */
 }
 
 .breadcrumb ol {
@@ -367,7 +226,7 @@ main {
 }
 
 .breadcrumb a {
-  color: var(--primary-color);
+  color: var(--primary-color); /* Menggunakan variabel */
   text-decoration: none;
   white-space: nowrap;
 }
@@ -378,16 +237,23 @@ main {
 
 .breadcrumb .separator {
   margin: 0 8px;
-  color: var(--secondary-color);
+  color: var(--secondary-color); /* Menggunakan variabel */
 }
 
 /* --- Judul Halaman / Seksi --- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--text-color); /* Menggunakan variabel */
+  margin-bottom: 0.8em;
+  line-height: 1.2;
+}
+
 .page-title, .section-title, .category-title-header, .search-results-title {
   font-size: clamp(2em, 4vw, 3.5em);
-  color: var(--primary-color);
+  color: var(--primary-color); /* Menggunakan variabel */
   text-align: center;
   margin-bottom: 30px;
-  border-bottom: 3px solid var(--accent-color);
+  border-bottom: 3px solid var(--accent-color); /* Menggunakan variabel */
   padding-bottom: 15px;
   display: inline-block;
   width: 100%;
@@ -398,10 +264,10 @@ main {
   font-size: clamp(1.8em, 3.5vw, 2.5em);
   text-align: left;
   margin-bottom: 25px;
-  color: var(--text-color);
+  color: var(--text-color); /* Menggunakan variabel */
   position: relative;
   padding-bottom: 10px;
-  border-bottom: 2px solid var(--accent-color);
+  border-bottom: 2px solid var(--accent-color); /* Menggunakan variabel */
   display: inline-block;
   padding-right: 15px;
 }
@@ -413,12 +279,12 @@ main {
 }
 
 .category-title .category-link:hover {
-  color: var(--primary-color);
+  color: var(--primary-color); /* Menggunakan variabel */
 }
 
 .page-info {
   font-size: 0.6em;
-  color: var(--secondary-color);
+  color: var(--secondary-color); /* Menggunakan variabel */
   display: block;
   margin-top: 5px;
 }
@@ -431,14 +297,14 @@ main {
   margin-bottom: 40px;
 }
 
-/* --- Komponen Kartu Video --- */
+/* --- Video Card Component --- */
 .video-card {
   display: flex;
   flex-direction: column;
-  background-color: var(--card-bg);
+  background-color: var(--card-bg); /* Menggunakan variabel */
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: var(--shadow-light);
+  box-shadow: var(--shadow-light); /* Menggunakan variabel */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   text-decoration: none;
   color: inherit;
@@ -447,7 +313,7 @@ main {
 
 .video-card:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow-medium);
+  box-shadow: var(--shadow-medium); /* Menggunakan variabel */
 }
 
 .thumbnail-container {
@@ -490,7 +356,7 @@ main {
   font-size: 1.1em;
   margin-top: 0;
   margin-bottom: 8px;
-  color: var(--text-color);
+  color: var(--text-color); /* Menggunakan variabel */
   line-height: 1.4;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -501,11 +367,11 @@ main {
 
 .video-category {
   font-size: 0.9em;
-  color: var(--secondary-color);
+  color: var(--secondary-color); /* Menggunakan variabel */
   margin-bottom: 5px;
 }
 
-/* --- Gaya untuk tag di dalam VideoCard --- */
+/* --- Styling for tags inside VideoCard --- */
 .video-card-tags {
   margin-top: 8px;
   display: flex;
@@ -516,7 +382,7 @@ main {
 .tag-item-small {
   font-size: 0.7em;
   padding: 3px 6px;
-  background-color: var(--secondary-color);
+  background-color: var(--secondary-color); /* Menggunakan variabel */
   color: white;
   border-radius: 4px;
   text-decoration: none;
@@ -525,8 +391,7 @@ main {
 }
 
 .tag-item-small:hover {
-  background-color: #5a6268; /* Fallback hardcode, idealnya via variabel. */
-  filter: brightness(0.9);
+  background-color: #5a6268; /* Hardcoded atau bisa pakai darker(var(--secondary-color)) jika ada preprocessor */
 }
 
 
@@ -535,7 +400,7 @@ main {
   text-align: center;
   margin-bottom: 40px;
   padding: 40px 20px;
-  background: linear-gradient(to right, var(--primary-color), var(--primary-color));
+  background: linear-gradient(to right, var(--primary-color), var(--primary-color)); /* Sesuaikan jika perlu, atau buat gradient khusus */
   color: white;
   border-radius: 8px;
   box-shadow: var(--shadow-medium);
@@ -545,7 +410,7 @@ main {
   font-size: clamp(2.5em, 5vw, 4em);
   margin-bottom: 10px;
   line-height: 1.2;
-  color: white; /* Pastikan teks hero selalu putih/terang untuk kontras */
+  color: white;
 }
 
 .hero-section p {
@@ -566,7 +431,7 @@ main {
   grid-column: 1 / -1;
   text-align: center;
   font-size: 1.2em;
-  color: var(--secondary-color);
+  color: var(--secondary-color); /* Menggunakan variabel */
   padding: 50px 0;
 }
 
@@ -578,17 +443,17 @@ main {
 .view-all-button {
   display: inline-block;
   padding: 10px 20px;
-  background-color: var(--accent-color);
+  background-color: var(--accent-color); /* Menggunakan variabel */
   color: white;
   text-decoration: none;
   border-radius: 5px;
   font-weight: 500;
   transition: background-color 0.2s ease-in-out, transform 0.2s ease;
-  box-shadow: var(--shadow-light);
+  box-shadow: var(--shadow-light); /* Menggunakan variabel */
 }
 
 .view-all-button:hover {
-  background-color: var(--accent-color);
+  background-color: var(--accent-color); /* Akan berubah sesuai mode */
   filter: brightness(0.9);
   transform: translateY(-2px);
 }
@@ -598,7 +463,7 @@ main {
   position: relative;
   width: 100%;
   padding-bottom: 56.25%; /* Rasio aspek 16:9 */
-  background-color: #000; /* Tetap hitam untuk pemutar video */
+  background-color: #000;
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 20px;
@@ -618,10 +483,10 @@ main {
   justify-content: space-between;
   margin-bottom: 20px;
   padding: 10px 0;
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color); /* Menggunakan variabel */
+  border-bottom: 1px solid var(--border-color); /* Menggunakan variabel */
   font-size: 0.95em;
-  color: var(--secondary-color);
+  color: var(--secondary-color); /* Menggunakan variabel */
 }
 
 .video-meta p {
@@ -629,7 +494,7 @@ main {
 }
 
 .video-meta a {
-  color: var(--primary-color);
+  color: var(--primary-color); /* Menggunakan variabel */
   text-decoration: none;
 }
 
@@ -639,20 +504,20 @@ main {
 
 .video-description h2, .video-tags-container h2 {
   font-size: 1.5em;
-  color: var(--text-color);
+  color: var(--text-color); /* Menggunakan variabel */
   margin-top: 0;
   margin-bottom: 15px;
 }
 
 .video-description p {
-  color: var(--text-color);
+  color: var(--text-color); /* Menggunakan variabel */
   line-height: 1.7;
   margin-bottom: 0;
 }
 
 .video-tags-container {
   margin-top: 30px;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color); /* Menggunakan variabel */
   padding-top: 20px;
 }
 
@@ -664,7 +529,7 @@ main {
 
 .tag-item {
   display: inline-block;
-  background-color: var(--primary-color);
+  background-color: var(--primary-color); /* Menggunakan variabel */
   color: white;
   padding: 6px 12px;
   border-radius: 20px;
@@ -674,7 +539,7 @@ main {
 }
 
 .tag-item:hover {
-  background-color: var(--primary-color);
+  background-color: var(--primary-color); /* Akan berubah sesuai mode */
   filter: brightness(0.9);
   transform: translateY(-2px);
 }
@@ -688,9 +553,9 @@ main {
   gap: 10px;
   margin-top: 30px;
   padding: 15px;
-  background-color: var(--background-color);
+  background-color: var(--background-color); /* Menggunakan variabel */
   border-radius: 8px;
-  box-shadow: var(--shadow-light);
+  box-shadow: var(--shadow-light); /* Menggunakan variabel */
 }
 
 .pagination-link {
@@ -701,25 +566,25 @@ main {
   height: 40px;
   padding: 0 10px;
   text-decoration: none;
-  color: var(--primary-color);
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
+  color: var(--primary-color); /* Menggunakan variabel */
+  background-color: var(--card-bg); /* Menggunakan variabel */
+  border: 1px solid var(--border-color); /* Menggunakan variabel */
   border-radius: 5px;
   transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
   font-weight: 500;
 }
 
 .pagination-link:hover {
-  background-color: var(--primary-color);
+  background-color: var(--primary-color); /* Menggunakan variabel */
   color: white;
   transform: translateY(-2px);
 }
 
 .pagination-link.active {
-  background-color: var(--primary-color);
+  background-color: var(--primary-color); /* Menggunakan variabel */
   color: white;
   font-weight: bold;
-  border-color: var(--primary-color);
+  border-color: var(--primary-color); /* Menggunakan variabel */
   cursor: default;
 }
 
@@ -739,47 +604,47 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: var(--background-color);
-  border: 1px solid var(--border-color);
+  background-color: var(--background-color); /* Menggunakan variabel */
+  border: 1px solid var(--border-color); /* Menggunakan variabel */
   border-radius: 8px;
   padding: 25px;
   text-align: center;
   text-decoration: none;
-  color: var(--text-color);
-  box-shadow: var(--shadow-light);
+  color: var(--text-color); /* Menggunakan variabel */
+  box-shadow: var(--shadow-light); /* Menggunakan variabel */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .category-item:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow-medium);
-  background-color: var(--card-bg);
-  filter: brightness(1.05);
+  box-shadow: var(--shadow-medium); /* Menggunakan variabel */
+  background-color: var(--card-bg); /* Menggunakan card-bg untuk hover di dark mode */
+  filter: brightness(1.05); /* Sedikit lebih terang */
 }
 
 .category-item-title {
   font-size: 1.6em;
-  color: var(--primary-color);
+  color: var(--primary-color); /* Menggunakan variabel */
   margin-top: 0;
   margin-bottom: 10px;
 }
 
 .category-item-count {
   font-size: 1.1em;
-  color: var(--secondary-color);
+  color: var(--secondary-color); /* Menggunakan variabel */
   margin: 0;
 }
 
+
 /* --- Footer --- */
 footer {
-  background-color: var(--text-color);
-  color: white; /* Teks footer tetap putih agar kontras dengan latar belakang gelap */
+  background-color: var(--text-color); /* Menggunakan variabel */
+  color: white;
   text-align: center;
   padding: 1.5rem 20px;
   margin-top: 40px;
   font-size: 0.9rem;
 }
-
 
 /* --- Responsiveness --- */
 @media (max-width: 992px) { /* Untuk tablet dan layar yang lebih kecil */
