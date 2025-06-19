@@ -1,0 +1,157 @@
+---
+// src/pages/[id]/[slug].astro
+// (Dulunya src/pages/video/[id]/[slug].astro)
+
+import Layout from '../../layouts/BaseLayout.astro'; // Path relatif berubah!
+import VideoCard from '../../components/VideoCard.astro'; // Path relatif berubah!
+import { getAllVideos, type VideoData } from '../../utils/data'; // Path relatif berubah!
+import { slugify } from '../../utils/slugify';
+import { nama, desk, url } from '../../utils/site.ts';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const allVideos: VideoData[] = await getAllVideos();
+  return allVideos.map(video => ({
+    params: { id: video.id, slug: slugify(video.title) },
+    props: { video, allVideos }, // Pass the specific video AND allVideos for related logic
+  }));
+}
+
+const { video, allVideos } = Astro.props; // Get the current video and all videos
+
+// --- LOGIKA UNTUK VIDEO TERKAIT ---
+const numberOfRelatedVideos = 6; // Jumlah video terkait yang ingin ditampilkan
+const relatedVideos: VideoData[] = [];
+
+// Strategi 1: Video dari kategori yang sama (paling prioritas)
+const sameCategoryVideos = allVideos.filter(v =>
+  v.category === video.category && v.id !== video.id // Exclude current video
+);
+
+// Ambil beberapa video dari kategori yang sama
+for (const v of sameCategoryVideos) {
+  if (relatedVideos.length < numberOfRelatedVideos) {
+    relatedVideos.push(v);
+  } else {
+    break;
+  }
+}
+
+// Strategi 2: Jika masih kurang, cari berdasarkan tags (jika ada)
+if (relatedVideos.length < numberOfRelatedVideos && video.tags && video.tags.length > 0) {
+  const videoTags = new Set(video.tags.map(tag => tag.toLowerCase()));
+  const tagMatchedVideos = allVideos.filter(v =>
+    v.id !== video.id && // Exclude current video
+    !relatedVideos.some(rv => rv.id === v.id) && // Exclude already added videos
+    v.tags && v.tags.some(tag => videoTags.has(tag.toLowerCase())) // Check for shared tags
+  );
+
+  // Ambil sisa video dari tag yang cocok
+  for (const v of tagMatchedVideos) {
+    if (relatedVideos.length < numberOfRelatedVideos) {
+      relatedVideos.push(v);
+    } else {
+      break;
+    }
+  }
+}
+
+// Strategi 3: Jika masih kurang, ambil acak dari semua video (fallback)
+if (relatedVideos.length < numberOfRelatedVideos) {
+  const remainingSlots = numberOfRelatedVideos - relatedVideos.length;
+  const otherVideos = allVideos.filter(v =>
+    v.id !== video.id && // Exclude current video
+    !relatedVideos.some(rv => rv.id === v.id) // Exclude already added videos
+  );
+  // Kocok video dan ambil beberapa
+  const shuffledOthers = otherVideos.sort(() => 0.5 - Math.random());
+  relatedVideos.push(...shuffledOthers.slice(0, remainingSlots));
+}
+
+// Opsional: Kocok relatedVideos agar tidak selalu urut
+relatedVideos.sort(() => 0.5 - Math.random());
+
+
+// Mendapatkan domain unik dari URL thumbnail dan embedUrl untuk preconnect
+const allDomains = new Set<string>();
+// Add domains for the current video
+try {
+  if (video.thumbnail) allDomains.add(new URL(video.thumbnail).origin);
+  if (video.embedUrl) allDomains.add(new URL(video.embedUrl).origin);
+} catch (e) {
+  console.error(`[ERROR] URL thumbnail/video tidak valid untuk video ID ${video.id} (current video):`, e);
+}
+// Add domains for related videos
+relatedVideos.forEach(v => {
+  try {
+    if (v.thumbnail) allDomains.add(new URL(v.thumbnail).origin);
+    if (v.embedUrl) allDomains.add(new URL(v.embedUrl).origin);
+  } catch (e) {
+    console.error(`[ERROR] URL thumbnail/video tidak valid untuk video ID ${v.id} (related video):`, e);
+  }
+});
+
+const preconnectDomains = Array.from(allDomains);
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: video.category, url: `/category/${slugify(video.category)}/1` },
+  // === MODIFIED === Update the URL for the current video in breadcrumbs
+  { name: video.title, url: `/${video.id}/${slugify(video.title)}` },
+];
+---
+
+<Layout
+  title={`${video.title} - ${nama}`}
+  description={video.description}
+  preconnectDomains={preconnectDomains}
+  siteName={nama}
+  siteUrl={url}
+>
+  <main class="video-detail-page">
+    <nav class="breadcrumb" aria-label="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+      <ol>
+        {breadcrumbs.map((item, index) => (
+          <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            {index > 0 && <span class="separator">/</span>}
+            {item.url ? (
+              <a itemprop="item" href={item.url}>
+                <span itemprop="name">{item.name}</span>
+              </a>
+            ) : (
+              <span itemprop="name">{item.name}</span>
+            )}
+            <meta itemprop="position" content={(index + 1).toString()} />
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <h1 class="video-title">{video.title}</h1>
+
+    <div class="video-player-container">
+      <iframe
+        src={video.embedUrl}
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
+    </div>
+
+    <p class="video-description">{video.description}</p>
+
+    {relatedVideos.length > 0 && (
+      <section class="related-videos-section">
+        <h2 class="section-title">Video Terkait</h2>
+        <div class="video-grid">
+          {relatedVideos.map((relatedVideo) => (
+            // === MODIFIED === Update the URL for related video cards
+            <VideoCard video={relatedVideo} videoDetailPath={`/${relatedVideo.id}/${slugify(relatedVideo.title)}`} />
+          ))}
+        </div>
+      </section>
+    )}
+  </main>
+</Layout>
