@@ -6,6 +6,7 @@ export default defineConfig({
   output: 'server', // Mengaktifkan Server-Side Rendering (SSR)
   adapter: cloudflare(), // Adapter untuk deployment di Cloudflare Pages/Workers
   site: 'https://bokeporgasme.pages.dev',
+  integrations: [sitemap()],
   // Jika Anda memiliki masalah CORS, Anda bisa mencoba menambahkan ini (opsional)
   // server: {
   //   host: true, // Mengizinkan akses dari jaringan lokal (untuk dev)
