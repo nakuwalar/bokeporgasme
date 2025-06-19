@@ -17,7 +17,7 @@ export async function getStaticPaths() {
 const { query, page } = Astro.params; // Sekarang kita punya 'query' DAN 'page' sebagai parameter terpisah
 const originalQuery = query ? decodeURIComponent(query) : '';
 const currentPage = page ? parseInt(page) : 1;
-const videosPerPage = 12; // Sesuaikan jumlah video per halaman
+const videosPerPage = 30; // Sesuaikan jumlah video per halaman
 
 const normalizedQuery = originalQuery.toLowerCase().trim().replace(/-/g, ' ');
 
