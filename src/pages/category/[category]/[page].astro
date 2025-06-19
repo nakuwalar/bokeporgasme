@@ -20,12 +20,12 @@ interface VideoData {
   category: string;
 }
 
+// Definisikan VIDEOS_PER_PAGE di scope global frontmatter
+// Agar bisa digunakan di dalam getStaticPaths DAN sebagai prop.
+const VIDEOS_PER_PAGE = 12; // Atur jumlah video per halaman di sini
+
 // getStaticPaths untuk menghasilkan halaman untuk setiap kategori unik
 export async function getStaticPaths() {
-  // Pindahkan definisi VIDEOS_PER_PAGE KE DALAM getStaticPaths
-  // Ini menjamin VIDEOS_PER_PAGE ada di scope saat fungsi ini dieksekusi.
-  const VIDEOS_PER_PAGE = 12; // Atur jumlah video per halaman di sini
-
   const results: VideoData[] = [];
   const csvFilePath = path.resolve(process.cwd(), 'src/data/videos.csv');
 
@@ -50,7 +50,6 @@ export async function getStaticPaths() {
     const totalPages = Math.ceil(categoryVideos.length / VIDEOS_PER_PAGE);
 
     // Pastikan selalu ada setidaknya satu halaman, bahkan jika tidak ada video
-    // Ini penting agar kategori tanpa video tetap memiliki halaman /category/nama-kategori/1
     const pagesToGenerate = totalPages === 0 ? 1 : totalPages;
 
     for (let page = 1; page <= pagesToGenerate; page++) {
@@ -59,13 +58,14 @@ export async function getStaticPaths() {
       const paginatedVideos = categoryVideos.slice(startIndex, endIndex);
 
       paths.push({
-        // 'params' harus cocok dengan nama folder dinamis di URL: [category] dan [page]
         params: { category: sluggedCategory, page: page.toString() },
         props: {
-          categoryName: category, // Nama kategori asli
+          categoryName: category,
           videos: paginatedVideos,
           currentPage: page,
           totalPages: pagesToGenerate,
+          // PENTING: Kirim VIDEOS_PER_PAGE sebagai prop
+          videosPerPage: VIDEOS_PER_PAGE,
         },
       });
     }
@@ -77,11 +77,13 @@ export async function getStaticPaths() {
 const { category, page } = Astro.params;
 
 // Dapatkan data kategori, video, dan informasi paginasi dari props
-const { categoryName, videos, currentPage, totalPages } = Astro.props as {
+// PENTING: Destruktur videosPerPage dari Astro.props
+const { categoryName, videos, currentPage, totalPages, videosPerPage } = Astro.props as {
   categoryName: string;
   videos: VideoData[];
   currentPage: number;
   totalPages: number;
+  videosPerPage: number; // Tambahkan ini ke interface Astro.props
 };
 
 // Fallback untuk memastikan actualCategoryName selalu ada
@@ -108,7 +110,6 @@ const actualCategoryName = categoryName || "Semua Kategori";
         </li>
         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
           <span class="separator">/</span>
-          {/* Link ke halaman 1 kategori saat ini - Gunakan /category/ */}
           <a itemprop="item" href={`/category/${category}/1`}>
             <span itemprop="name">{actualCategoryName}</span>
           </a>
@@ -135,7 +136,8 @@ const actualCategoryName = categoryName || "Semua Kategori";
         ) : (
           videos.map((video, index) => (
             <div itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-              <meta itemprop="position" content={((currentPage - 1) * VIDEOS_PER_PAGE + index + 1).toString()} />
+              {/* PENTING: Gunakan videosPerPage dari props di sini */}
+              <meta itemprop="position" content={((currentPage - 1) * videosPerPage + index + 1).toString()} />
               <VideoCard video={video} />
             </div>
           ))
