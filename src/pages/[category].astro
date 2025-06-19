@@ -110,7 +110,7 @@ const actualCategoryName = categoryName || (videos && videos.length > 0 ? videos
         </li>
         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
           <span class="separator">/</span>
-          <a itemprop="item" href={`/kategori/${category}/1`}>
+          <a itemprop="item" href={`/category/${category}/1`}>
             <span itemprop="name">{actualCategoryName}</span>
           </a>
           <meta itemprop="position" content="2" />
@@ -149,7 +149,7 @@ const actualCategoryName = categoryName || (videos && videos.length > 0 ? videos
           <ul>
             <li>
               <a
-                href={currentPage > 1 ? `/kategori/${category}/${currentPage - 1}` : '#'}
+                href={currentPage > 1 ? `/category/${category}/${currentPage - 1}` : '#'}
                 class={`page-link ${currentPage === 1 ? 'disabled' : ''}`}
                 aria-disabled={currentPage === 1}
               >
@@ -159,7 +159,7 @@ const actualCategoryName = categoryName || (videos && videos.length > 0 ? videos
             {[...Array(totalPages)].map((_, i) => (
               <li>
                 <a
-                  href={`/kategori/${category}/${i + 1}`}
+                  href={`/category/${category}/${i + 1}`}
                   class={`page-link ${currentPage === i + 1 ? 'active' : ''}`}
                   aria-current={currentPage === i + 1 ? 'page' : undefined}
                 >
@@ -169,7 +169,7 @@ const actualCategoryName = categoryName || (videos && videos.length > 0 ? videos
             ))}
             <li>
               <a
-                href={currentPage < totalPages ? `/kategori/${category}/${currentPage + 1}` : '#'}
+                href={currentPage < totalPages ? `/category/${category}/${currentPage + 1}` : '#'}
                 class={`page-link ${currentPage === totalPages ? 'disabled' : ''}`}
                 aria-disabled={currentPage === totalPages}
               >
