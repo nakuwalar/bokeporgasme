@@ -50,6 +50,7 @@ const canonicalUrl = Astro.url.href;
     {Astro.site && (
       <>
         <link rel="dns-prefetch" href={Astro.site} />
+        {/* Pastikan font ini ada atau hapus baris ini jika tidak menggunakan font kustom */}
         <link rel="preload" href="/fonts/your-font-regular.woff2" as="font" type="font/woff2" crossorigin />
       </>
     )}
@@ -63,6 +64,7 @@ const canonicalUrl = Astro.url.href;
           <li><a href="/category">Category</a></li>
           {/* Formulir Pencarian di Navigasi */}
           <li class="search-item">
+            {/* PASTIKAN ID FORMULIR ADALAH 'searchForm' */}
             <form action="/cari/" method="get" class="search-form" id="searchForm">
               <input
                 type="text"
@@ -81,17 +83,18 @@ const canonicalUrl = Astro.url.href;
     <footer>
       <p>&copy; {new Date().getFullYear()} Bokep Orgasme. All rights reserved.</p>
     </footer>
-        <script is:inline>
+    {/* SCRIPT INI YANG AKAN MEMASTIKAN PENCARIAN BEKERJA */}
+    <script is:inline>
       // Fungsi untuk mengkonversi string menjadi slug yang SEO-friendly
       function slugify(text) {
         return text
           .toString()
           .toLowerCase()
           .trim()
-          .replace(/\s+/g, '-')     // Ganti spasi dengan tanda hubung
+          .replace(/\s+/g, '-')      // Ganti spasi dengan tanda hubung
           .replace(/[^\w-]+/g, '')  // Hapus semua kecuali kata dan tanda hubung
-          .replace(/--+/g, '-')     // Ganti tanda hubung ganda dengan satu tanda hubung
-          .replace(/^-+/, '')       // Hapus tanda hubung dari awal
+          .replace(/--+/g, '-')      // Ganti tanda hubung ganda dengan satu tanda hubung
+          .replace(/^-+/, '')        // Hapus tanda hubung dari awal
           .replace(/-+$/, '');      // Hapus tanda hubung dari akhir
       }
 
@@ -119,7 +122,7 @@ const canonicalUrl = Astro.url.href;
 </html>
 
 <style is:global>
-  :root {
+  /* :root {
     --primary-color: #007bff;
     --secondary-color: #6c757d;
     --accent-color: #28a745;
@@ -129,7 +132,7 @@ const canonicalUrl = Astro.url.href;
     --card-bg: #ffffff;
     --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.05);
     --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
+  } */
 
   body {
     font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
