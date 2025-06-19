@@ -144,7 +144,16 @@ const breadcrumbs = [
     <h1 class="video-title">{video.title}</h1>
 
     <p class="video-description">{video.description}</p>
-
+      {videoTags.length > 0 && (Add commentMore actions
+        <div class="video-tags-container">
+          <h2>Tags:</h2>
+          <div class="tags-list">
+            {videoTags.map(tag => (
+              <a href={`/cari/${slugify(tag)}`} class="tag-item">{tag}</a>
+            ))}
+          </div>
+        </div>
+      )}
     {relatedVideos.length > 0 && (
       <section class="related-videos-section">
         <h2 class="section-title">Video Terkait</h2>
