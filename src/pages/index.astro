@@ -2,8 +2,11 @@
 // src/pages/index.astro
 import Layout from '../layouts/BaseLayout.astro';
 import VideoCard from '../components/VideoCard.astro';
-import { slugify } from '../utils/slugify';
+import { slugify } => '../utils/slugify';
 import { getAllVideos, type VideoData } from '../utils/data'; // Import type juga
+
+// === NEW === Import site details from your site.ts utility file
+import { nama, desk, url } from '../utils/site.ts';
 
 // Ini memberitahu Astro untuk membuat HTML statis untuk halaman ini saat build
 export const prerender = true;
@@ -43,8 +46,8 @@ latestVideos.forEach(video => {
     if (video.thumbnail) {
       allDomains.add(new URL(video.thumbnail).origin);
     }
-    if (video.embedUrl) { // <-- PERBAIKAN: Gunakan embedUrl
-      allDomains.add(new URL(video.embedUrl).origin); // <-- PERBAIKAN: Gunakan embedUrl
+    if (video.embedUrl) {
+      allDomains.add(new URL(video.embedUrl).origin);
     }
   } catch (e) {
     console.error(`[ERROR] URL thumbnail/video tidak valid untuk video ID ${video.id} (latestVideos):`, e);
@@ -57,8 +60,8 @@ Object.values(videosByCategory).flat().forEach(video => {
     if (video.thumbnail) {
       allDomains.add(new URL(video.thumbnail).origin);
     }
-    if (video.embedUrl) { // <-- PERBAIKAN: Gunakan embedUrl
-      allDomains.add(new URL(video.embedUrl).origin); // <-- PERBAIKAN: Gunakan embedUrl
+    if (video.embedUrl) {
+      allDomains.add(new URL(video.embedUrl).origin);
     }
   } catch (e) {
     console.error(`[ERROR] URL thumbnail/video tidak valid untuk video ID ${video.id} (videosByCategory):`, e);
@@ -72,15 +75,20 @@ const breadcrumbs = [
   { name: 'Home', url: '/' },
 ];
 
-// Dapatkan siteName dari Astro.props, yang akan diisi oleh BaseLayout
-// Jika BaseLayout tidak meneruskannya, akan menggunakan nilai default dari BaseLayout
-const { siteName } = Astro.props;
+// === MODIFIED === Define siteName from the imported 'nama' variable
+// You can remove `const { siteName } = Astro.props;` as it won't be used here.
+const siteName = nama; // Use 'nama' from your site.ts for siteName
+const siteDescription = desk; // Use 'desk' for description
+const siteUrl = url; // Use 'url' for siteUrl
+
 ---
 
 <Layout
-  title={`${siteName} - Video Bokep Indo Terbaru`} {/* PERBAIKAN DI SINI */}
-  description="Temukan berbagai video bokep indonesia mulai bokep bocil sampai ngentot tante!"
+  title={`${siteName} - Video Bokep Indo Terbaru`}
+  description={siteDescription} // === MODIFIED === Use siteDescription
   preconnectDomains={preconnectDomains}
+  siteName={siteName} // === NEW === Pass siteName to Layout
+  siteUrl={siteUrl}   // === NEW === Pass siteUrl to Layout
 >
   <main class="home-page">
     <nav class="breadcrumb" aria-label="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
