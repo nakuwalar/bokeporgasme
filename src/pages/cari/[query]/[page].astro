@@ -4,8 +4,8 @@
 
 import Layout from '../../../../layouts/BaseLayout.astro'; // Perbaiki path relatif
 import VideoCard from '../../../../components/VideoCard.astro'; // Perbaiki path relatif
-import { getAllVideos, type VideoData } from '../../../../utils/data'; // Perbaiki path relatif
-import { slugify } from '../../../../utils/slugify';
+import { getAllVideos, type VideoData } from '../../../../utils/data.ts'; // Perbaiki path relatif
+import { slugify } from '../../../../utils/slugify.ts';
 
 // getStaticPaths ini diperlukan untuk memberitahu Astro bahwa ini adalah rute dinamis.
 // Tetap kosong untuk SSR on-demand, agar tidak di-prerender.
