@@ -1,8 +1,5 @@
 ---
 // Pastikan path ke komponen dan layout sudah benar untuk lokasi ini
-// Dari 'src/pages/category/[category]/[page].astro'
-// ke 'src/layouts/' perlu 3x '../'
-// ke 'src/components/' perlu 3x '../'
 import Layout from '../../../layouts/BaseLayout.astro';
 import path from 'path';
 import fs from 'fs';
@@ -20,12 +17,13 @@ interface VideoData {
   category: string;
 }
 
-// Definisikan VIDEOS_PER_PAGE di scope global frontmatter
-// Agar bisa digunakan di dalam getStaticPaths DAN sebagai prop.
-const VIDEOS_PER_PAGE = 12; // Atur jumlah video per halaman di sini
-
 // getStaticPaths untuk menghasilkan halaman untuk setiap kategori unik
 export async function getStaticPaths() {
+  // Pindahkan definisi VIDEOS_PER_PAGE KE DALAM getStaticPaths
+  // Ini adalah cara paling GARANSI VIDEOS_PER_PAGE akan didefinisikan
+  // saat getStaticPaths dieksekusi.
+  const VIDEOS_PER_PAGE = 12; // Atur jumlah video per halaman di sini
+
   const results: VideoData[] = [];
   const csvFilePath = path.resolve(process.cwd(), 'src/data/videos.csv');
 
@@ -64,7 +62,7 @@ export async function getStaticPaths() {
           videos: paginatedVideos,
           currentPage: page,
           totalPages: pagesToGenerate,
-          // PENTING: Kirim VIDEOS_PER_PAGE sebagai prop
+          // Tetap kirim VIDEOS_PER_PAGE sebagai prop
           videosPerPage: VIDEOS_PER_PAGE,
         },
       });
@@ -77,13 +75,13 @@ export async function getStaticPaths() {
 const { category, page } = Astro.params;
 
 // Dapatkan data kategori, video, dan informasi paginasi dari props
-// PENTING: Destruktur videosPerPage dari Astro.props
+// Pastikan videosPerPage ikut didestruktur
 const { categoryName, videos, currentPage, totalPages, videosPerPage } = Astro.props as {
   categoryName: string;
   videos: VideoData[];
   currentPage: number;
   totalPages: number;
-  videosPerPage: number; // Tambahkan ini ke interface Astro.props
+  videosPerPage: number;
 };
 
 // Fallback untuk memastikan actualCategoryName selalu ada
@@ -136,7 +134,6 @@ const actualCategoryName = categoryName || "Semua Kategori";
         ) : (
           videos.map((video, index) => (
             <div itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-              {/* PENTING: Gunakan videosPerPage dari props di sini */}
               <meta itemprop="position" content={((currentPage - 1) * videosPerPage + index + 1).toString()} />
               <VideoCard video={video} />
             </div>
