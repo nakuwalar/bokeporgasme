@@ -21,7 +21,7 @@ export async function getStaticPaths() {
 const { video, allVideos } = Astro.props; // Get the current video and all videos
 
 // --- LOGIKA UNTUK VIDEO TERKAIT ---
-const numberOfRelatedVideos = 6; // Jumlah video terkait yang ingin ditampilkan
+const numberOfRelatedVideos = 20; // Jumlah video terkait yang ingin ditampilkan
 const relatedVideos: VideoData[] = [];
 
 // Strategi 1: Video dari kategori yang sama (paling prioritas)
@@ -135,8 +135,8 @@ const breadcrumbs = [
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen
         loading="lazy"
-        width="100&"
-        height="400"
+        width="100%"
+        height="450"
         title={video.title}
       ></iframe>
     </div>
