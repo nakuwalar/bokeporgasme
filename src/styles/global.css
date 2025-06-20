@@ -516,19 +516,23 @@ main {
   box-shadow: var(--shadow-medium);
 }
 
-/* --- Video Detail Page --- */
-.video-player-wrapper {
+/* --- Video Detail Page (Specific Styles) --- */
+.video-detail-page {
+  /* No specific styles needed here, uses `main`'s styles */
+}
+
+.video-player-container {
   position: relative;
   width: 100%;
   padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
   background-color: #000;
   border-radius: var(--border-radius-large);
   overflow: hidden;
-  margin-bottom: calc(var(--spacing-unit) * 1.25); /* 20px */
+  margin-bottom: calc(var(--spacing-unit) * 1.5); /* 24px */
   box-shadow: var(--shadow-medium);
 }
 
-.video-player-wrapper iframe {
+.video-player-container iframe {
   position: absolute;
   top: 0;
   left: 0;
@@ -537,63 +541,39 @@ main {
   border: none;
 }
 
-.video-title-detail { /* Added class for clarity for specific video detail page title */
-  font-size: 2.2rem;
+.video-title { /* Updated to specifically target the H1 on the detail page */
+  font-size: 2.5rem; /* Slightly larger for main video title */
   margin-top: calc(var(--spacing-unit) * 1.5);
   margin-bottom: var(--spacing-unit);
-  color: var(--primary-color); /* Highlight video title */
+  color: var(--primary-color); /* Highlight video title with primary color */
   line-height: 1.2;
 }
 
-
-.video-meta {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: calc(var(--spacing-unit) * 1.25); /* 20px */
-  padding: 0.75rem 0; /* 10px */
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
-  font-size: 0.95em;
-  color: var(--text-color-light); /* Meta info subtle */
-}
-
-.video-meta p {
-  margin: 0;
-}
-
-.video-meta a {
-  color: var(--primary-color);
-  text-decoration: none;
-}
-
-.video-meta a:hover {
-  text-decoration: underline;
-}
-
-.video-description-container h2, .video-tags-container h2 {
-  font-size: 1.5em;
-  color: var(--text-color);
-  margin-top: 0;
-  margin-bottom: var(--spacing-unit); /* 15px */
-}
-
-.video-description-container p {
-  color: var(--text-color);
+.video-description { /* Updated to target the P for description */
+  font-size: 1.1rem;
+  color: var(--text-color-light); /* Description text is lighter */
   line-height: 1.7;
-  margin-bottom: 0;
-  max-width: var(--max-width-text); /* Limit description width */
+  margin-bottom: calc(var(--spacing-unit) * 2); /* Increased margin */
+  max-width: var(--max-width-text); /* Limit description width for readability */
 }
 
 .video-tags-container {
-  margin-top: calc(var(--spacing-unit) * 2); /* 30px */
+  margin-top: calc(var(--spacing-unit) * 2); /* 32px */
   border-top: 1px solid var(--border-color);
   padding-top: calc(var(--spacing-unit) * 1.25); /* 20px */
+}
+
+.video-tags-container h2 {
+  font-size: 1.5em;
+  color: var(--text-color);
+  margin-top: 0;
+  margin-bottom: var(--spacing-unit); /* 16px */
 }
 
 .tags-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem; /* 10px */
+  gap: 0.75rem; /* 12px */
 }
 
 .tag-item {
@@ -611,6 +591,19 @@ main {
   background-color: var(--hover-color-dark);
   transform: translateY(-2px);
 }
+
+.related-videos-section {
+    margin-top: calc(var(--spacing-unit) * 3); /* Add spacing above related videos */
+}
+
+.related-videos-section .section-title {
+    /* Inherits .section-title styles, which are already good */
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+}
+
+/* Removed `.video-meta` as it was not present in the HTML snippet provided for the video detail page.
+   If you add meta info (like date, author) back, you can use these styles.
+*/
 
 /* --- Pagination --- */
 .pagination {
@@ -844,10 +837,13 @@ footer {
     font-size: 1em;
     padding: 0.8rem;
   }
-  .video-title-detail {
-    font-size: 1.8rem;
+  .video-title { /* For detail page */
+    font-size: 2rem; /* Adjusted for smaller screens */
   }
-  .video-description-container h2, .video-tags-container h2 {
+  .video-description {
+    font-size: 1rem;
+  }
+  .video-tags-container h2 {
     font-size: 1.3em;
   }
 }
@@ -879,8 +875,8 @@ footer {
   .video-info {
     padding: var(--spacing-unit);
   }
-  .video-title {
-    font-size: 1.1em;
+  .video-title { /* For detail page */
+    font-size: 1.8rem; /* Further adjusted for smallest screens */
   }
 
   .pagination {
@@ -899,8 +895,5 @@ footer {
   .tag-card {
     min-height: 60px;
     font-size: 1.1em;
-  }
-  .video-title-detail {
-    font-size: 1.6rem;
   }
 }
