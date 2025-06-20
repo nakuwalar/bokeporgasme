@@ -2,19 +2,18 @@
 // src/pages/category/[slug]/[page].astro
 import Layout from '../../../layouts/BaseLayout.astro';
 import VideoCard from '../../../components/VideoCard.astro';
-import { getAllVideos, type VideoData } from '../../../utils/data'; // Import VideoData type
+import { getAllVideos, type VideoData } from '../../../utils/data';
 import { slugify } from '../../../utils/slugify';
 
-export const prerender = true; // Penting untuk memastikan halaman ini di-prerender
+export const prerender = true;
 
 export async function getStaticPaths() {
-  const allVideos: VideoData[] = await getAllVideos(); // Gunakan type VideoData
-  const videosPerPage = 30; // Sesuaikan jumlah video per halaman
+  const allVideos: VideoData[] = await getAllVideos();
+  const videosPerPage = 30;
 
   const paths = [];
-  const categories: { [key: string]: VideoData[] } = {}; // Tentukan tipe untuk categories
+  const categories: { [key: string]: VideoData[] } = {};
 
-  // Kelompokkan video berdasarkan kategori
   allVideos.forEach(video => {
     if (!categories[video.category]) {
       categories[video.category] = [];
@@ -22,7 +21,6 @@ export async function getStaticPaths() {
     categories[video.category].push(video);
   });
 
-  // Buat path untuk setiap kategori dan setiap halaman paginasi
   for (const categoryName in categories) {
     const categorySlug = slugify(categoryName);
     const categoryVideos = categories[categoryName];
@@ -33,22 +31,17 @@ export async function getStaticPaths() {
       const endIndex = startIndex + videosPerPage;
       const paginatedVideosForPage = categoryVideos.slice(startIndex, endIndex);
 
-      // Kumpulkan domain preconnect hanya untuk video di halaman ini
       const preconnectDomainsForPage = new Set<string>();
       paginatedVideosForPage.forEach(video => {
         try {
-          // Tambahkan validasi jika URL mungkin kosong atau tidak valid
           if (video.thumbnail) {
             preconnectDomainsForPage.add(new URL(video.thumbnail).origin);
           }
-          if (video.embedUrl) { // *** PERBAIKAN: Gunakan embedUrl ***
+          if (video.embedUrl) {
             preconnectDomainsForPage.add(new URL(video.embedUrl).origin);
           }
         } catch (e) {
-          // Log error dengan ID video untuk memudahkan identifikasi
-          // Pesan error dari Astro mungkin masih bilang CSV, tapi ini akan menunjukkan ID video JSON Anda
           console.error(`[ERROR] URL tidak valid untuk video ID "${video.id}" di kategori "${video.category}" (paginasi kategori):`, e);
-          // Anda bisa memilih untuk tidak menambahkan domain ini atau mengabaikan video ini jika URL-nya kritis
         }
       });
 
@@ -61,7 +54,7 @@ export async function getStaticPaths() {
           categoryName,
           currentPage: i,
           totalPages,
-          videos: paginatedVideosForPage, // *** PERBAIKAN: Hanya kirim video yang dipaginasi ***
+          videos: paginatedVideosForPage,
           preconnectDomains: Array.from(preconnectDomainsForPage),
         },
       });
@@ -70,16 +63,8 @@ export async function getStaticPaths() {
   return paths;
 }
 
-// *** PERBAIKAN: Hanya ambil 'videos' dari props, bukan 'categoryVideos' yang lengkap ***
 const { categoryName, currentPage, totalPages, videos: paginatedVideos, preconnectDomains } = Astro.props;
 
-// *** HAPUS: Ini tidak lagi diperlukan karena sudah difilter di getStaticPaths ***
-// const videosPerPage = 12;
-// const startIndex = (currentPage - 1) * videosPerPage;
-// const endIndex = startIndex + videosPerPage;
-// const paginatedVideos = categoryVideos.slice(startIndex, endIndex);
-
-// Breadcrumb data
 const breadcrumbs = [
   { name: 'Beranda', url: '/' },
   { name: 'Kategori', url: '/category/' },
@@ -93,7 +78,14 @@ const breadcrumbs = [
   description={`Kumpulan video kategori ${categoryName}, halaman ${currentPage}.`}
   preconnectDomains={preconnectDomains}
 >
-  <main class="category-page">
+  <main class="category-page" itemscope itemtype="http://schema.org/CollectionPage">
+    <meta itemprop="name" content={`${categoryName} - Halaman ${currentPage}`} />
+    <meta itemprop="description" content={`Kumpulan video kategori ${categoryName}, halaman ${currentPage}.`} />
+    <meta itemprop="url" content={Astro.url.href} />
+    {/* Jika ada gambar representatif untuk kategori ini, tambahkan itemprop="image" */}
+    {/* <link itemprop="image" href="/path/to/category-image.jpg" /> */}
+
+
     <nav class="breadcrumb" aria-label="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
       <ol>
         {breadcrumbs.map((item, index) => (
@@ -112,14 +104,14 @@ const breadcrumbs = [
       </ol>
     </nav>
 
-    <h1 class="category-title-header">{categoryName} <span class="page-info">(Halaman {currentPage} dari {totalPages})</span></h1>
+    <h1 class="category-title-header" itemprop="headline">{categoryName} <span class="page-info">(Halaman {currentPage} dari {totalPages})</span></h1>
 
     {paginatedVideos.length === 0 ? (
       <p class="no-videos-in-category">Tidak ada video yang ditemukan dalam kategori ini.</p>
     ) : (
       <div class="video-grid">
         {paginatedVideos.map((video) => (
-          <VideoCard video={video} />
+          <VideoCard video={video} /> {/* Pastikan VideoCard Anda juga memiliki skema VideoObject */}
         ))}
       </div>
     )}
