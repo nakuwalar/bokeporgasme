@@ -107,30 +107,30 @@ h1, h2, h3, h4, h5, h6 {
   transition: color 0.3s ease;
 }
 
-/* Menggunakan ukuran font statis dengan rem untuk desktop */
+/* Menggunakan ukuran font statis dengan rem untuk desktop (GLOBAL HEADINGS) */
 h1 {
-  font-size: 2.5rem; /* Patokan utama dari .video-detail-page .video-title */
+  font-size: 3.2rem; /* Ukuran H1 global yang lebih besar untuk judul utama halaman */
   font-weight: 800;
-  color: var(--primary-color); /* Bisa disesuaikan jika ingin warna berbeda untuk H1 di luar hero */
+  color: var(--primary-color);
 }
 h2 {
-  font-size: 2rem; /* Lebih kecil dari H1 */
+  font-size: 2.4rem; /* Sesuaikan h2 global */
   font-weight: 700;
 }
 h3 {
-  font-size: 1.6rem; /* Lebih kecil dari H2 */
+  font-size: 1.9rem; /* Sesuaikan h3 global */
   font-weight: 600;
 }
 h4 {
-  font-size: 1.4rem; /* Lebih kecil dari H3 */
+  font-size: 1.6rem; /* Sesuaikan h4 global */
   font-weight: 600;
 }
 h5 {
-  font-size: 1.2rem; /* Lebih kecil dari H4 */
+  font-size: 1.3rem; /* Sesuaikan h5 global */
   font-weight: 500;
 }
 h6 {
-  font-size: 1rem; /* Lebih kecil dari H5 */
+  font-size: 1rem; /* Sesuaikan h6 global */
   font-weight: 500;
 }
 
@@ -608,19 +608,17 @@ main {
   border: none;
 }
 
-/* Override .video-title from video-card for the H1 on the detail page. */
-/* Karena H1 global sekarang 2.5rem, tidak perlu override spesifik lagi kecuali ada perbedaan.
-   Mengatur H1 global ke 2.5rem membuatnya konsisten. */
-/* main.video-detail-page .video-title {
-  font-size: 2.5rem;
+/* OVERRIDE: Set H1 specifically for video detail page */
+main.video-detail-page .video-title {
+  font-size: 2.5rem; /* Patokan utama: Judul video 2.5rem */
   margin-top: calc(var(--spacing-unit) * 1.5);
   margin-bottom: var(--spacing-unit);
-  color: var(--text-color);
+  color: var(--text-color); /* Changed to text-color for a more subdued title */
   line-height: 1.2;
   text-align: left;
   border-bottom: none;
   padding-bottom: 0;
-} */
+}
 
 .video-description {
   font-size: 1.1rem;
@@ -639,7 +637,7 @@ main {
 }
 
 .video-tags-container h2 {
-  font-size: 1.7rem; /* Ini sekarang akan mengacu pada h2 global, mungkin perlu disesuaikan jika ingin lebih kecil dari h2 global */
+  font-size: 1.7rem; /* H2 di dalam konteks detail video, disesuaikan agar tidak terlalu besar dari h1 video */
   color: var(--text-color);
   margin-top: 0;
   margin-bottom: var(--spacing-unit);
@@ -752,305 +750,4 @@ main {
   border-radius: var(--border-radius-medium);
   padding: calc(var(--spacing-unit) * 1.5);
   text-align: center;
-  text-decoration: none;
-  color: var(--text-color);
-  box-shadow: var(--shadow-light);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-}
-
-.category-item:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-medium);
-  background-color: var(--hover-color-light);
-}
-
-.category-item-title {
-  font-size: 1.6em;
-  color: var(--primary-color);
-  margin-top: 0;
-  margin-bottom: 0.6rem;
-}
-
-.category-item-count {
-  font-size: 1.1em;
-  color: var(--text-color-light);
-  margin: 0;
-  transition: color 0.3s ease;
-}
-
-/* --- Tags Grid (tags/index.astro) --- */
-.tags-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: var(--spacing-unit);
-  padding: var(--spacing-unit);
-  justify-content: center;
-  margin-bottom: calc(var(--spacing-unit) * 2);
-}
-
-.tag-card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: var(--spacing-unit);
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-medium);
-  text-decoration: none;
-  color: var(--primary-color);
-  font-weight: bold;
-  font-size: 1.1em;
-  text-align: center;
-  transition: all 0.2s ease-in-out, background-color 0.3s ease, border-color 0.3s ease;
-  min-height: 80px;
-  box-shadow: var(--shadow-light);
-}
-
-.tag-card:hover {
-  background-color: var(--hover-color-light);
-  border-color: var(--primary-color);
-  box-shadow: var(--shadow-medium);
-  transform: translateY(-2px);
-}
-
-
-/* --- Footer --- */
-footer {
-  background-color: var(--card-bg);
-  color: var(--text-color-light);
-  text-align: center;
-  padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 1.25);
-  margin-top: auto;
-  font-size: 0.9rem;
-  border-top: 1px solid var(--border-color);
-  box-shadow: var(--shadow-medium);
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* --- Responsiveness --- */
-@media (max-width: 992px) { /* Tablet landscape and larger phones */
-  main {
-    padding: var(--spacing-unit);
-    margin: var(--spacing-unit) auto;
-  }
-
-  /* Penyesuaian ukuran font untuk layar menengah */
-  h1 {
-    font-size: 2.2rem; /* Menyesuaikan H1 untuk layar menengah */
-  }
-  h2 {
-    font-size: 1.8rem; /* Lebih kecil dari H1 */
-  }
-  h3 {
-    font-size: 1.4rem; /* Lebih kecil dari H2 */
-  }
-  h4 {
-    font-size: 1.2rem;
-  }
-  h5 {
-    font-size: 1rem;
-  }
-  h6 {
-    font-size: 0.9rem;
-  }
-  .hero-section h1 {
-    font-size: 2.5rem; /* Mungkin ingin tetap besar di hero, disesuaikan agar tidak terlalu jauh dari H1 global */
-  }
-  .hero-section p {
-    font-size: 1.1rem;
-  }
-  /* Tidak perlu override main.video-detail-page .video-title lagi karena H1 global sudah disesuaikan */
-  /* main.video-detail-page .video-title {
-    font-size: 2.2rem;
-  } */
-  .video-tags-container h2 {
-    font-size: 1.5rem; /* Menyesuaikan ukuran H2 di sini jika perlu */
-  }
-
-
-  .video-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--spacing-unit);
-  }
-
-  .category-list {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: var(--spacing-unit);
-  }
-}
-
-@media (max-width: 768px) { /* Tablet portrait and larger phones */
-  .main-nav {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .logo {
-    margin-bottom: 0.5rem;
-    width: 100%;
-    text-align: center;
-  }
-  .search-form {
-    width: 100%;
-    margin: 0.5rem 0;
-    order: 1;
-  }
-  .nav-links {
-    width: 100%;
-    justify-content: center;
-    margin-top: 0.5rem;
-    order: 2;
-  }
-  .nav-links li {
-    margin-left: 0;
-    margin: 0 0.6rem;
-  }
-
-  /* Penyesuaian ukuran font untuk layar tablet dan mobile besar */
-  h1 {
-    font-size: 1.9rem; /* Menyesuaikan H1 untuk layar mobile besar */
-  }
-  h2 {
-    font-size: 1.5rem; /* Lebih kecil dari H1 */
-  }
-  h3 {
-    font-size: 1.2rem; /* Lebih kecil dari H2 */
-  }
-  h4 {
-    font-size: 1.1rem;
-  }
-  h5 {
-    font-size: 1rem;
-  }
-  h6 {
-    font-size: 0.9rem;
-  }
-  .hero-section h1 {
-    font-size: 2rem; /* Menyesuaikan hero H1 */
-  }
-  .hero-section p {
-    font-size: 1rem;
-  }
-  /* Tidak perlu override main.video-detail-page .video-title lagi */
-  /* main.video-detail-page .video-title {
-    font-size: 1.9rem;
-    text-align: center;
-  } */
-  .video-tags-container h2 {
-    font-size: 1.3rem; /* Menyesuaikan ukuran H2 di sini jika perlu */
-  }
-
-
-  .video-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: var(--spacing-unit);
-  }
-
-  .page-title, .section-title, .category-title-header, .search-results-title {
-    text-align: center;
-    display: block;
-    width: 100%;
-  }
-  .category-title {
-    text-align: center;
-    display: block;
-    width: 100%;
-    padding-right: 0;
-  }
-
-  .view-all-button-container {
-    text-align: center;
-  }
-
-  .category-list {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: var(--spacing-unit);
-  }
-  .category-item {
-    padding: var(--spacing-unit);
-  }
-  .tags-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 0.8rem;
-  }
-  .tag-card {
-    min-height: 70px;
-    font-size: 1em;
-    padding: 0.8rem;
-  }
-
-  .related-videos-section .section-title {
-    text-align: center;
-    width: 100%;
-    padding-right: 0;
-  }
-}
-
-@media (max-width: 480px) { /* Small mobile devices */
-  :root {
-    --spacing-unit: 0.9rem;
-  }
-
-  main {
-    padding: var(--spacing-unit);
-    margin: var(--spacing-unit) auto;
-  }
-
-  /* Penyesuaian ukuran font untuk layar mobile kecil */
-  h1 {
-    font-size: 1.6rem; /* Menyesuaikan H1 untuk layar mobile kecil */
-  }
-  h2 {
-    font-size: 1.3rem; /* Lebih kecil dari H1 */
-  }
-  h3 {
-    font-size: 1rem; /* Lebih kecil dari H2 */
-  }
-  h4 {
-    font-size: 0.95rem;
-  }
-  h5 {
-    font-size: 0.9rem;
-  }
-  h6 {
-    font-size: 0.8rem;
-  }
-  .hero-section h1 {
-    font-size: 1.7rem; /* Menyesuaikan hero H1 */
-  }
-  .hero-section p {
-    font-size: 0.9rem;
-  }
-  /* Tidak perlu override main.video-detail-page .video-title lagi */
-  /* main.video-detail-page .video-title {
-    font-size: 1.6rem;
-  } */
-  .video-tags-container h2 {
-    font-size: 1.1rem; /* Menyesuaikan ukuran H2 di sini jika perlu */
-  }
-
-  .video-grid {
-    grid-template-columns: 1fr;
-    padding: 0;
-  }
-  .video-info {
-    padding: var(--spacing-unit);
-  }
-
-  .pagination {
-    padding: 0.6rem;
-    gap: 0.5rem;
-  }
-  .pagination-link {
-    min-width: 32px;
-    height: 32px;
-    font-size: 0.8em;
-  }
-
-  .tags-grid {
-    grid-template-columns: 1fr;
-  }
-  .tag-card {
-    min-height: 60px;
-    font-size: 1em;
-  }
-}
+  text-decoration:
