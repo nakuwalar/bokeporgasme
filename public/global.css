@@ -1,73 +1,45 @@
-/*
- * src/styles/global.css
- *
- * Ini adalah file CSS global Anda yang akan diimpor di BaseLayout.astro.
- * Semua gaya dasar, variabel CSS, dan gaya umum untuk komponen
- * serta halaman akan ditempatkan di sini.
-*/
-
 :root {
-  /* Warna Default (Light Mode) - YouTube-like adjustments */
-  --primary-color: #a300ba; /* Retaining your primary purple */
-  --secondary-color: #AAAAAA; /* Lighter grey for secondary/light text */
-  --accent-color: #FF0000; /* YouTube's classic red for accents */
-
-  --background-color-body: #F0F0F0; /* Slightly off-white */
-  --background-color-main-content: #FFFFFF; /* Pure white for main content */
-  --text-color: #212121; /* Darker text for readability */
-  --text-color-light: #606060; /* Medium grey for light text */
-
-  --border-color: #E0E0E0; /* Lighter, subtle border */
-  --card-bg: #FFFFFF; /* Pure white cards */
-
-  --hover-color-light: #F9F9F9; /* Very subtle hover for cards */
-  --hover-color-dark: #8c009d; /* Keeping your primary hover for consistency */
-  --active-color: #7e008d;
-
-  /* Shadows (Disarankan disesuaikan untuk light mode jika diperlukan) - More subtle, YouTube-like */
-  --shadow-light: 0 1px 2px rgba(0,0,0,0.1);
-  --shadow-medium: 0 3px 6px rgba(0,0,0,0.15);
-  --shadow-strong: 0 6px 12px rgba(0,0,0,0.2);
-
-  /* Spasi/Ukuran Font Dasar */
-  --spacing-unit: 1rem; /* Tetapkan 1rem = 16px (default browser) */
-  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; /* Changed to font stack */
-  --font-heading: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; /* Changed to font stack */
-
-  /* Border Radii */
-  --border-radius-small: 2px; /* Slightly sharper, common in YouTube UI */
-  --border-radius-medium: 4px; /* More rectangular, YouTube-like */
-  --border-radius-large: 8px; /* Slightly less rounded */
-
-  /* Max Widths - Dihapus atau disesuaikan jika diperlukan */
-  /* --max-width-content: 1200px; */
-  /* --max-width-text: 750px; */
+  --primary-color: #767a96;
+  --secondary-color: #babdc0;
+  --accent-color: #bcbdc7;
+  --background-color-body: #F9F9F9;
+  --background-color-main-content: #FFFFFF;
+  --text-color: #212121;
+  --text-color-light: #030303;
+  --border-color: #E0E0E0;
+  --card-bg: #FFFFFF;
+  --hover-color-light: #F0F0F0;
+  --hover-color-dark: #303F9F;
+  --active-color: #283593;
+  --shadow-light: 0 1px 2px rgba(0,0,0,0.08);
+  --shadow-medium: 0 3px 6px rgba(0,0,0,0.12);
+  --shadow-strong: 0 6px 12px rgba(0,0,0,0.18);
+  --spacing-unit: 1rem;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-heading: -apple-system, BlinkMacMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --border-radius-small: 2px;
+  --border-radius-medium: 4px;
+  --border-radius-large: 8px;
 }
 
-/* --- Dark Mode Variables --- YouTube-like adjustments */
 body.dark-mode {
-  --primary-color: #BB86FC; /* Material Design purple for dark mode */
+  --primary-color: #6c6375;
   --secondary-color: #B0B0B0;
-  --accent-color: #FF0000; /* Keeping red for dark mode accents */
-
-  --background-color-body: #121212; /* Very dark background */
-  --background-color-main-content: #1E1E1E; /* Slightly lighter dark for main content */
-  --text-color: #E0E0E0; /* Light text on dark background */
-  --text-color-light: #A0A0A0; /* Slightly darker light text */
-
-  --border-color: #333333; /* Darker border */
-  --card-bg: #282828; /* Darker card background */
-
-  --hover-color-light: #3A3A3A; /* Hover for dark cards */
-  --hover-color-dark: #A000A0; /* Adjusted primary hover for dark mode */
-  --active-color: #900090;
-
-  --shadow-light: 0 1px 2px rgba(0,0,0,0.6); /* More prominent dark mode shadows */
-  --shadow-medium: 0 3px 6px rgba(0,0,0,0.7);
-  --shadow-strong: 0 6px 12px rgba(0,0,0,0.8);
+  --accent-color: #3a3939;
+  --background-color-body: #181818;
+  --background-color-main-content: #000000;
+  --text-color: #E0E0E0;
+  --text-color-light: #A0A0A0;
+  --border-color: #080000;
+  --card-bg: #030000;
+  --hover-color-light: #050000;
+  --hover-color-dark: #6C7DD7;
+  --active-color: #7986CB;
+  --shadow-light: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-medium: 0 3px 6px rgba(0,0,0,0.5);
+  --shadow-strong: 0 6px 12px rgba(0,0,0,0.6);
 }
 
-/* --- Base Styles --- */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -97,40 +69,38 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* --- Global Typography --- */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   color: var(--text-color);
   line-height: 1.2;
-  margin-top: calc(var(--spacing-unit) * 1.5); /* Sedikit diperkecil margin atas */
+  margin-top: calc(var(--spacing-unit) * 1.5);
   margin-bottom: var(--spacing-unit);
   transition: color 0.3s ease;
 }
 
-/* Menggunakan skala font yang lebih ringkas dan proporsional untuk heading global (desktop base) */
 h1 {
-  font-size: 2.5rem; /* Lebih ringkas dari sebelumnya, tetapi tetap menonjol */
+  font-size: 2.2rem;
   font-weight: 800;
   color: var(--primary-color);
 }
 h2 {
-  font-size: 2rem; /* Proporsional dengan H1 */
+  font-size: 1.8rem;
   font-weight: 700;
 }
 h3 {
-  font-size: 1.6rem; /* Proporsional dengan H2 */
+  font-size: 1.5rem;
   font-weight: 600;
 }
 h4 {
-  font-size: 1.3rem; /* Proporsional dengan H3 */
+  font-size: 1.2rem;
   font-weight: 600;
 }
 h5 {
-  font-size: 1.05rem; /* Sedikit di atas ukuran font dasar */
+  font-size: 1rem;
   font-weight: 500;
 }
 h6 {
-  font-size: 0.9rem; /* Paling kecil, untuk detail atau label */
+  font-size: 0.85rem;
   font-weight: 500;
   color: var(--text-color-light);
 }
@@ -150,14 +120,13 @@ a:hover {
   text-decoration: underline;
 }
 
-/* --- Global Buttons & Forms --- */
 button, .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: var(--border-radius-medium); /* Adjusted for YouTube-like */
+  border-radius: var(--border-radius-medium);
   cursor: pointer;
   font-size: 1rem;
   font-weight: 600;
@@ -165,16 +134,15 @@ button, .button {
   background-color: var(--primary-color);
   transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
   text-decoration: none;
-  /* YouTube-like button specific styling */
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: none; /* Starting with no shadow */
+  box-shadow: none;
 }
 
 button:hover, .button:hover {
   background-color: var(--hover-color-dark);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-light); /* Subtle shadow on hover */
+  box-shadow: var(--shadow-light);
 }
 
 .button-secondary {
@@ -189,7 +157,6 @@ button:hover, .button:hover {
   box-shadow: var(--shadow-light);
 }
 
-/* Forms */
 input[type="search"],
 input[type="text"],
 input[type="email"],
@@ -222,15 +189,14 @@ input[type="password"]:focus,
 textarea:focus {
   border-color: var(--primary-color);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(163, 0, 186, 0.3); /* Using your primary color for focus ring */
+  box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.3);
 }
 
-/* --- Header & Navigasi --- */
 header {
   background-color: var(--card-bg);
-  padding: var(--spacing-unit) 0;
+  padding: 0.2rem 0;
   box-shadow: var(--shadow-medium);
-  position: sticky;
+  position: static;
   top: 0;
   z-index: 1000;
   border-bottom: 1px solid var(--border-color);
@@ -238,7 +204,7 @@ header {
 }
 
 .main-nav {
-  max-width: var(--max-width-content, 1200px); /* Pertahankan max-width untuk nav agar tidak terlalu lebar */
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 calc(var(--spacing-unit) * 1.5);
   display: flex;
@@ -271,29 +237,29 @@ header {
 .search-form input[type="search"] {
   flex-grow: 1;
   padding: 0.65rem 1rem;
-  border: 1px solid var(--border-color); /* Added border for Youtube bar look */
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius-medium) 0 0 var(--border-radius-medium);
   font-size: 1rem;
   outline: none;
-  background-color: var(--background-color-body); /* Using body bg for search input */
+  background-color: var(--background-color-body);
   color: var(--text-color);
 }
 
 .search-form button {
-  background-color: var(--accent-color); /* Using accent red for search button */
+  background-color: var(--accent-color);
   color: white;
   border-radius: 0 var(--border-radius-medium) var(--border-radius-medium) 0;
   font-weight: bold;
   padding: 0.65rem 1rem;
-  text-transform: none; /* No uppercase for search button */
+  text-transform: none;
   letter-spacing: unset;
-  box-shadow: none; /* No shadow */
-  border: 1px solid var(--accent-color); /* Border matches accent */
+  box-shadow: none;
+  border: 1px solid var(--accent-color);
 }
 
 .search-form button:hover {
-  background-color: #E60000; /* Slightly darker red on hover */
-  transform: none; /* No translateY for search button hover */
+  background-color: #CC0000;
+  transform: none;
   box-shadow: none;
 }
 
@@ -327,24 +293,19 @@ header {
   font-weight: 600;
 }
 
-
-/* --- General Page Layout --- */
 main {
-  width: 100%; /* Memenuhi lebar penuh */
-  margin: 0; /* Hapus margin auto */
-  padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 4); /* Sesuaikan padding untuk halaman penuh */
+  width: 100%;
+  margin: 0;
+  padding: calc(var(--spacing-unit) * 0) calc(var(--spacing-unit) * 1);
   background-color: var(--background-color-main-content);
-  /* border-radius: var(--border-radius-large); Hapus border-radius jika ingin full edge-to-edge */
-  box-shadow: var(--shadow-medium); /* Pertahankan shadow jika diinginkan */
+  box-shadow: var(--shadow-medium);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  /* Tambahkan max-width opsional untuk konten di dalam main jika tidak ingin melebar terlalu jauh */
-  max-width: var(--max-width-content, 1200px); /* Opsional: batasi lebar konten di dalam main */
+  max-width: 1280px;
   margin-left: auto;
   margin-right: auto;
-  border-radius: var(--border-radius-large); /* Kembali tambahkan radius untuk content area */
+  border-radius: var(--border-radius-large);
 }
 
-/* --- Breadcrumbs --- */
 .breadcrumb {
   margin-bottom: var(--spacing-unit);
   font-size: 0.9em;
@@ -391,11 +352,9 @@ main {
   transition: color 0.3s ease;
 }
 
-
-/* --- Page / Section Titles --- */
-.page-title, .section-title, .category-title-header, .search-results-title {
+.page-title, .category-title-header, .search-results-title {
   text-align: center;
-  margin-bottom: calc(var(--spacing-unit) * 1.2); /* Sedikit diperkecil margin bottom */
+  margin-bottom: calc(var(--spacing-unit) * 1.2);
   border-bottom: 3px solid var(--accent-color);
   padding-bottom: var(--spacing-unit);
   display: inline-block;
@@ -404,9 +363,27 @@ main {
   transition: border-color 0.3s ease;
 }
 
-.category-title {
+.section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
   text-align: left;
-  margin-bottom: calc(var(--spacing-unit) * 1); /* Sedikit diperkecil margin bottom */
+  margin-top: calc(var(--spacing-unit) * 1.5);
+  margin-bottom: calc(var(--spacing-unit) * 1);
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 0.5rem;
+  display: inline-block;
+  padding-right: var(--spacing-unit);
+  width: auto;
+  transition: color 0.3s ease, border-color 0.3s ease;
+  color: var(--text-color);
+}
+
+.category-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-top: calc(var(--spacing-unit) * 1.5);
+  margin-bottom: calc(var(--spacing-unit) * 1);
+  text-align: left;
   color: var(--text-color);
   position: relative;
   padding-bottom: 0.5rem;
@@ -434,15 +411,13 @@ main {
   transition: color 0.3s ease;
 }
 
-/* --- Video Grid (Used on many pages) --- */
 .video-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Minmax sedikit diperkecil */
-  gap: calc(var(--spacing-unit) * 1.2); /* Gap sedikit diperkecil */
-  margin-bottom: calc(var(--spacing-unit) * 2); /* Margin bottom diperkecil */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: calc(var(--spacing-unit) * 1.2);
+  margin-bottom: calc(var(--spacing-unit) * 2);
 }
 
-/* --- Video Card Component --- */
 .video-card {
   display: flex;
   flex-direction: column;
@@ -498,8 +473,9 @@ main {
   padding: var(--spacing-unit);
 }
 
+/* --- Start of VideoCard.astro specific CSS added to global.css --- */
 .video-title {
-  font-size: 1.05em; /* Sedikit diperkecil */
+  font-size: 1.05em;
   margin-top: 0;
   margin-bottom: 0.5rem;
   color: var(--text-color);
@@ -513,18 +489,18 @@ main {
 }
 
 .video-category {
-  font-size: 0.85em; /* Sedikit diperkecil */
+  font-size: 0.85em;
   color: var(--text-color-light);
   margin-bottom: 0.5rem;
   transition: color 0.3s ease;
 }
+/* --- End of VideoCard.astro specific CSS added to global.css --- */
 
-/* --- Homepage (Index) --- */
 .hero-section {
   text-align: center;
-  margin-bottom: calc(var(--spacing-unit) * 2); /* Diperkecil margin bottom */
-  padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 1.25); /* Padding diperkecil */
-  background: linear-gradient(135deg, var(--primary-color), #6a057e);
+  margin-bottom: calc(var(--spacing-unit) * 2);
+  padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 1.25);
+  background: linear-gradient(135deg, var(--primary-color), #4CAF50);
   color: white;
   border-radius: var(--border-radius-large);
   box-shadow: var(--shadow-medium);
@@ -534,32 +510,32 @@ main {
 .hero-section h1 {
   margin-bottom: 0.5rem;
   line-height: 1.2;
-  color: white; /* Override h1 global color for hero section */
-  font-size: 2.2rem; /* Diperkecil untuk hero section */
+  color: white;
+  font-size: 2.2rem;
 }
 
 .hero-section p {
-  font-size: 1.1rem; /* Diperkecil */
+  font-size: 1.1rem;
   opacity: 0.9;
-  max-width: var(--max-width-text, 750px);
+  max-width: 750px;
   margin: 0 auto;
 }
 
 .latest-videos-section,
 .all-categories-section {
-  margin-top: calc(var(--spacing-unit) * 2.5); /* Margin top diperkecil */
+  margin-top: calc(var(--spacing-unit) * 2.5);
 }
 
 .category-group {
-  margin-bottom: calc(var(--spacing-unit) * 3); /* Margin bottom diperkecil */
+  margin-bottom: calc(var(--spacing-unit) * 3);
 }
 
 .no-videos-overall, .no-videos-in-category, .no-videos-found, .no-categories, .no-tags-message {
   grid-column: 1 / -1;
   text-align: center;
-  font-size: 1.1em; /* Diperkecil */
+  font-size: 1.1em;
   color: var(--text-color-light);
-  padding: calc(var(--spacing-unit) * 2) 0; /* Padding diperkecil */
+  padding: calc(var(--spacing-unit) * 2) 0;
   background-color: var(--card-bg);
   border-radius: var(--border-radius-medium);
   box-shadow: var(--shadow-light);
@@ -584,14 +560,12 @@ main {
 }
 
 .view-all-button:hover {
-  background-color: #E60000; /* Darker red on hover */
+  background-color: #CC0000;
   transform: translateY(-2px);
   box-shadow: var(--shadow-medium);
 }
 
-/* --- Video Detail Page (Specific Styles) --- */
 .video-detail-page {
-  /* No specific width/margin changes here, inherits from main */
 }
 
 .video-player-container {
@@ -601,7 +575,7 @@ main {
   background-color: #000;
   border-radius: var(--border-radius-large);
   overflow: hidden;
-  margin-bottom: calc(var(--spacing-unit) * 1.2); /* Margin bottom diperkecil */
+  margin-bottom: calc(var(--spacing-unit) * 1.2);
   box-shadow: var(--shadow-medium);
 }
 
@@ -614,12 +588,12 @@ main {
   border: none;
 }
 
-/* OVERRIDE: Set H1 specifically for video detail page */
 main.video-detail-page .video-title {
-  font-size: 2.2rem; /* Tetap menjadi yang terbesar di halaman detail, tapi diperkecil */
-  margin-top: calc(var(--spacing-unit) * 1.2); /* Margin atas diperkecil */
-  margin-bottom: var(--spacing-unit);
+  font-size: 1.5rem;
+  font-weight: 600;
   color: var(--text-color);
+  margin-top: calc(var(--spacing-unit) * 1.5);
+  margin-bottom: var(--spacing-unit);
   line-height: 1.2;
   text-align: left;
   border-bottom: none;
@@ -627,79 +601,111 @@ main.video-detail-page .video-title {
 }
 
 .video-description {
-  font-size: 1em; /* Diperkecil sedikit */
+  font-size: 1em;
   color: var(--text-color-light);
-  line-height: 1.6; /* Line height diperkecil sedikit */
-  margin-bottom: calc(var(--spacing-unit) * 1.5); /* Margin bottom diperkecil */
-  max-width: var(--max-width-text, 750px);
+  line-height: 1.6;
+  margin-bottom: calc(var(--spacing-unit) * 1.5);
+  max-width: 750px;
   transition: color 0.3s ease;
 }
 
 .video-tags-container {
-  margin-top: calc(var(--spacing-unit) * 1.8); /* Margin atas diperkecil */
+  margin-top: calc(var(--spacing-unit) * 1.8);
   border-top: 1px solid var(--border-color);
-  padding-top: calc(var(--spacing-unit) * 1); /* Padding atas diperkecil */
+  padding-top: calc(var(--spacing-unit) * 1);
   transition: border-color 0.3s ease;
 }
 
-/* Menyesuaikan H2 di halaman detail video agar proporsional dengan H1 video */
-.video-tags-container h2 {
-  font-size: 1.5rem; /* Lebih kecil dari H1 video, proporsional */
+main.video-detail-page h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
   color: var(--text-color);
   margin-top: 0;
   margin-bottom: var(--spacing-unit);
   transition: color 0.3s ease;
 }
 
+main.video-detail-page h3 {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+main.video-detail-page h4 {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+main.video-detail-page h5 {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+main.video-detail-page h6 {
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
 .tags-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem; /* Gap sedikit diperkecil */
+  gap: 0.6rem;
 }
 
 .tag-item {
   display: inline-block;
-  background-color: var(--secondary-color); /* Changed to secondary color for tags */
-  color: white;
-  padding: 0.4rem 0.8rem; /* Padding diperkecil */
-  border-radius: var(--border-radius-small); /* Sharper corners */
-  text-decoration: none;
-  font-size: 0.85em; /* Diperkecil */
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  background-color: transparent;
+  color: var(--text-color-light);
+  font-size: 0.85em;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+  margin-right: 0.6rem;
+  margin-bottom: 0.6rem;
 }
 
 .tag-item:hover {
-  background-color: #707070; /* Darker grey on hover */
-  transform: translateY(-2px);
+  color: var(--primary-color);
+  text-decoration: underline;
+  background-color: transparent;
+  transform: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+body.dark-mode .tag-item {
+  color: var(--text-color-light);
+}
+
+body.dark-mode .tag-item:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
 }
 
 .related-videos-section {
-    margin-top: calc(var(--spacing-unit) * 2.5); /* Margin top diperkecil */
+  margin-top: calc(var(--spacing-unit) * 2.5);
 }
 
 .related-videos-section .section-title {
-    color: var(--text-color);
-    text-align: left;
-    margin-top: calc(var(--spacing-unit) * 1.5); /* Margin atas diperkecil */
-    margin-bottom: calc(var(--spacing-unit) * 1); /* Margin bottom diperkecil */
-    border-bottom: 2px solid var(--accent-color);
-    padding-bottom: 0.5rem;
-    display: inline-block;
-    padding-right: var(--spacing-unit);
-    width: auto;
-    transition: color 0.3s ease, border-color 0.3s ease;
+  color: var(--text-color);
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: left;
+  margin-top: calc(var(--spacing-unit) * 1.5);
+  margin-bottom: calc(var(--spacing-unit) * 1);
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 0.5rem;
+  display: inline-block;
+  padding-right: var(--spacing-unit);
+  width: auto;
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
-
-/* --- Pagination --- */
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.6rem; /* Gap diperkecil */
-  margin-top: calc(var(--spacing-unit) * 1.5); /* Margin top diperkecil */
-  padding: var(--spacing-unit) * 0.8; /* Padding diperkecil */
+  gap: 0.6rem;
+  margin-top: calc(var(--spacing-unit) * 1.5);
+  padding: calc(var(--spacing-unit) * 0.8);
   background-color: var(--background-color-main-content);
   border-radius: var(--border-radius-large);
   box-shadow: var(--shadow-light);
@@ -707,84 +713,78 @@ main.video-detail-page .video-title {
 }
 
 .pagination-link {
-  min-width: 36px; /* Ukuran minimum diperkecil */
-  height: 36px; /* Ukuran diperkecil */
-  padding: 0 0.5rem; /* Padding diperkecil */
-  font-size: 0.9em; /* Diperkecil */
+  min-width: 36px;
+  height: 36px;
+  padding: 0 0.5rem;
+  font-size: 0.9em;
 }
 
-/* --- Category List (category/index.astro) --- */
 .category-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Minmax diperkecil */
-  gap: calc(var(--spacing-unit) * 1); /* Gap diperkecil */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: calc(var(--spacing-unit) * 1);
 }
 
 .category-item {
-  padding: calc(var(--spacing-unit) * 1.2); /* Padding diperkecil */
+  padding: calc(var(--spacing-unit) * 1.2);
 }
 
 .category-item-title {
-  font-size: 1.4em; /* Diperkecil */
+  font-size: 1.4em;
 }
 
 .category-item-count {
-  font-size: 1em; /* Diperkecil */
+  font-size: 1em;
 }
 
-/* --- Tags Grid (tags/index.astro) --- */
 .tags-grid {
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Minmax diperkecil */
-  gap: 0.6rem; /* Gap diperkecil */
-  padding: var(--spacing-unit) * 0.8; /* Padding diperkecil */
-  margin-bottom: calc(var(--spacing-unit) * 1.5); /* Margin bottom diperkecil */
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.6rem;
+  padding: calc(var(--spacing-unit) * 0.8);
+  margin-bottom: calc(var(--spacing-unit) * 1.5);
 }
 
 .tag-card {
-  padding: 0.8rem; /* Padding diperkecil */
-  font-size: 1em; /* Diperkecil */
-  min-height: 70px; /* Min-height diperkecil */
+  padding: 0.8rem;
+  font-size: 1em;
+  min-height: 70px;
 }
 
-
-/* --- Footer --- */
 footer {
   background-color: var(--card-bg);
   color: var(--text-color-light);
   text-align: center;
-  padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 1.25); /* Padding diperkecil */
+  padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 1.25);
   margin-top: auto;
-  font-size: 0.8rem; /* Diperkecil */
+  font-size: 0.8rem;
   border-top: 1px solid var(--border-color);
   box-shadow: var(--shadow-medium);
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* --- Responsiveness --- */
-@media (max-width: 992px) { /* Tablet landscape and larger phones */
+@media (max-width: 992px) {
   main {
-    padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2); /* Padding disesuaikan */
-    border-radius: var(--border-radius-large); /* Tetapkan border-radius */
+    padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
+    border-radius: var(--border-radius-large);
   }
 
-  /* Penyesuaian ukuran font untuk layar menengah (tablet) */
   h1 {
-    font-size: 2.1rem;
+    font-size: 2rem;
   }
   h2 {
-    font-size: 1.7rem;
+    font-size: 1.6rem;
   }
   h3 {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
   }
   h4 {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
   }
   h5 {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
   h6 {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
   .hero-section h1 {
     font-size: 2rem;
@@ -793,10 +793,25 @@ footer {
     font-size: 1rem;
   }
   main.video-detail-page .video-title {
-    font-size: 1.9rem;
-  }
-  .video-tags-container h2 {
     font-size: 1.3rem;
+  }
+  main.video-detail-page h2 {
+    font-size: 1.1rem;
+  }
+  main.video-detail-page h3 {
+    font-size: 0.95rem;
+  }
+  main.video-detail-page h4 {
+    font-size: 0.85rem;
+  }
+  main.video-detail-page h5 {
+    font-size: 0.75rem;
+  }
+  main.video-detail-page h6 {
+    font-size: 0.65rem;
+  }
+  .related-videos-section .section-title {
+    font-size: 1.1rem;
   }
 
   .video-grid {
@@ -806,11 +821,11 @@ footer {
 
   .category-list {
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: var(--spacing-unit) * 0.8;
+    gap: calc(var(--spacing-unit) * 0.8);
   }
 }
 
-@media (max-width: 768px) { /* Tablet portrait and larger phones */
+@media (max-width: 768px) {
   .main-nav {
     flex-direction: column;
     align-items: flex-start;
@@ -837,45 +852,62 @@ footer {
   }
 
   main {
-    padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 1.5); /* Padding disesuaikan */
+    padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 1.5);
   }
 
-  /* Penyesuaian ukuran font untuk layar mobile besar */
   h1 {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
   }
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
   h3 {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
   }
   h4 {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
   h5 {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
   h6 {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
   .hero-section h1 {
-    font-size: 1.9rem;
+    font-size: 1.8rem;
   }
   .hero-section p {
     font-size: 0.9rem;
   }
   main.video-detail-page .video-title {
-    font-size: 1.7rem;
+    font-size: 1.15rem;
     text-align: center;
   }
-  .video-tags-container h2 {
-    font-size: 1.2rem;
+  main.video-detail-page h2 {
+    font-size: 0.95rem;
+  }
+  main.video-detail-page h3 {
+    font-size: 0.85rem;
+  }
+  main.video-detail-page h4 {
+    font-size: 0.75rem;
+  }
+  main.video-detail-page h5 {
+    font-size: 0.7rem;
+  }
+  main.video-detail-page h6 {
+    font-size: 0.6rem;
+  }
+  .related-videos-section .section-title {
+    font-size: 0.95rem;
+    text-align: center;
+    width: 100%;
+    padding-right: 0;
   }
 
   .video-grid {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: var(--spacing-unit) * 0.8;
+    gap: calc(var(--spacing-unit) * 0.8);
   }
 
   .page-title, .section-title, .category-title-header, .search-results-title {
@@ -896,10 +928,10 @@ footer {
 
   .category-list {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: var(--spacing-unit) * 0.6;
+    gap: calc(var(--spacing-unit) * 0.6);
   }
   .category-item {
-    padding: var(--spacing-unit) * 0.8;
+    padding: calc(var(--spacing-unit) * 0.8);
   }
   .tags-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -910,53 +942,61 @@ footer {
     font-size: 0.9em;
     padding: 0.6rem;
   }
-
-  .related-videos-section .section-title {
-    text-align: center;
-    width: 100%;
-    padding-right: 0;
-  }
 }
 
-@media (max-width: 480px) { /* Small mobile devices */
+@media (max-width: 480px) {
   :root {
-    --spacing-unit: 0.85rem; /* Ukuran unit dasar diperkecil sedikit lagi */
+    --spacing-unit: 0.85rem;
   }
 
   main {
-    padding: var(--spacing-unit); /* Padding disesuaikan */
+    padding: var(--spacing-unit);
   }
 
-  /* Penyesuaian ukuran font untuk layar mobile kecil */
   h1 {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
   h2 {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
   }
   h3 {
-    font-size: 1.05rem;
+    font-size: 1rem;
   }
   h4 {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
   h5 {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
   h6 {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
   }
   .hero-section h1 {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
   .hero-section p {
     font-size: 0.85rem;
   }
   main.video-detail-page .video-title {
-    font-size: 1.5rem;
+    font-size: 1rem;
   }
-  .video-tags-container h2 {
-    font-size: 1.1rem;
+  main.video-detail-page h2 {
+    font-size: 0.85rem;
+  }
+  main.video-detail-page h3 {
+    font-size: 0.75rem;
+  }
+  main.video-detail-page h4 {
+    font-size: 0.65rem;
+  }
+  main.video-detail-page h5 {
+    font-size: 0.6rem;
+  }
+  main.video-detail-page h6 {
+    font-size: 0.55rem;
+  }
+  .related-videos-section .section-title {
+    font-size: 0.85rem;
   }
 
   .video-grid {
