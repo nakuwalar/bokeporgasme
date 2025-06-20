@@ -7,9 +7,6 @@ import VideoCard from '../../../components/VideoCard.astro';
 import { getAllVideos, type VideoData } from '../../../utils/data.ts';
 import { slugify } from '../../../utils/slugify.ts';
 
-// getStaticPaths ini diperlukan untuk memberitahu Astro bahwa ini adalah rute dinamis.
-// Tetap kosong untuk SSR on-demand, agar tidak di-prerender.
-// Ini penting karena Anda tidak bisa memprediksi semua kueri pencarian saat build time.
 export async function getStaticPaths() {
   return [];
 }
@@ -17,19 +14,14 @@ export async function getStaticPaths() {
 const { query, page } = Astro.params;
 const originalQuery = query ? decodeURIComponent(query) : '';
 const currentPage = page ? parseInt(page) : 1;
-const videosPerPage = 30; // Sesuaikan jumlah video per halaman
+const videosPerPage = 30;
 
-// --- MODIFIKASI KUNCI DI SINI ---
-// 1. Ambil kueri mentah dan pastikan lowercase & trim
 const searchInput = originalQuery.toLowerCase().trim();
 
-// 2. Buat array kata-kata dari kueri, tangani spasi dan hyphen
-//    Misal: "keyword-satu" -> ["keyword", "satu"]
-//    Misal: "keyword satu" -> ["keyword", "satu"]
 const searchWords = searchInput
-    .replace(/-/g, ' ') // Ganti hyphen dengan spasi
-    .split(/\s+/)      // Pisahkan berdasarkan satu atau lebih spasi
-    .filter(word => word.length > 0); // Hapus kata kosong
+    .replace(/-/g, ' ')
+    .split(/\s+/)
+    .filter(word => word.length > 0);
 
 console.log(`[CARI PAGE] Kueri asli dari URL: "${originalQuery}"`);
 console.log(`[CARI PAGE] Kata-kata pencarian terurai: ${JSON.stringify(searchWords)}`);
@@ -40,7 +32,6 @@ let preconnectDomains: string[] = [];
 let totalPages = 1;
 let paginatedResults: VideoData[] = [];
 
-// Hanya lakukan pencarian jika ada query (query path parameter selalu ada)
 if (searchWords.length > 0) {
   try {
     const allVideos: VideoData[] = await getAllVideos();
@@ -51,16 +42,15 @@ if (searchWords.length > 0) {
         video.description.toLowerCase(),
         typeof video.category === 'string' ? video.category.toLowerCase() : '',
         typeof video.tags === 'string' ? video.tags.toLowerCase() : ''
-      ].join(' '); // Gabungkan semua konten yang dapat dicari menjadi satu string besar
+      ].join(' ');
 
-      // Cek apakah SEMUA kata dari searchWords ada di videoContent
       return searchWords.every(word => videoContent.includes(word));
     });
 
     searchResults.sort((a, b) => a.title.localeCompare(b.title));
 
     totalPages = Math.ceil(searchResults.length / videosPerPage);
-    const validCurrentPage = Math.max(1, Math.min(currentPage, totalPages)); // Pastikan halaman valid
+    const validCurrentPage = Math.max(1, Math.min(currentPage, totalPages));
 
     const startIndex = (validCurrentPage - 1) * videosPerPage;
     const endIndex = startIndex + videosPerPage;
@@ -69,7 +59,6 @@ if (searchWords.length > 0) {
     console.log(`[CARI PAGE] Jumlah total hasil: ${searchResults.length}`);
     console.log(`[CARI PAGE] Total halaman: ${totalPages}`);
     console.log(`[CARI PAGE] Hasil paginasi di halaman ${validCurrentPage}: ${paginatedResults.length} video`);
-
 
     if (paginatedResults.length > 0) {
       const domainsSet = new Set<string>();
@@ -87,26 +76,45 @@ if (searchWords.length > 0) {
   } catch (error) {
     console.error('[CARI PAGE ERROR] Gagal melakukan pencarian:', error);
     searchResults = [];
-    paginatedResults = []; // Pastikan ini juga kosong jika ada error
+    paginatedResults = [];
   }
 }
 
-// URL dasar untuk paginasi (tanpa nomor halaman)
 const baseSearchUrl = `/cari/${originalQuery}`;
+
+// Fungsi helper untuk mengkapitalisasi huruf pertama setiap kata
+function capitalizeWords(str: string): string {
+  return str.split(' ').map(word => {
+    if (word.length === 0) return '';
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  }).join(' ');
+}
+
+// Gunakan fungsi capitalizeWords untuk judul dan h1
+const displayQuery = capitalizeWords(originalQuery);
+
 
 const breadcrumbs = [
   { name: 'Beranda', url: '/' },
-  { name: 'tags', url: `${url}/tags` },
-  { name: `${searchWords}` },
+  { name: 'Tags', url: `${url}/tags` },
+  { name: `Pencarian untuk "${displayQuery}"`, url: null }, // Menggunakan displayQuery di breadcrumb
 ];
 ---
 
 <Layout
-  title={`${searchWords} Cari ${nama}`}
-  description={`Nonton Streaming Bokep Terbaru ${searchWords}. Halaman ${currentPage}.`}
+  title={`${displayQuery} Cari ${nama} | Halaman ${currentPage}`} // Menggunakan displayQuery
+  description={`Nonton Streaming Bokep Terbaru ${displayQuery}. Halaman ${currentPage}.`} // Menggunakan displayQuery
   preconnectDomains={preconnectDomains}
 >
-  <main class="search-page">
+  <main class="search-page" itemscope itemtype="http://schema.org/SearchResultsPage">
+    <meta itemprop="url" content={Astro.url.href} />
+    <meta itemprop="name" content={`Hasil Pencarian untuk "${displayQuery}" Halaman ${currentPage}`} /> {/* Menggunakan displayQuery */}
+    <meta itemprop="description" content={`Daftar video yang cocok dengan pencarian "${displayQuery}". Halaman ${currentPage} dari total ${totalPages} halaman.`} /> {/* Menggunakan displayQuery */}
+    <meta itemprop="encodingFormat" content="text/html" />
+    <meta itemprop="numberOfItems" content={searchResults.length.toString()} />
+    <meta itemprop="about" content={originalQuery} />
+
+
     <nav class="breadcrumb" aria-label="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
       <ol>
         {breadcrumbs.map((item, index) => (
@@ -125,7 +133,7 @@ const breadcrumbs = [
       </ol>
     </nav>
 
-    <h1 class="search-results-title">{`${searchWords} Cari ${nama}`} <span class="page-info">(Halaman {currentPage} dari {totalPages})</span></h1>
+    <h1 class="search-results-title" itemprop="headline">{`Hasil Pencarian untuk "${displayQuery}"`} <span class="page-info">(Halaman {currentPage} dari {totalPages})</span></h1> {/* Menggunakan displayQuery */}
 
     {originalQuery === '' ? (
       <p class="no-results-message">
@@ -136,20 +144,18 @@ const breadcrumbs = [
         Maaf, tidak ada video yang cocok dengan pencarian Anda. Coba kata kunci lain.
       </p>
     ) : (
-      <div class="video-grid">
+      <div class="video-grid" itemprop="mainContentOfPage">
         {paginatedResults.map((video) => (
           <VideoCard video={video} videoDetailPath={`/${video.id}/${slugify(video.title)}`} />
         ))}
       </div>
     )}
 
-    {/* --- Paginasi Langsung di Dalam Halaman --- */}
     {totalPages > 1 && (
       <nav class="pagination" aria-label="Navigasi Halaman Pencarian">
         {currentPage > 1 && (
           <a href={`${baseSearchUrl}/${currentPage - 1}`} class="pagination-link">&laquo; Sebelumnya</a>
         )}
-        {/* Filter halaman untuk menampilkan hanya halaman yang relevan (1, terakhir, dan sekitar halaman saat ini) */}
         {Array.from({ length: totalPages }, (_, i) => i + 1).filter(p =>
           p === 1 || p === totalPages || (p >= currentPage - 2 && p <= currentPage + 2)
         ).map(pageNumber => (
@@ -160,7 +166,6 @@ const breadcrumbs = [
             {pageNumber}
           </a>
         ))}
-        {/* Tambahkan elipsis jika ada halaman yang diskip (contoh: 1 ... 5 6 [7] 8 9 ... 15) */}
         {(currentPage + 2 < totalPages && totalPages > 5) && (currentPage < totalPages - 2) && <span class="pagination-link ellipsis">...</span>}
         {currentPage < totalPages && (
           <a href={`${baseSearchUrl}/${currentPage + 1}`} class="pagination-link">Berikutnya &raquo;</a>
@@ -171,17 +176,16 @@ const breadcrumbs = [
 </Layout>
 
 <style>
-  /* Styles for the "no results" message, now using CSS variables */
   .no-results-message {
     text-align: center;
-    padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5); /* Use spacing unit for padding */
-    background-color: var(--accent-color); /* Use accent color for background */
-    color: white; /* White text for contrast */
-    border: 1px solid var(--border-color); /* Use border color */
+    padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5);
+    background-color: var(--accent-color);
+    color: white;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
-    margin: calc(var(--spacing-unit) * 2) auto; /* Use spacing unit for margin */
+    margin: calc(var(--spacing-unit) * 2) auto;
     max-width: 600px;
-    box-shadow: var(--shadow-light); /* Add a light shadow */
+    box-shadow: var(--shadow-light);
   }
 
   .pagination-link.ellipsis {
