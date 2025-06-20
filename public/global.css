@@ -109,28 +109,28 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Menggunakan ukuran font statis dengan rem untuk desktop */
 h1 {
-  font-size: 3.8rem;
+  font-size: 2.5rem; /* Patokan utama dari .video-detail-page .video-title */
   font-weight: 800;
-  color: var(--primary-color);
+  color: var(--primary-color); /* Bisa disesuaikan jika ingin warna berbeda untuk H1 di luar hero */
 }
 h2 {
-  font-size: 2.8rem;
+  font-size: 2rem; /* Lebih kecil dari H1 */
   font-weight: 700;
 }
 h3 {
-  font-size: 2.2rem;
+  font-size: 1.6rem; /* Lebih kecil dari H2 */
   font-weight: 600;
 }
 h4 {
-  font-size: 1.8rem;
+  font-size: 1.4rem; /* Lebih kecil dari H3 */
   font-weight: 600;
 }
 h5 {
-  font-size: 1.4rem;
+  font-size: 1.2rem; /* Lebih kecil dari H4 */
   font-weight: 500;
 }
 h6 {
-  font-size: 1.1rem;
+  font-size: 1rem; /* Lebih kecil dari H5 */
   font-weight: 500;
 }
 
@@ -609,16 +609,18 @@ main {
 }
 
 /* Override .video-title from video-card for the H1 on the detail page. */
-main.video-detail-page .video-title {
+/* Karena H1 global sekarang 2.5rem, tidak perlu override spesifik lagi kecuali ada perbedaan.
+   Mengatur H1 global ke 2.5rem membuatnya konsisten. */
+/* main.video-detail-page .video-title {
   font-size: 2.5rem;
   margin-top: calc(var(--spacing-unit) * 1.5);
   margin-bottom: var(--spacing-unit);
-  color: var(--text-color); /* Changed to text-color for a more subdued title */
+  color: var(--text-color);
   line-height: 1.2;
   text-align: left;
   border-bottom: none;
   padding-bottom: 0;
-}
+} */
 
 .video-description {
   font-size: 1.1rem;
@@ -637,7 +639,7 @@ main.video-detail-page .video-title {
 }
 
 .video-tags-container h2 {
-  font-size: 1.7rem;
+  font-size: 1.7rem; /* Ini sekarang akan mengacu pada h2 global, mungkin perlu disesuaikan jika ingin lebih kecil dari h2 global */
   color: var(--text-color);
   margin-top: 0;
   margin-bottom: var(--spacing-unit);
@@ -834,34 +836,35 @@ footer {
 
   /* Penyesuaian ukuran font untuk layar menengah */
   h1 {
-    font-size: 3.2rem;
+    font-size: 2.2rem; /* Menyesuaikan H1 untuk layar menengah */
   }
   h2 {
-    font-size: 2.4rem;
+    font-size: 1.8rem; /* Lebih kecil dari H1 */
   }
   h3 {
-    font-size: 1.9rem;
+    font-size: 1.4rem; /* Lebih kecil dari H2 */
   }
   h4 {
-    font-size: 1.6rem;
+    font-size: 1.2rem;
   }
   h5 {
-    font-size: 1.3rem;
-  }
-  h6 {
     font-size: 1rem;
   }
+  h6 {
+    font-size: 0.9rem;
+  }
   .hero-section h1 {
-    font-size: 2.8rem;
+    font-size: 2.5rem; /* Mungkin ingin tetap besar di hero, disesuaikan agar tidak terlalu jauh dari H1 global */
   }
   .hero-section p {
     font-size: 1.1rem;
   }
-  main.video-detail-page .video-title {
+  /* Tidak perlu override main.video-detail-page .video-title lagi karena H1 global sudah disesuaikan */
+  /* main.video-detail-page .video-title {
     font-size: 2.2rem;
-  }
+  } */
   .video-tags-container h2 {
-    font-size: 1.6rem;
+    font-size: 1.5rem; /* Menyesuaikan ukuran H2 di sini jika perlu */
   }
 
 
@@ -904,35 +907,36 @@ footer {
 
   /* Penyesuaian ukuran font untuk layar tablet dan mobile besar */
   h1 {
-    font-size: 2.8rem;
+    font-size: 1.9rem; /* Menyesuaikan H1 untuk layar mobile besar */
   }
   h2 {
-    font-size: 2rem;
+    font-size: 1.5rem; /* Lebih kecil dari H1 */
   }
   h3 {
-    font-size: 1.6rem;
+    font-size: 1.2rem; /* Lebih kecil dari H2 */
   }
   h4 {
-    font-size: 1.4rem;
+    font-size: 1.1rem;
   }
   h5 {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
   h6 {
     font-size: 0.9rem;
   }
   .hero-section h1 {
-    font-size: 2.2rem;
+    font-size: 2rem; /* Menyesuaikan hero H1 */
   }
   .hero-section p {
     font-size: 1rem;
   }
-  main.video-detail-page .video-title {
+  /* Tidak perlu override main.video-detail-page .video-title lagi */
+  /* main.video-detail-page .video-title {
     font-size: 1.9rem;
     text-align: center;
-  }
+  } */
   .video-tags-container h2 {
-    font-size: 1.4rem;
+    font-size: 1.3rem; /* Menyesuaikan ukuran H2 di sini jika perlu */
   }
 
 
@@ -993,34 +997,35 @@ footer {
 
   /* Penyesuaian ukuran font untuk layar mobile kecil */
   h1 {
-    font-size: 2.2rem;
+    font-size: 1.6rem; /* Menyesuaikan H1 untuk layar mobile kecil */
   }
   h2 {
-    font-size: 1.8rem;
+    font-size: 1.3rem; /* Lebih kecil dari H1 */
   }
   h3 {
-    font-size: 1.4rem;
+    font-size: 1rem; /* Lebih kecil dari H2 */
   }
   h4 {
-    font-size: 1.2rem;
+    font-size: 0.95rem;
   }
   h5 {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
   h6 {
     font-size: 0.8rem;
   }
   .hero-section h1 {
-    font-size: 1.8rem;
+    font-size: 1.7rem; /* Menyesuaikan hero H1 */
   }
   .hero-section p {
     font-size: 0.9rem;
   }
-  main.video-detail-page .video-title {
+  /* Tidak perlu override main.video-detail-page .video-title lagi */
+  /* main.video-detail-page .video-title {
     font-size: 1.6rem;
-  }
+  } */
   .video-tags-container h2 {
-    font-size: 1.2rem;
+    font-size: 1.1rem; /* Menyesuaikan ukuran H2 di sini jika perlu */
   }
 
   .video-grid {
