@@ -1,176 +1,268 @@
-/*
-  src/styles/global.css
+/* src/styles/global.css */
 
-  Ini adalah file CSS global Anda yang akan diimpor di BaseLayout.astro.
-  Semua gaya dasar, variabel CSS, dan gaya umum untuk komponen
-  serta halaman akan ditempatkan di sini.
-*/
-
+/* --- Custom Properties (CSS Variables) --- */
+/* These make it easy to change your theme colors globally */
 :root {
-  /* Warna */
-  --primary-color: #007bff; /* Biru cerah, untuk tautan, judul utama */
-  --secondary-color: #6c757d; /* Abu-abu sedang, untuk teks sekunder */
-  --accent-color: #dc3545; /* Merah, untuk tombol aksi atau highlight */
-  --background-color: #f8f9fa; /* Abu-abu sangat terang, untuk latar belakang halaman */
-  --text-color: #343a40; /* Hitam gelap, untuk teks utama */
-  --border-color: #dee2e6; /* Abu-abu terang, untuk garis pemisah */
-  --card-bg: #ffffff; /* Putih, untuk latar belakang card/konten */
+  /* Colors */
+  --background-color-body: #1a1a2e; /* Dark blue/purple for the main background */
+  --background-color-card: #20203f; /* Slightly lighter dark for cards/elements */
+  --text-color: #e0e0e0; /* Light gray for general text */
+  --text-color-light: #b0b0b0; /* Lighter gray for secondary text/meta */
+  --primary-color: #6a057e; /* A vibrant purple for links, highlights, buttons */
+  --secondary-color: #a300ba; /* A complementary brighter purple/magenta */
+  --accent-color: #ff5722; /* A vibrant orange for accents, warnings */
+  --border-color: #333355; /* Darker border for separation */
+  --hover-color: #2b2b52; /* Hover state for cards/interactive elements */
+  --active-color: #550468; /* Active state for buttons/links */
+
+  /* Spacing */
+  --spacing-unit: 1rem; /* Base spacing unit (16px) */
+
+  /* Typography */
+  --font-family-sans: 'Inter', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --font-family-serif: Georgia, 'Times New Roman', Times, serif; /* Optional, if you use a serif font */
+  --font-size-base: 1rem; /* Base font size */
+  --line-height-base: 1.6;
 
   /* Shadows */
-  --shadow-light: 0 1px 3px rgba(0,0,0,0.1);
-  --shadow-medium: 0 4px 8px rgba(0,0,0,0.15);
-  --shadow-strong: 0 6px 12px rgba(0,0,0,0.2);
+  --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.4);
+  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.5);
+  --shadow-heavy: 0 8px 16px rgba(0, 0, 0, 0.6);
 
-  /* Spasi/Ukuran Font Dasar */
-  --spacing-unit: 1rem; /* Umumnya 16px */
-  --font-body: 'Arial', sans-serif;
-  --font-heading: 'Helvetica Neue', Arial, sans-serif;
+  /* Borders */
+  --border-radius-small: 4px;
+  --border-radius-medium: 8px;
+  --border-radius-large: 12px;
+
+  /* Max Widths */
+  --max-width-content: 1200px; /* Max width for main content areas */
+  --max-width-text: 700px; /* Max width for long paragraphs for readability */
 }
 
-/* Reset CSS Sederhana & Gaya Dasar */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
+/* --- Base Styles --- */
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
-  font-family: var(--font-body);
   margin: 0;
   padding: 0;
-  background-color: var(--background-color);
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
   color: var(--text-color);
-  line-height: 1.6;
+  background-color: var(--background-color-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure body takes full viewport height for footer sticky */
+  overflow-x: hidden; /* Prevent horizontal scroll from overflow */
 }
 
-/* Tautan Global */
+/* --- Global Typography --- */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: calc(var(--spacing-unit) * 2);
+  margin-bottom: var(--spacing-unit);
+  color: var(--text-color);
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+p {
+  margin-bottom: var(--spacing-unit);
+}
+
 a {
   color: var(--primary-color);
   text-decoration: none;
-  transition: color 0.2s ease, text-decoration 0.2s ease;
+  transition: color 0.2s ease-in-out;
 }
 
 a:hover {
-  color: #0056b3; /* Sedikit lebih gelap dari primary-color */
+  color: var(--secondary-color);
   text-decoration: underline;
 }
 
-/* Tombol Global */
-button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-button:hover {
-  transform: translateY(-1px);
-}
-
-/* --- Header & Navigasi --- */
-header {
-  background-color: var(--primary-color);
-  padding: 1rem 0;
-  box-shadow: var(--shadow-medium);
-  position: sticky; /* Membuat header tetap di atas saat scroll */
-  top: 0;
-  z-index: 1000; /* Pastikan header di atas konten lain */
-}
-
-.main-nav {
-  max-width: 1200px;
+/* --- Utility Classes (Optional but Recommended) --- */
+.container {
+  max-width: var(--max-width-content);
   margin: 0 auto;
-  padding: 0 20px;
+  padding: var(--spacing-unit);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid {
+  display: grid;
+  gap: var(--spacing-unit);
+}
+
+/* --- Specific Element Styling (General Components) --- */
+
+/* Buttons */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: 1px solid var(--primary-color);
+  border-radius: var(--border-radius-medium);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: var(--active-color);
+  border-color: var(--active-color);
+  box-shadow: var(--shadow-light);
+  text-decoration: none; /* Remove underline on hover for buttons */
+}
+
+.button-secondary {
+  background-color: transparent;
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.button-secondary:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* Forms */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: var(--spacing-unit);
+  background-color: var(--background-color-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-small);
+  color: var(--text-color);
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-base);
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(106, 5, 126, 0.3); /* Focus ring effect */
+}
+
+/* --- Layout Specifics (from your Astro files) --- */
+
+/* Header/Navbar (assuming a fixed or sticky header) */
+.header {
+  background-color: var(--background-color-card);
+  border-bottom: 1px solid var(--border-color);
+  padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
+  box-shadow: var(--shadow-light);
+  position: sticky;
+  top: 0;
+  z-index: 1000; /* Ensure header stays on top */
 }
 
-.logo {
-  color: white;
-  text-decoration: none;
+.site-logo a {
   font-size: 1.8rem;
-  font-weight: bold;
-  white-space: nowrap; /* Mencegah logo pecah baris */
+  font-weight: 800;
+  color: var(--text-color);
+  text-decoration: none;
 }
 
-.search-form {
-  display: flex;
-  flex-grow: 1;
-  margin: 10px 20px; /* Jarak atas/bawah dan samping */
-  max-width: 400px;
-  order: 2; /* Mengubah urutan agar di bawah logo/nav di mobile */
+.site-logo a:hover {
+  color: var(--primary-color);
+  text-decoration: none;
 }
 
-.search-form input[type="search"] {
-  flex-grow: 1;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 5px 0 0 5px;
-  font-size: 1rem;
-  outline: none;
-}
-
-.search-form button {
-  background-color: var(--accent-color);
-  color: white;
-  border-radius: 0 5px 5px 0;
-  font-weight: bold;
-}
-
-.search-form button:hover {
-  background-color: #c82333;
-}
-
-.nav-links {
+.main-nav ul {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
-  align-items: center;
-  order: 3; /* Mengubah urutan */
+  gap: var(--spacing-unit);
 }
 
-.nav-links li {
-  margin-left: 20px;
-}
-
-.nav-links a {
-  color: white;
+.main-nav li a {
+  color: var(--text-color);
   font-weight: 500;
-  transition: color 0.2s ease;
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--border-radius-small);
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
-.nav-links a:hover {
-  color: #e2e6ea;
+.main-nav li a:hover,
+.main-nav li a.active {
+  background-color: var(--primary-color);
+  color: white;
+  text-decoration: none;
 }
 
-/* --- Tata Letak Halaman Umum --- */
-main {
-  max-width: 1200px;
-  margin: 30px auto;
-  padding: 20px;
-  background-color: var(--card-bg);
-  border-radius: 8px;
-  box-shadow: var(--shadow-medium);
+/* Footer */
+.footer {
+  margin-top: auto; /* Push footer to the bottom */
+  background-color: var(--background-color-card);
+  border-top: 1px solid var(--border-color);
+  padding: calc(var(--spacing-unit) * 2);
+  text-align: center;
+  color: var(--text-color-light);
+  box-shadow: var(--shadow-light);
 }
 
-/* --- Breadcrumbs --- */
+.footer p {
+  margin: 0;
+}
+
+/* --- Specific Page/Component Styles (Examples from your files) --- */
+
+/* Breadcrumbs */
 .breadcrumb {
-  margin-bottom: 20px;
+  margin-top: var(--spacing-unit);
+  margin-bottom: var(--spacing-unit);
   font-size: 0.9em;
-  color: var(--secondary-color);
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border-color);
+  color: var(--text-color-light);
 }
 
 .breadcrumb ol {
@@ -178,7 +270,8 @@ main {
   padding: 0;
   margin: 0;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  align-items: center;
 }
 
 .breadcrumb li {
@@ -186,483 +279,481 @@ main {
   align-items: center;
 }
 
+.breadcrumb .separator {
+  margin: 0 0.5rem;
+  color: var(--border-color);
+}
+
 .breadcrumb a {
-  color: var(--primary-color);
+  color: var(--text-color-light);
   text-decoration: none;
-  white-space: nowrap;
 }
 
 .breadcrumb a:hover {
+  color: var(--primary-color);
   text-decoration: underline;
 }
 
-.breadcrumb .separator {
-  margin: 0 8px;
-  color: #999;
+.breadcrumb li:last-child span {
+  font-weight: 600;
+  color: var(--text-color); /* Current page bold and slightly brighter */
 }
 
-/* --- Judul Halaman / Seksi --- */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  color: var(--text-color);
-  margin-bottom: 0.8em;
-  line-height: 1.2;
-}
-
-.page-title, .section-title, .category-title-header, .search-results-title {
-  font-size: clamp(2em, 4vw, 3.5em); /* Responsive font size */
-  color: var(--primary-color);
-  text-align: center;
-  margin-bottom: 30px;
-  border-bottom: 3px solid var(--accent-color);
-  padding-bottom: 15px;
-  display: inline-block;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.category-title { /* Untuk judul kategori di halaman utama */
-  font-size: clamp(1.8em, 3.5vw, 2.5em);
-  text-align: left;
-  margin-bottom: 25px;
-  color: #333;
-  position: relative;
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--accent-color);
-  display: inline-block;
-  padding-right: 15px;
-}
-
-.category-title .category-link {
-  text-decoration: none;
-  color: inherit;
-  transition: color 0.2s ease;
-}
-
-.category-title .category-link:hover {
-  color: var(--primary-color);
-}
-
-.page-info {
-  font-size: 0.6em;
-  color: var(--secondary-color);
-  display: block;
-  margin-top: 5px;
-}
-
-/* --- Grid Video (Digunakan di banyak halaman) --- */
+/* Video Grid (Used on Home, Category, Search pages) */
 .video-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 25px;
-  margin-bottom: 40px; /* Tambahkan margin bawah untuk konsistensi */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responsive grid */
+  gap: calc(var(--spacing-unit) * 1.5);
+  padding: var(--spacing-unit);
+  margin-bottom: calc(var(--spacing-unit) * 2);
 }
 
-/* --- Video Card Component --- */
+/* Video Card (Component) */
 .video-card {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--card-bg);
-  border-radius: 8px;
+  background-color: var(--background-color-card);
+  border-radius: var(--border-radius-medium);
   overflow: hidden;
-  box-shadow: var(--shadow-light);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow-medium);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   text-decoration: none;
   color: inherit;
-  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .video-card:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow-medium);
+  box-shadow: var(--shadow-heavy);
 }
 
-.thumbnail-container {
+.video-card-thumbnail {
   width: 100%;
-  padding-bottom: 56.25%; /* Rasio aspek 16:9 */
-  position: relative;
-  overflow: hidden;
-}
-
-.thumbnail-container img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  height: 180px; /* Fixed height for thumbnails */
   object-fit: cover;
-  transition: transform 0.3s ease;
+  display: block;
 }
 
-.video-card:hover .thumbnail-container img {
-  transform: scale(1.05);
+.video-card-content {
+  padding: var(--spacing-unit);
+  flex-grow: 1; /* Allow content to take available space */
+  display: flex;
+  flex-direction: column;
 }
 
-.duration { /* Jika Anda memutuskan untuk menambahkannya kembali ke JSON */
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.8em;
-}
-
-.video-info {
-  padding: 15px;
-}
-
-.video-title {
-  font-size: 1.1em;
-  margin-top: 0;
-  margin-bottom: 8px;
+.video-card-title {
+  font-size: 1.15rem;
+  font-weight: 600;
   color: var(--text-color);
-  line-height: 1.4;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+  /* Limit title to 2 lines for consistency */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-}
-
-.video-category {
-  font-size: 0.9em;
-  color: var(--secondary-color);
-  margin-bottom: 5px;
-}
-
-/* --- Halaman Beranda (Index) --- */
-.hero-section {
-  text-align: center;
-  margin-bottom: 40px;
-  padding: 40px 20px;
-  background: linear-gradient(to right, var(--primary-color), #0056b3);
-  color: white;
-  border-radius: 8px;
-  box-shadow: var(--shadow-medium);
-}
-
-.hero-section h1 {
-  font-size: clamp(2.5em, 5vw, 4em);
-  margin-bottom: 10px;
-  line-height: 1.2;
-  color: white; /* Pastikan judul putih di hero */
-}
-
-.hero-section p {
-  font-size: clamp(1em, 2.5vw, 1.5em);
-  opacity: 0.9;
-}
-
-.latest-videos-section,
-.all-categories-section {
-  margin-top: 50px;
-}
-
-.category-group {
-  margin-bottom: 60px;
-}
-
-.no-videos-overall, .no-videos-in-category, .no-videos-found, .no-categories {
-  grid-column: 1 / -1; /* Membuat teks menempati seluruh lebar grid */
-  text-align: center;
-  font-size: 1.2em;
-  color: #999;
-  padding: 50px 0;
-}
-
-.view-all-button-container {
-  text-align: right;
-  margin-top: 20px;
-}
-
-.view-all-button {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: var(--accent-color);
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
-  font-weight: 500;
-  transition: background-color 0.2s ease-in-out, transform 0.2s ease;
-  box-shadow: var(--shadow-light);
-}
-
-.view-all-button:hover {
-  background-color: #c82333;
-  transform: translateY(-2px);
-}
-
-/* --- Halaman Detail Video --- */
-.video-player-wrapper {
-  position: relative;
-  width: 100%;
-  padding-bottom: 56.25%; /* Rasio aspek 16:9 */
-  background-color: #000;
-  border-radius: 8px;
   overflow: hidden;
-  margin-bottom: 20px;
+  text-overflow: ellipsis;
 }
 
-.video-player-wrapper iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
+.video-card-meta {
+  font-size: 0.85rem;
+  color: var(--text-color-light);
+  margin-top: auto; /* Push meta to the bottom */
 }
 
-.video-meta {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  padding: 10px 0;
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
-  font-size: 0.95em;
-  color: var(--secondary-color);
-}
-
-.video-meta p {
-  margin: 0;
-}
-
-.video-meta a {
-  color: var(--primary-color);
-  text-decoration: none;
-}
-
-.video-meta a:hover {
-  text-decoration: underline;
-}
-
-.video-description h2, .video-tags-container h2 {
-  font-size: 1.5em;
-  color: var(--text-color);
-  margin-top: 0;
-  margin-bottom: 15px;
-}
-
-.video-description p {
-  color: var(--text-color);
-  line-height: 1.7;
-  margin-bottom: 0;
-}
-
-.video-tags-container {
-  margin-top: 30px;
-  border-top: 1px solid var(--border-color);
-  padding-top: 20px;
-}
-
-.tags-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.tag-item {
-  display: inline-block;
-  background-color: var(--primary-color);
-  color: white;
-  padding: 8px 15px;
-  border-radius: 20px;
-  text-decoration: none;
-  font-size: 0.9em;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.tag-item:hover {
-  background-color: #0056b3;
-  transform: translateY(-2px);
-}
-
-/* --- Halaman Kategori (Paginasi) --- */
+/* Pagination */
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 30px;
-  padding: 15px;
-  background-color: var(--background-color);
-  border-radius: 8px;
-  box-shadow: var(--shadow-light);
+  gap: 0.5rem;
+  margin-top: calc(var(--spacing-unit) * 2);
+  margin-bottom: calc(var(--spacing-unit) * 2);
 }
 
 .pagination-link {
   display: inline-flex;
-  justify-content: center;
   align-items: center;
-  min-width: 40px;
+  justify-content: center;
+  min-width: 40px; /* Ensure uniform size */
   height: 40px;
-  padding: 0 10px;
-  text-decoration: none;
-  color: var(--primary-color);
-  background-color: var(--card-bg);
+  padding: 0 0.8rem;
+  background-color: var(--background-color-card);
   border: 1px solid var(--border-color);
-  border-radius: 5px;
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
-  font-weight: 500;
+  border-radius: var(--border-radius-small);
+  color: var(--text-color);
+  text-decoration: none;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
 .pagination-link:hover {
-  background-color: var(--primary-color);
-  color: white;
-  transform: translateY(-2px);
+  background-color: var(--hover-color);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  text-decoration: none;
 }
 
 .pagination-link.active {
   background-color: var(--primary-color);
+  border-color: var(--primary-color);
   color: white;
   font-weight: bold;
-  border-color: var(--primary-color);
   cursor: default;
 }
 
 .pagination-link.active:hover {
-  transform: none;
+  background-color: var(--primary-color); /* No change on hover for active */
+  color: white;
 }
 
-/* --- Daftar Kategori (category/index.astro) --- */
-.category-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 25px;
+.pagination-link.ellipsis {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--text-color-light);
+  cursor: default;
+  pointer-events: none; /* Make ellipsis non-clickable */
 }
 
-.category-item {
+/* Search page specific */
+.search-results-title, .category-title-header {
+  text-align: center;
+  margin-top: calc(var(--spacing-unit) * 2);
+  margin-bottom: calc(var(--spacing-unit) * 1.5);
+  color: var(--text-color);
+}
+
+.page-info {
+  font-size: 0.7em;
+  color: var(--text-color-light);
+  font-weight: normal;
+}
+
+.no-results-message, .no-videos-in-category, .no-tags-message, .no-videos-overall, .no-categories {
+  text-align: center;
+  padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5);
+  background-color: var(--background-color-card);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-medium);
+  margin: calc(var(--spacing-unit) * 2) auto;
+  max-width: 600px;
+  box-shadow: var(--shadow-light);
+}
+
+
+/* Tags List (on video detail page) */
+.video-tags-container {
+  margin-top: calc(var(--spacing-unit) * 2);
+  padding: var(--spacing-unit);
+  background-color: var(--background-color-card);
+  border-radius: var(--border-radius-medium);
+  box-shadow: var(--shadow-light);
+}
+
+.video-tags-container h2 {
+  font-size: 1.3rem;
+  margin-top: 0;
+  margin-bottom: var(--spacing-unit);
+  color: var(--text-color);
+}
+
+.tags-list {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.tag-item {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: var(--border-radius-small);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.tag-item:hover {
+  background-color: var(--active-color);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+/* Tags Grid (on tags index page) */
+.tags-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--spacing-unit);
+  padding: var(--spacing-unit);
+  justify-content: center;
+}
+
+.tag-card {
+  display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--background-color);
+  padding: calc(var(--spacing-unit) * 1);
+  background-color: var(--background-color-card);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 25px;
-  text-align: center;
+  border-radius: var(--border-radius-medium);
   text-decoration: none;
-  color: var(--text-color);
-  box-shadow: var(--shadow-light);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.category-item:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-medium);
-  background-color: #f0f4f7;
-}
-
-.category-item-title {
-  font-size: 1.6em;
-  color: var(--primary-color);
-  margin-top: 0;
-  margin-bottom: 10px;
-}
-
-.category-item-count {
+  color: var(--primary-color); /* Tags themselves are primary color */
+  font-weight: bold;
   font-size: 1.1em;
-  color: var(--secondary-color);
-  margin: 0;
-}
-
-
-/* --- Footer --- */
-footer {
-  background-color: var(--text-color);
-  color: white;
   text-align: center;
-  padding: 1.5rem 20px;
-  margin-top: 40px;
-  font-size: 0.9rem;
+  transition: all 0.2s ease-in-out;
+  min-height: 80px;
 }
 
-/* --- Responsiveness --- */
-@media (max-width: 992px) { /* Untuk tablet dan layar yang lebih kecil */
-  main {
-    padding: 15px;
-    margin: 20px auto;
-  }
+.tag-card:hover {
+  background-color: var(--hover-color);
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
 }
 
-@media (max-width: 768px) { /* Untuk mobile dan tablet potret */
-  .main-nav {
-    flex-direction: column;
-    align-items: flex-start;
+/* Hero section (Homepage) */
+.hero-section {
+  text-align: center;
+  padding: calc(var(--spacing-unit) * 3) var(--spacing-unit);
+  background: linear-gradient(135deg, var(--background-color-body) 0%, #0d0d1b 100%);
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: calc(var(--spacing-unit) * 2);
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  color: white; /* Make hero title brighter */
+  margin-top: 0;
+  margin-bottom: var(--spacing-unit);
+}
+
+.hero-section p {
+  font-size: 1.25rem;
+  color: var(--text-color-light);
+  max-width: var(--max-width-text);
+  margin: 0 auto;
+}
+
+/* Section Titles (Used on Home, Related Videos) */
+.section-title {
+  text-align: center;
+  margin-top: calc(var(--spacing-unit) * 3);
+  margin-bottom: calc(var(--spacing-unit) * 1.5);
+  color: var(--text-color);
+  font-size: 2rem;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background-color: var(--primary-color);
+  margin: 0.5rem auto 0;
+  border-radius: 2px;
+}
+
+/* Category Group (Homepage) */
+.category-group {
+  margin-bottom: calc(var(--spacing-unit) * 3);
+}
+
+.category-group .category-title {
+  text-align: center;
+  margin-bottom: var(--spacing-unit);
+}
+
+.category-group .category-link {
+  color: var(--text-color); /* Default to text color */
+  text-decoration: none;
+  font-size: 1.8rem;
+  font-weight: 600;
+  transition: color 0.2s ease-in-out;
+}
+
+.category-group .category-link:hover {
+  color: var(--primary-color); /* Highlight on hover */
+  text-decoration: underline;
+}
+
+.view-all-button-container {
+  text-align: center;
+  margin-top: var(--spacing-unit);
+}
+
+.view-all-button {
+  @extend .button; /* Inherit button styles */
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  font-size: 1em;
+  padding: 0.6rem 1.2rem;
+}
+
+.view-all-button:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+/* Video Detail Page Specifics */
+.video-detail-page {
+  max-width: var(--max-width-content);
+  margin: 0 auto;
+  padding: var(--spacing-unit);
+}
+
+.video-player-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio (9/16 * 100) */
+  height: 0;
+  overflow: hidden;
+  background-color: #000; /* Black background for player */
+  border-radius: var(--border-radius-medium);
+  box-shadow: var(--shadow-heavy);
+  margin-bottom: calc(var(--spacing-unit) * 2);
+}
+
+.video-player-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.video-title {
+  font-size: 2.2rem;
+  margin-top: calc(var(--spacing-unit) * 1.5);
+  margin-bottom: var(--spacing-unit);
+  color: var(--text-color);
+  line-height: 1.2;
+}
+
+.video-description {
+  font-size: 1.1rem;
+  color: var(--text-color-light);
+  line-height: 1.8;
+  margin-bottom: calc(var(--spacing-unit) * 2);
+  max-width: var(--max-width-text); /* Limit description width for readability */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  :root {
+    --font-size-base: 0.95rem;
+    --spacing-unit: 0.8rem;
   }
-  .logo {
-    margin-bottom: 10px;
-    width: 100%;
-    text-align: center;
+
+  h1 {
+    font-size: 2rem;
   }
-  .search-form {
-    width: 100%;
-    margin: 10px 0;
-    order: 1; /* Pindahkan search form ke atas di mobile */
+
+  h2 {
+    font-size: 1.6rem;
   }
-  .nav-links {
-    width: 100%;
-    justify-content: center;
-    margin-top: 10px;
-    order: 2; /* Pindahkan nav links ke bawah search form */
+
+  h3 {
+    font-size: 1.3rem;
   }
-  .nav-links li {
-    margin-left: 0;
-    margin: 0 10px; /* Spasi antar item nav */
+
+  .hero-section h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-section p {
+    font-size: 1.1rem;
   }
 
   .video-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-  }
-
-  .page-title, .section-title, .category-title-header, .search-results-title {
-      text-align: center;
-      display: block;
-      width: 100%;
-  }
-  .category-title {
-      text-align: center;
-      display: block;
-      width: 100%;
-      padding-right: 0;
-  }
-
-  .view-all-button-container {
-    text-align: center;
-  }
-  .video-meta {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-  }
-  .categories-list-page {
-    padding: 15px;
-    margin: 15px auto;
-  }
-  .category-list {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
+    gap: var(--spacing-unit);
   }
-  .category-item {
-    padding: 20px;
-  }
-}
 
-@media (max-width: 480px) { /* Untuk mobile yang lebih kecil */
-  .video-grid {
-    grid-template-columns: 1fr; /* Satu kolom untuk layar sangat kecil */
+  .video-card-thumbnail {
+    height: 150px;
   }
-  .pagination {
-    padding: 10px;
-    gap: 8px;
+
+  .video-card-title {
+    font-size: 1rem;
   }
+
   .pagination-link {
     min-width: 35px;
     height: 35px;
+    padding: 0 0.5rem;
+  }
+
+  .tag-card {
+    min-height: 60px;
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --font-size-base: 0.9rem;
+    --spacing-unit: 0.7rem;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+
+  .hero-section p {
+    font-size: 1rem;
+  }
+
+  .video-grid {
+    grid-template-columns: 1fr; /* Single column on very small screens */
+    padding: 0;
+  }
+
+  .video-card-thumbnail {
+    height: 200px; /* Taller on single column to fill space */
+  }
+
+  .main-nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .main-nav li {
+    width: 100%;
+    text-align: center;
+  }
+
+  .main-nav li a {
+    display: block;
+    width: 100%;
+    padding: 0.7rem;
+  }
+
+  .pagination {
+    gap: 0.3rem;
+  }
+
+  .pagination-link {
+    min-width: 30px;
+    height: 30px;
+    font-size: 0.85rem;
+  }
+
+  .tag-card {
+    min-height: 50px;
     font-size: 0.9em;
   }
 }
