@@ -75,18 +75,38 @@ body {
 /* --- Global Typography --- */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  color: var(--text-color);
+  color: var(--text-color); /* Umumnya teks berwarna terang */
   line-height: 1.2;
   margin-top: calc(var(--spacing-unit) * 2);
   margin-bottom: var(--spacing-unit);
 }
 
-h1 { font-size: 2.8rem; font-weight: 800; }
-h2 { font-size: 2.2rem; font-weight: 700; }
-h3 { font-size: 1.7rem; font-weight: 600; }
-h4 { font-size: 1.4rem; font-weight: 600; }
-h5 { font-size: 1.2rem; font-weight: 500; }
-h6 { font-size: 1rem; font-weight: 500; }
+/* Menggunakan clamp() untuk responsivitas ukuran font yang proporsional */
+h1 {
+  font-size: clamp(2.8rem, 5vw, 4rem); /* Min: 2.8rem, Ideal: 5vw, Max: 4rem */
+  font-weight: 800;
+  color: var(--primary-color); /* H1 seringkali lebih baik jika menggunakan warna primer */
+}
+h2 {
+  font-size: clamp(2rem, 4vw, 3.2rem); /* Min: 2rem, Ideal: 4vw, Max: 3.2rem */
+  font-weight: 700;
+}
+h3 {
+  font-size: clamp(1.6rem, 3vw, 2.5rem); /* Min: 1.6rem, Ideal: 3vw, Max: 2.5rem */
+  font-weight: 600;
+}
+h4 {
+  font-size: clamp(1.3rem, 2.5vw, 2rem); /* Min: 1.3rem, Ideal: 2.5vw, Max: 2rem */
+  font-weight: 600;
+}
+h5 {
+  font-size: 1.2rem; /* H5 ke bawah bisa statis atau clamp yang lebih kecil */
+  font-weight: 500;
+}
+h6 {
+  font-size: 1rem;
+  font-weight: 500;
+}
 
 p {
   margin-bottom: var(--spacing-unit);
@@ -147,7 +167,7 @@ textarea {
   width: 100%;
   padding: 0.75rem 1rem;
   margin-bottom: var(--spacing-unit);
-  background-color: var(--background-color-card); /* Darker input fields */
+  background-color: var(--card-bg); /* Darker input fields, using card-bg for consistency */
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-small);
   color: var(--text-color);
@@ -161,7 +181,7 @@ input[type="text"]::placeholder,
 input[type="email"]::placeholder,
 input[type="password"]::placeholder,
 textarea::placeholder {
-    color: var(--text-color-light); /* Placeholder color for dark theme */
+  color: var(--text-color-light); /* Placeholder color for dark theme */
 }
 
 input[type="search"]:focus,
@@ -176,7 +196,7 @@ textarea:focus {
 
 /* --- Header & Navigasi --- */
 header {
-  background-color: var(--background-color-card); /* Darker header */
+  background-color: var(--card-bg); /* Darker header */
   padding: var(--spacing-unit) 0;
   box-shadow: var(--shadow-medium);
   position: sticky;
@@ -324,9 +344,9 @@ main {
 
 
 /* --- Page / Section Titles --- */
+/* Font size and color are now inherited from h1, h2, etc. where applicable.
+   These classes handle layout and decorative elements. */
 .page-title, .section-title, .category-title-header, .search-results-title {
-  font-size: clamp(2em, 4vw, 3.5em);
-  color: var(--primary-color); /* Titles use primary color for emphasis */
   text-align: center;
   margin-bottom: calc(var(--spacing-unit) * 1.5); /* 30px */
   border-bottom: 3px solid var(--accent-color);
@@ -337,10 +357,9 @@ main {
 }
 
 .category-title { /* Untuk judul kategori di halaman utama */
-  font-size: clamp(1.8em, 3.5vw, 2.5em);
   text-align: left;
   margin-bottom: calc(var(--spacing-unit) * 1.25); /* 25px */
-  color: var(--text-color);
+  color: var(--text-color); /* Default text color */
   position: relative;
   padding-bottom: 0.5rem; /* 10px */
   border-bottom: 2px solid var(--accent-color);
@@ -430,6 +449,7 @@ main {
 }
 
 .video-title {
+  /* This .video-title is for the video cards, not the H1 on the detail page */
   font-size: 1.1em;
   margin-top: 0;
   margin-bottom: 0.5rem; /* 8px */
@@ -460,10 +480,10 @@ main {
 }
 
 .hero-section h1 {
-  font-size: clamp(2.5em, 5vw, 4em);
+  /* This h1 will inherit its size from the global h1 rule */
   margin-bottom: 0.5rem; /* 10px */
   line-height: 1.2;
-  color: white;
+  color: white; /* Override h1 global color for hero section */
 }
 
 .hero-section p {
@@ -488,7 +508,7 @@ main {
   font-size: 1.2em;
   color: var(--text-color-light);
   padding: calc(var(--spacing-unit) * 2.5) 0; /* 50px */
-  background-color: var(--background-color-card);
+  background-color: var(--card-bg); /* Use card-bg for consistency */
   border-radius: var(--border-radius-medium);
   box-shadow: var(--shadow-light);
 }
@@ -518,7 +538,8 @@ main {
 
 /* --- Video Detail Page (Specific Styles) --- */
 .video-detail-page {
-  /* No specific styles needed here, uses `main`'s styles */
+  /* This class wraps the main content for the video detail page.
+     Styles for its children elements can be made more specific here. */
 }
 
 .video-player-container {
@@ -541,15 +562,20 @@ main {
   border: none;
 }
 
-.video-title { /* Updated to specifically target the H1 on the detail page */
-  font-size: 2.5rem; /* Slightly larger for main video title */
+/* Override .video-title from video-card for the H1 on the detail page.
+   This H1 will inherit its base size from the global h1 rule. */
+main.video-detail-page .video-title { /* More specific selector for the main video title (H1) */
+  font-size: clamp(2.2rem, 4vw, 3.2rem); /* Make it distinct but still responsive */
   margin-top: calc(var(--spacing-unit) * 1.5);
   margin-bottom: var(--spacing-unit);
   color: var(--primary-color); /* Highlight video title with primary color */
   line-height: 1.2;
+  text-align: left; /* Ensure it's left-aligned by default */
+  border-bottom: none; /* Remove any inherited borders */
+  padding-bottom: 0;
 }
 
-.video-description { /* Updated to target the P for description */
+.video-description {
   font-size: 1.1rem;
   color: var(--text-color-light); /* Description text is lighter */
   line-height: 1.7;
@@ -564,7 +590,9 @@ main {
 }
 
 .video-tags-container h2 {
-  font-size: 1.5em;
+  /* This h2 for "Tags" will inherit its base size from the global h2 rule.
+     Adjust if you need a slightly different size for this specific h2. */
+  font-size: clamp(1.4rem, 2.5vw, 2rem); /* A bit smaller than a typical h2 */
   color: var(--text-color);
   margin-top: 0;
   margin-bottom: var(--spacing-unit); /* 16px */
@@ -596,14 +624,20 @@ main {
     margin-top: calc(var(--spacing-unit) * 3); /* Add spacing above related videos */
 }
 
+/* The .section-title inside .related-videos-section will inherit from global h2.
+   We just need to ensure its layout/decorative styles are correct. */
 .related-videos-section .section-title {
-    /* Inherits .section-title styles, which are already good */
+    color: var(--text-color); /* Default text color, not primary for sub-section */
+    text-align: left; /* Ensure it's left-aligned on desktop */
+    margin-top: calc(var(--spacing-unit) * 2); /* Space from above */
     margin-bottom: calc(var(--spacing-unit) * 1.5);
+    border-bottom: 2px solid var(--accent-color); /* Thinner border */
+    padding-bottom: 0.5rem;
+    display: inline-block; /* For border to wrap text */
+    padding-right: var(--spacing-unit);
+    width: auto; /* Not full width by default */
 }
 
-/* Removed `.video-meta` as it was not present in the HTML snippet provided for the video detail page.
-   If you add meta info (like date, author) back, you can use these styles.
-*/
 
 /* --- Pagination --- */
 .pagination {
@@ -683,7 +717,7 @@ main {
 }
 
 .category-item-title {
-  font-size: 1.6em;
+  font-size: 1.6em; /* Keep this specific as it's a component title */
   color: var(--primary-color);
   margin-top: 0;
   margin-bottom: 0.6rem; /* 10px */
@@ -733,7 +767,7 @@ main {
 
 /* --- Footer --- */
 footer {
-  background-color: var(--background-color-card); /* Darker footer background */
+  background-color: var(--card-bg); /* Darker footer background */
   color: var(--text-color-light); /* Lighter text for footer */
   text-align: center;
   padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 1.25); /* 1.5rem 20px */
@@ -750,12 +784,15 @@ footer {
     margin: var(--spacing-unit) auto; /* 20px */
   }
 
-  h1 { font-size: 2.5rem; }
-  h2 { font-size: 2rem; }
-  h3 { font-size: 1.5rem; }
+  /* Headings will scale automatically due to clamp(), no need to override specific sizes here */
 
-  .hero-section h1 { font-size: 3.5em; }
-  .hero-section p { font-size: 1.3em; }
+  .hero-section h1 { /* Override specific h1 style for hero on smaller screens */
+    font-size: clamp(2.2em, 5vw, 3.5em); /* Slightly smaller than desktop */
+  }
+
+  .hero-section p {
+    font-size: clamp(0.9em, 2.5vw, 1.3em);
+  }
 
   .video-grid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -800,13 +837,14 @@ footer {
   }
 
   .page-title, .section-title, .category-title-header, .search-results-title {
-    font-size: clamp(1.8em, 5vw, 2.5em);
+    /* These will still inherit from h1/h2/etc. global rules, but we center them here */
     text-align: center;
-    display: block;
+    display: block; /* Ensure it takes full width */
     width: 100%;
+    /* Clamp() will handle font size for these classes via their h tag */
   }
   .category-title {
-    font-size: clamp(1.6em, 4vw, 2em);
+    /* This will inherit from h2/h3. Centering and width adjustment for mobile. */
     text-align: center;
     display: block;
     width: 100%;
@@ -816,11 +854,7 @@ footer {
   .view-all-button-container {
     text-align: center;
   }
-  .video-meta {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.3rem; /* 5px */
-  }
+
   .category-list {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: var(--spacing-unit); /* 15px */
@@ -837,14 +871,18 @@ footer {
     font-size: 1em;
     padding: 0.8rem;
   }
-  .video-title { /* For detail page */
-    font-size: 2rem; /* Adjusted for smaller screens */
-  }
-  .video-description {
-    font-size: 1rem;
+
+  /* Specific adjustments for video detail page on smaller screens */
+  main.video-detail-page .video-title {
+    text-align: center; /* Center the main video title on mobile */
   }
   .video-tags-container h2 {
-    font-size: 1.3em;
+    font-size: clamp(1.2rem, 3vw, 1.5rem); /* Adjust size for "Tags:" heading */
+  }
+  .related-videos-section .section-title {
+    text-align: center; /* Center "Video Terkait" title on mobile */
+    width: 100%; /* Ensure it takes full width on mobile */
+    padding-right: 0;
   }
 }
 
@@ -858,25 +896,25 @@ footer {
     margin: var(--spacing-unit) auto;
   }
 
-  h1 { font-size: 2rem; }
-  h2 { font-size: 1.6rem; }
-  h3 { font-size: 1.3rem; }
+  /* Headings will continue to scale down via clamp() */
 
-  .hero-section h1 { font-size: 2.2em; }
-  .hero-section p { font-size: 1.1em; }
+  .hero-section h1 {
+    font-size: clamp(1.8em, 6vw, 2.5em);
+  }
+  .hero-section p {
+    font-size: clamp(0.9em, 3vw, 1.2em);
+  }
 
   .video-grid {
     grid-template-columns: 1fr; /* Single column for very small screens */
     padding: 0;
   }
   .video-card-thumbnail {
-    height: 220px; /* Taller on single column to fill space */
+    /* Removed specific height here as object-fit: cover handles it.
+       If you need a fixed height, consider using a min-height instead. */
   }
   .video-info {
     padding: var(--spacing-unit);
-  }
-  .video-title { /* For detail page */
-    font-size: 1.8rem; /* Further adjusted for smallest screens */
   }
 
   .pagination {
@@ -894,6 +932,6 @@ footer {
   }
   .tag-card {
     min-height: 60px;
-    font-size: 1.1em;
+    font-size: 1em;
   }
 }
