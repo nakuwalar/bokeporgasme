@@ -1,45 +1,50 @@
 /*
- * src/styles/global.css
- */
+  src/styles/global.css
+
+  Ini adalah file CSS global Anda yang akan diimpor di BaseLayout.astro.
+  Semua gaya dasar, variabel CSS, dan gaya umum untuk komponen
+  serta halaman akan ditempatkan di sini.
+*/
 
 :root {
-  /* Warna Tema Terang (Default) */
-  --primary-color: #0056b3; /* Biru tua gelap */
-  --secondary-color: #5a6268; /* Sedikit lebih gelap dari abu-abu */
-  --accent-color: #b3001a; /* Merah gelap */
-  --background-color: #e6e9ed; /* Latar belakang terang yang sedikit lebih gelap */
-  --text-color: #212529; /* Teks sangat gelap */
-  --border-color: #c0c4c8; /* Border yang sedikit lebih gelap */
-  --card-bg: #f0f2f5; /* Latar belakang card sedikit lebih gelap */
+  /* Warna */
+  --primary-color: #a300ba; /* Ungu cerah, untuk tautan, judul utama */
+  --secondary-color: #b0b0b0; /* Abu-abu sedang, untuk teks sekunder */
+  --accent-color: #ff5722; /* Oranye, untuk tombol aksi atau highlight */
+
+  --background-color-body: #1a1a2e; /* Biru gelap keunguan untuk latar belakang halaman utama */
+  --background-color-main-content: #20203f; /* Sedikit lebih terang dari body untuk konten utama/card wrapper */
+  --text-color: #e0e0e0; /* Putih keabu-abuan untuk teks utama */
+  --text-color-light: #b0b0b0; /* Abu-abu lebih terang untuk teks sekunder/meta */
+
+  --border-color: #333355; /* Garis pemisah yang halus di tema gelap */
+  --card-bg: #2b2b52; /* Latar belakang card yang sedikit lebih terang dari main content */
+
+  --hover-color-light: #3a3a6b; /* Hover state untuk elemen ringan seperti card */
+  --hover-color-dark: #8c009d; /* Hover state untuk primary color */
+  --active-color: #7e008d; /* Warna aktif/klik untuk primary */
 
   /* Shadows */
-  --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.15);
-  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.2);
-  --shadow-strong: 0 6px 12px rgba(0, 0, 0, 0.25);
+  --shadow-light: 0 2px 5px rgba(0,0,0,0.4);
+  --shadow-medium: 0 5px 15px rgba(0,0,0,0.5);
+  --shadow-strong: 0 10px 25px rgba(0,0,0,0.6);
 
   /* Spasi/Ukuran Font Dasar */
-  --spacing-unit: 1rem;
-  --font-body: 'Arial', sans-serif;
-  --font-heading: 'Helvetica Neue', Arial, sans-serif;
+  --spacing-unit: 1rem; /* Umumnya 16px */
+  --font-body: 'Inter', sans-serif; /* Menggunakan Inter sebagai font utama */
+  --font-heading: 'Inter', sans-serif; /* Menggunakan Inter juga untuk heading */
+
+  /* Border Radii */
+  --border-radius-small: 4px;
+  --border-radius-medium: 8px;
+  --border-radius-large: 12px;
+
+  /* Max Widths */
+  --max-width-content: 1200px; /* Lebar maksimum untuk konten utama */
+  --max-width-text: 750px; /* Lebar maksimum untuk blok teks panjang agar mudah dibaca */
 }
 
-/* --- Dark Mode Variables --- */
-body.dark-mode {
-  --primary-color: #003366; /* Biru tua sangat gelap untuk dark mode */
-  --secondary-color: #8b949c;
-  --accent-color: #cc0022; /* Merah lebih terang dari primary */
-  --background-color: #0a0a0a; /* Latar belakang sangat gelap */
-  --text-color: #f0f0f0; /* Teks sangat terang */
-  --border-color: #222; /* Border sangat gelap */
-  --card-bg: #111111; /* Latar belakang card sangat gelap */
-
-  /* Shadows untuk dark mode, bisa disesuaikan agar tidak terlalu mencolok */
-  --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.5);
-  --shadow-strong: 0 6px 12px rgba(0, 0, 0, 0.6);
-}
-
-/* Reset CSS Sederhana & Gaya Dasar */
+/* --- Base Styles --- */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -48,20 +53,45 @@ body.dark-mode {
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
   font-family: var(--font-body);
-  margin: 0;
-  padding: 0;
-  background-color: var(--background-color); /* Menggunakan variabel */
-  color: var(--text-color); /* Menggunakan variabel */
+  font-size: var(--spacing-unit); /* 1rem base font size */
   line-height: 1.6;
+  background-color: var(--background-color-body);
+  color: var(--text-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: flex; /* Untuk sticky footer */
+  flex-direction: column; /* Untuk sticky footer */
+  min-height: 100vh; /* Untuk sticky footer */
+  overflow-x: hidden; /* Mencegah scroll horizontal */
 }
 
-/* Tautan Global */
+/* --- Global Typography --- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--text-color);
+  line-height: 1.2;
+  margin-top: calc(var(--spacing-unit) * 2);
+  margin-bottom: var(--spacing-unit);
+}
+
+h1 { font-size: 2.8rem; font-weight: 800; }
+h2 { font-size: 2.2rem; font-weight: 700; }
+h3 { font-size: 1.7rem; font-weight: 600; }
+h4 { font-size: 1.4rem; font-weight: 600; }
+h5 { font-size: 1.2rem; font-weight: 500; }
+h6 { font-size: 1rem; font-weight: 500; }
+
+p {
+  margin-bottom: var(--spacing-unit);
+}
+
 a {
   color: var(--primary-color);
   text-decoration: none;
@@ -69,39 +99,96 @@ a {
 }
 
 a:hover {
-  color: var(--primary-color); /* Tetap gunakan primary-color yang sudah berubah */
+  color: var(--hover-color-dark); /* Slightly darker primary on hover */
   text-decoration: underline;
 }
 
-/* Tombol Global */
-button {
-  padding: 0.5rem 1rem;
+/* --- Global Buttons & Forms --- */
+button, .button { /* Menjadikan .button juga ikut styling ini */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 5px;
+  border-radius: var(--border-radius-medium);
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.2s ease, transform 0.1s ease, color 0.2s ease; /* Tambah color */
+  font-weight: 600;
+  color: white;
+  background-color: var(--primary-color);
+  transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+  text-decoration: none; /* Untuk .button class */
 }
 
-button:hover {
-  transform: translateY(-1px);
+button:hover, .button:hover {
+  background-color: var(--hover-color-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-light);
+}
+
+.button-secondary {
+  background-color: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+.button-secondary:hover {
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: var(--shadow-light);
+}
+
+/* Forms */
+input[type="search"],
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-bottom: var(--spacing-unit);
+  background-color: var(--background-color-card); /* Darker input fields */
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-small);
+  color: var(--text-color);
+  font-family: var(--font-body);
+  font-size: var(--spacing-unit);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="search"]::placeholder,
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+textarea::placeholder {
+    color: var(--text-color-light); /* Placeholder color for dark theme */
+}
+
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(163, 0, 186, 0.3); /* Focus ring primary color */
 }
 
 /* --- Header & Navigasi --- */
 header {
-  background-color: var(--primary-color); /* Menggunakan variabel */
-  padding: 1rem 0;
-  box-shadow: var(--shadow-medium); /* Menggunakan variabel */
-  position: static;
+  background-color: var(--background-color-card); /* Darker header */
+  padding: var(--spacing-unit) 0;
+  box-shadow: var(--shadow-medium);
+  position: sticky;
   top: 0;
   z-index: 1000;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .main-nav {
-  /* max-width: 1200px; */ /* Removed for full width */
-  width: 100%; /* Set to full width */
+  max-width: var(--max-width-content);
   margin: 0 auto;
-  padding: 0 15px;
+  padding: 0 calc(var(--spacing-unit) * 1.5); /* 20px */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -109,47 +196,46 @@ header {
 }
 
 .logo {
-  color: white; /* Tetap putih agar kontras dengan primary-color header */
+  color: var(--text-color); /* Logo color */
   text-decoration: none;
   font-size: 1.8rem;
   font-weight: bold;
   white-space: nowrap;
 }
 
+.logo:hover {
+  color: var(--primary-color);
+}
+
 .search-form {
   display: flex;
   flex-grow: 1;
-  margin: 10px 20px;
+  margin: 0 var(--spacing-unit); /* Reduced margin for desktop */
   max-width: 400px;
-  order: 2;
+  order: 0; /* Default order, will change in media query */
 }
 
 .search-form input[type="search"] {
   flex-grow: 1;
-  padding: 0.5rem 1rem;
+  padding: 0.65rem 1rem;
   border: none;
-  border-radius: 5px 0 0 5px;
+  border-radius: var(--border-radius-medium) 0 0 var(--border-radius-medium);
   font-size: 1rem;
   outline: none;
-  background-color: var(--card-bg); /* Menggunakan variabel */
-  color: var(--text-color); /* Menggunakan variabel */
+  background-color: var(--background-color-body); /* Slightly darker for search input */
+  color: var(--text-color);
 }
-
-.search-form input[type="search"]::placeholder {
-  color: var(--secondary-color);
-}
-
 
 .search-form button {
-  background-color: var(--accent-color); /* Menggunakan variabel */
+  background-color: var(--accent-color);
   color: white;
-  border-radius: 0 5px 5px 0;
+  border-radius: 0 var(--border-radius-medium) var(--border-radius-medium) 0;
   font-weight: bold;
+  padding: 0.65rem 1rem;
 }
 
 .search-form button:hover {
-  background-color: var(--accent-color); /* Akan berubah sesuai mode */
-  filter: brightness(0.9); /* Sedikit lebih gelap */
+  background-color: #e04e1f; /* Darker accent on hover */
 }
 
 .nav-links {
@@ -158,60 +244,48 @@ header {
   padding: 0;
   display: flex;
   align-items: center;
-  order: 3;
+  order: 0; /* Default order */
 }
 
 .nav-links li {
-  margin-left: 20px;
+  margin-left: calc(var(--spacing-unit) * 1.25); /* 20px */
 }
 
 .nav-links a {
-  color: white; /* Tetap putih agar kontras dengan primary-color header */
+  color: var(--text-color); /* Nav links color */
   font-weight: 500;
-  transition: color 0.2s ease;
+  padding: 0.5rem 0; /* Adjust padding for better clickable area */
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .nav-links a:hover {
-  color: #e2e6ea;
+  color: var(--primary-color); /* Primary color on hover */
+  text-decoration: none;
 }
 
-/* --- Dark Mode Toggle Button --- */
-.dark-mode-toggle {
-  background: none;
-  border: none;
-  font-size: 1.5rem; /* Ukuran ikon */
-  cursor: pointer;
-  color: white; /* Warna ikon agar terlihat di header */
-  margin-left: 15px;
-  padding: 5px;
-  border-radius: 5px;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.dark-mode-toggle:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: var(--accent-color); /* Contoh hover effect */
+.nav-links a.active { /* If you have an active state for nav links */
+  color: var(--primary-color);
+  font-weight: 600;
 }
 
 
-/* --- Tata Letak Halaman Umum --- */
+/* --- General Page Layout --- */
 main {
-  /* max-width: 1200px; */ /* Removed for full width */
-  width: 100%; /* Set to full width */
-  margin: 30px auto;
-  padding: 20px;
-  background-color: var(--card-bg); /* Menggunakan variabel */
-  border-radius: 8px;
-  box-shadow: var(--shadow-medium); /* Menggunakan variabel */
+  max-width: var(--max-width-content);
+  margin: calc(var(--spacing-unit) * 2) auto; /* 30px */
+  padding: calc(var(--spacing-unit) * 1.5); /* 20px */
+  background-color: var(--background-color-main-content); /* Main content area background */
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--shadow-medium);
 }
 
 /* --- Breadcrumbs --- */
 .breadcrumb {
-  margin-bottom: 20px;
+  margin-bottom: var(--spacing-unit); /* 20px */
   font-size: 0.9em;
-  color: var(--secondary-color); /* Menggunakan variabel */
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border-color); /* Menggunakan variabel */
+  color: var(--text-color-light);
+  padding: var(--spacing-unit) 0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .breadcrumb ol {
@@ -228,50 +302,50 @@ main {
 }
 
 .breadcrumb a {
-  color: var(--primary-color); /* Menggunakan variabel */
+  color: var(--secondary-color); /* Breadcrumb links slightly desaturated */
   text-decoration: none;
   white-space: nowrap;
 }
 
 .breadcrumb a:hover {
+  color: var(--primary-color);
   text-decoration: underline;
 }
 
 .breadcrumb .separator {
-  margin: 0 8px;
-  color: var(--secondary-color); /* Menggunakan variabel */
+  margin: 0 0.5rem; /* 8px */
+  color: var(--border-color);
 }
 
-/* --- Judul Halaman / Seksi --- */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  color: var(--text-color); /* Menggunakan variabel */
-  margin-bottom: 0.8em;
-  line-height: 1.2;
+.breadcrumb li:last-child span {
+  font-weight: 600;
+  color: var(--text-color); /* Current page bold and brighter */
 }
 
+
+/* --- Page / Section Titles --- */
 .page-title, .section-title, .category-title-header, .search-results-title {
   font-size: clamp(2em, 4vw, 3.5em);
-  color: var(--primary-color); /* Menggunakan variabel */
+  color: var(--primary-color); /* Titles use primary color for emphasis */
   text-align: center;
-  margin-bottom: 30px;
-  border-bottom: 3px solid var(--accent-color); /* Menggunakan variabel */
-  padding-bottom: 15px;
+  margin-bottom: calc(var(--spacing-unit) * 1.5); /* 30px */
+  border-bottom: 3px solid var(--accent-color);
+  padding-bottom: var(--spacing-unit); /* 15px */
   display: inline-block;
   width: 100%;
   box-sizing: border-box;
 }
 
-.category-title {
+.category-title { /* Untuk judul kategori di halaman utama */
   font-size: clamp(1.8em, 3.5vw, 2.5em);
   text-align: left;
-  margin-bottom: 25px;
-  color: var(--text-color); /* Menggunakan variabel */
+  margin-bottom: calc(var(--spacing-unit) * 1.25); /* 25px */
+  color: var(--text-color);
   position: relative;
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--accent-color); /* Menggunakan variabel */
+  padding-bottom: 0.5rem; /* 10px */
+  border-bottom: 2px solid var(--accent-color);
   display: inline-block;
-  padding-right: 15px;
+  padding-right: var(--spacing-unit); /* 15px */
 }
 
 .category-title .category-link {
@@ -281,33 +355,33 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .category-title .category-link:hover {
-  color: var(--primary-color); /* Menggunakan variabel */
+  color: var(--primary-color);
 }
 
 .page-info {
   font-size: 0.6em;
-  color: var(--secondary-color); /* Menggunakan variabel */
+  color: var(--text-color-light);
   display: block;
   margin-top: 5px;
 }
 
-/* --- Grid Video (Digunakan di banyak halaman) --- */
+/* --- Video Grid (Used on many pages) --- */
 .video-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 25px;
-  margin-bottom: 40px;
+  gap: calc(var(--spacing-unit) * 1.5); /* 25px */
+  margin-bottom: calc(var(--spacing-unit) * 2.5); /* 40px */
 }
 
 /* --- Video Card Component --- */
 .video-card {
   display: flex;
   flex-direction: column;
-  background-color: var(--card-bg); /* Menggunakan variabel */
-  border-radius: 8px;
+  background-color: var(--card-bg); /* Darker card background */
+  border-radius: var(--border-radius-medium);
   overflow: hidden;
-  box-shadow: var(--shadow-light); /* Menggunakan variabel */
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow-medium);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
   text-decoration: none;
   color: inherit;
   position: relative;
@@ -315,12 +389,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .video-card:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow-medium); /* Menggunakan variabel */
+  box-shadow: var(--shadow-strong);
+  background-color: var(--hover-color-light); /* Subtle background change on hover */
 }
 
 .thumbnail-container {
   width: 100%;
-  padding-bottom: 56.25%; /* Rasio aspek 16:9 */
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
   position: relative;
   overflow: hidden;
 }
@@ -339,11 +414,11 @@ h1, h2, h3, h4, h5, h6 {
   transform: scale(1.05);
 }
 
-.duration {
+.duration { /* If you decide to add it back to JSON */
   position: absolute;
   bottom: 8px;
   right: 8px;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.8); /* Slightly darker for better contrast */
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
@@ -351,14 +426,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .video-info {
-  padding: 15px;
+  padding: var(--spacing-unit); /* 15px */
 }
 
 .video-title {
   font-size: 1.1em;
   margin-top: 0;
-  margin-bottom: 8px;
-  color: var(--text-color); /* Menggunakan variabel */
+  margin-bottom: 0.5rem; /* 8px */
+  color: var(--text-color);
   line-height: 1.4;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -369,48 +444,24 @@ h1, h2, h3, h4, h5, h6 {
 
 .video-category {
   font-size: 0.9em;
-  color: var(--secondary-color); /* Menggunakan variabel */
-  margin-bottom: 5px;
+  color: var(--text-color-light); /* More subtle category text */
+  margin-bottom: 0.5rem; /* 5px */
 }
 
-/* --- Styling for tags inside VideoCard --- */
-.video-card-tags {
-  margin-top: 8px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-
-.tag-item-small {
-  font-size: 0.7em;
-  padding: 3px 6px;
-  background-color: var(--secondary-color); /* Menggunakan variabel */
-  color: white;
-  border-radius: 4px;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background-color 0.2s ease;
-}
-
-.tag-item-small:hover {
-  background-color: #5a6268; /* Hardcoded atau bisa pakai darker(var(--secondary-color)) jika ada preprocessor */
-}
-
-
-/* --- Halaman Beranda (Index) --- */
+/* --- Homepage (Index) --- */
 .hero-section {
   text-align: center;
-  margin-bottom: 40px;
-  padding: 40px 20px;
-  background: linear-gradient(to right, var(--primary-color), var(--primary-color)); /* Sesuaikan jika perlu, atau buat gradient khusus */
+  margin-bottom: calc(var(--spacing-unit) * 2.5); /* 40px */
+  padding: calc(var(--spacing-unit) * 2.5) calc(var(--spacing-unit) * 1.25); /* 40px 20px */
+  background: linear-gradient(135deg, var(--primary-color), #6a057e); /* Gradient for hero */
   color: white;
-  border-radius: 8px;
+  border-radius: var(--border-radius-large);
   box-shadow: var(--shadow-medium);
 }
 
 .hero-section h1 {
   font-size: clamp(2.5em, 5vw, 4em);
-  margin-bottom: 10px;
+  margin-bottom: 0.5rem; /* 10px */
   line-height: 1.2;
   color: white;
 }
@@ -418,60 +469,70 @@ h1, h2, h3, h4, h5, h6 {
 .hero-section p {
   font-size: clamp(1em, 2.5vw, 1.5em);
   opacity: 0.9;
+  max-width: var(--max-width-text);
+  margin: 0 auto;
 }
 
 .latest-videos-section,
 .all-categories-section {
-  margin-top: 50px;
+  margin-top: calc(var(--spacing-unit) * 3); /* 50px */
 }
 
 .category-group {
-  margin-bottom: 60px;
+  margin-bottom: calc(var(--spacing-unit) * 3.5); /* 60px */
 }
 
-.no-videos-overall, .no-videos-in-category, .no-videos-found, .no-categories {
+.no-videos-overall, .no-videos-in-category, .no-videos-found, .no-categories, .no-tags-message {
   grid-column: 1 / -1;
   text-align: center;
   font-size: 1.2em;
-  color: var(--secondary-color); /* Menggunakan variabel */
-  padding: 50px 0;
+  color: var(--text-color-light);
+  padding: calc(var(--spacing-unit) * 2.5) 0; /* 50px */
+  background-color: var(--background-color-card);
+  border-radius: var(--border-radius-medium);
+  box-shadow: var(--shadow-light);
 }
 
 .view-all-button-container {
   text-align: right;
-  margin-top: 20px;
+  margin-top: var(--spacing-unit); /* 20px */
 }
 
 .view-all-button {
   display: inline-block;
-  padding: 10px 20px;
-  background-color: var(--accent-color); /* Menggunakan variabel */
+  padding: 0.75rem 1.25rem; /* 10px 20px */
+  background-color: var(--accent-color);
   color: white;
   text-decoration: none;
-  border-radius: 5px;
+  border-radius: var(--border-radius-medium);
   font-weight: 500;
-  transition: background-color 0.2s ease-in-out, transform 0.2s ease;
-  box-shadow: var(--shadow-light); /* Menggunakan variabel */
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow-light);
 }
 
 .view-all-button:hover {
-  background-color: var(--accent-color); /* Akan berubah sesuai mode */
-  filter: brightness(0.9);
+  background-color: #e04e1f; /* Darker accent on hover */
   transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
 }
 
-/* --- Halaman Detail Video --- */
-.video-player-wrapper {
+/* --- Video Detail Page (Specific Styles) --- */
+.video-detail-page {
+  /* No specific styles needed here, uses `main`'s styles */
+}
+
+.video-player-container {
   position: relative;
   width: 100%;
-  padding-bottom: 56.25%; /* Rasio aspek 16:9 */
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
   background-color: #000;
-  border-radius: 8px;
+  border-radius: var(--border-radius-large);
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: calc(var(--spacing-unit) * 1.5); /* 24px */
+  box-shadow: var(--shadow-medium);
 }
 
-.video-player-wrapper iframe {
+.video-player-container iframe {
   position: absolute;
   top: 0;
   left: 0;
@@ -480,84 +541,82 @@ h1, h2, h3, h4, h5, h6 {
   border: none;
 }
 
-.video-meta {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  padding: 10px 0;
-  border-top: 1px solid var(--border-color); /* Menggunakan variabel */
-  border-bottom: 1px solid var(--border-color); /* Menggunakan variabel */
-  font-size: 0.95em;
-  color: var(--secondary-color); /* Menggunakan variabel */
+.video-title { /* Updated to specifically target the H1 on the detail page */
+  font-size: 2.5rem; /* Slightly larger for main video title */
+  margin-top: calc(var(--spacing-unit) * 1.5);
+  margin-bottom: var(--spacing-unit);
+  color: var(--primary-color); /* Highlight video title with primary color */
+  line-height: 1.2;
 }
 
-.video-meta p {
-  margin: 0;
-}
-
-.video-meta a {
-  color: var(--primary-color); /* Menggunakan variabel */
-  text-decoration: none;
-}
-
-.video-meta a:hover {
-  text-decoration: underline;
-}
-
-.video-description h2, .video-tags-container h2 {
-  font-size: 1.5em;
-  color: var(--text-color); /* Menggunakan variabel */
-  margin-top: 0;
-  margin-bottom: 15px;
-}
-
-.video-description p {
-  color: var(--text-color); /* Menggunakan variabel */
+.video-description { /* Updated to target the P for description */
+  font-size: 1.1rem;
+  color: var(--text-color-light); /* Description text is lighter */
   line-height: 1.7;
-  margin-bottom: 0;
+  margin-bottom: calc(var(--spacing-unit) * 2); /* Increased margin */
+  max-width: var(--max-width-text); /* Limit description width for readability */
 }
 
 .video-tags-container {
-  margin-top: 30px;
-  border-top: 1px solid var(--border-color); /* Menggunakan variabel */
-  padding-top: 20px;
+  margin-top: calc(var(--spacing-unit) * 2); /* 32px */
+  border-top: 1px solid var(--border-color);
+  padding-top: calc(var(--spacing-unit) * 1.25); /* 20px */
+}
+
+.video-tags-container h2 {
+  font-size: 1.5em;
+  color: var(--text-color);
+  margin-top: 0;
+  margin-bottom: var(--spacing-unit); /* 16px */
 }
 
 .tags-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 0.75rem; /* 12px */
 }
 
 .tag-item {
   display: inline-block;
-  background-color: var(--primary-color); /* Menggunakan variabel */
+  background-color: var(--primary-color);
   color: white;
-  padding: 6px 12px;
+  padding: 0.5rem 0.9rem; /* 8px 15px */
   border-radius: 20px;
   text-decoration: none;
-  font-size: 0.85em;
+  font-size: 0.9em;
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .tag-item:hover {
-  background-color: var(--primary-color); /* Akan berubah sesuai mode */
-  filter: brightness(0.9);
+  background-color: var(--hover-color-dark);
   transform: translateY(-2px);
 }
 
-/* --- Halaman Kategori (Paginasi) --- */
+.related-videos-section {
+    margin-top: calc(var(--spacing-unit) * 3); /* Add spacing above related videos */
+}
+
+.related-videos-section .section-title {
+    /* Inherits .section-title styles, which are already good */
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+}
+
+/* Removed `.video-meta` as it was not present in the HTML snippet provided for the video detail page.
+   If you add meta info (like date, author) back, you can use these styles.
+*/
+
+/* --- Pagination --- */
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 30px;
-  padding: 15px;
-  background-color: var(--background-color); /* Menggunakan variabel */
-  border-radius: 8px;
-  box-shadow: var(--shadow-light); /* Menggunakan variabel */
+  gap: 0.75rem; /* 10px */
+  margin-top: calc(var(--spacing-unit) * 2); /* 30px */
+  padding: var(--spacing-unit); /* 15px */
+  background-color: var(--background-color-main-content); /* Background for pagination */
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--shadow-light);
 }
 
 .pagination-link {
@@ -566,39 +625,39 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   min-width: 40px;
   height: 40px;
-  padding: 0 10px;
+  padding: 0 0.6rem; /* 10px */
   text-decoration: none;
-  color: var(--primary-color); /* Menggunakan variabel */
-  background-color: var(--card-bg); /* Menggunakan variabel */
-  border: 1px solid var(--border-color); /* Menggunakan variabel */
-  border-radius: 5px;
+  color: var(--primary-color);
+  background-color: var(--card-bg); /* Pagination link background */
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-small);
   transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
   font-weight: 500;
 }
 
 .pagination-link:hover {
-  background-color: var(--primary-color); /* Menggunakan variabel */
+  background-color: var(--primary-color);
   color: white;
   transform: translateY(-2px);
 }
 
 .pagination-link.active {
-  background-color: var(--primary-color); /* Menggunakan variabel */
+  background-color: var(--primary-color);
   color: white;
   font-weight: bold;
-  border-color: var(--primary-color); /* Menggunakan variabel */
+  border-color: var(--primary-color);
   cursor: default;
 }
 
 .pagination-link.active:hover {
-  transform: none;
+  transform: none; /* No transform on active hover */
 }
 
-/* --- Daftar Kategori (category/index.astro) --- */
+/* --- Category List (category/index.astro) --- */
 .category-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 25px;
+  gap: calc(var(--spacing-unit) * 1.5); /* 25px */
 }
 
 .category-item {
@@ -606,103 +665,152 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: var(--background-color); /* Menggunakan variabel */
-  border: 1px solid var(--border-color); /* Menggunakan variabel */
-  border-radius: 8px;
-  padding: 25px;
+  background-color: var(--card-bg); /* Darker category item background */
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-medium);
+  padding: calc(var(--spacing-unit) * 1.5); /* 25px */
   text-align: center;
   text-decoration: none;
-  color: var(--text-color); /* Menggunakan variabel */
-  box-shadow: var(--shadow-light); /* Menggunakan variabel */
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  color: var(--text-color);
+  box-shadow: var(--shadow-light);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .category-item:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow-medium); /* Menggunakan variabel */
-  background-color: var(--card-bg); /* Menggunakan card-bg untuk hover di dark mode */
-  filter: brightness(1.05); /* Sedikit lebih terang */
+  box-shadow: var(--shadow-medium);
+  background-color: var(--hover-color-light); /* Subtle background change on hover */
 }
 
 .category-item-title {
   font-size: 1.6em;
-  color: var(--primary-color); /* Menggunakan variabel */
+  color: var(--primary-color);
   margin-top: 0;
-  margin-bottom: 10px;
+  margin-bottom: 0.6rem; /* 10px */
 }
 
 .category-item-count {
   font-size: 1.1em;
-  color: var(--secondary-color); /* Menggunakan variabel */
+  color: var(--text-color-light); /* More subtle count text */
   margin: 0;
+}
+
+/* --- Tags Grid (tags/index.astro) --- */
+.tags-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--spacing-unit);
+  padding: var(--spacing-unit);
+  justify-content: center;
+  margin-bottom: calc(var(--spacing-unit) * 2);
+}
+
+.tag-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-unit); /* 16px */
+  background-color: var(--card-bg); /* Darker tag card background */
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-medium);
+  text-decoration: none;
+  color: var(--primary-color); /* Tags themselves are primary color */
+  font-weight: bold;
+  font-size: 1.1em;
+  text-align: center;
+  transition: all 0.2s ease-in-out;
+  min-height: 80px;
+  box-shadow: var(--shadow-light);
+}
+
+.tag-card:hover {
+  background-color: var(--hover-color-light); /* Subtle background change on hover */
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
 }
 
 
 /* --- Footer --- */
 footer {
-  background-color: var(--text-color); /* Menggunakan variabel */
-  color: white;
+  background-color: var(--background-color-card); /* Darker footer background */
+  color: var(--text-color-light); /* Lighter text for footer */
   text-align: center;
-  padding: 1.5rem 20px;
-  margin-top: 40px;
+  padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 1.25); /* 1.5rem 20px */
+  margin-top: auto; /* Push footer to the bottom for sticky behavior */
   font-size: 0.9rem;
+  border-top: 1px solid var(--border-color);
+  box-shadow: var(--shadow-medium);
 }
 
 /* --- Responsiveness --- */
-@media (max-width: 992px) { /* Untuk tablet dan layar yang lebih kecil */
+@media (max-width: 992px) { /* Tablet landscape and larger phones */
   main {
-    padding: 15px;
-    /* margin: 20px auto; */ /* Removed for full width */
+    padding: var(--spacing-unit); /* 15px */
+    margin: var(--spacing-unit) auto; /* 20px */
+  }
+
+  h1 { font-size: 2.5rem; }
+  h2 { font-size: 2rem; }
+  h3 { font-size: 1.5rem; }
+
+  .hero-section h1 { font-size: 3.5em; }
+  .hero-section p { font-size: 1.3em; }
+
+  .video-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-unit); /* 20px */
+  }
+
+  .category-list {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--spacing-unit); /* 15px */
   }
 }
 
-@media (max-width: 768px) { /* Untuk mobile dan tablet potret */
+@media (max-width: 768px) { /* Tablet portrait and larger phones */
   .main-nav {
     flex-direction: column;
     align-items: flex-start;
   }
   .logo {
-    margin-bottom: 10px;
+    margin-bottom: 0.5rem; /* 10px */
     width: 100%;
     text-align: center;
   }
   .search-form {
     width: 100%;
-    margin: 10px 0;
-    order: 1;
+    margin: 0.5rem 0; /* 10px */
+    order: 1; /* Pindahkan search form ke atas di mobile */
   }
   .nav-links {
     width: 100%;
     justify-content: center;
-    margin-top: 10px;
-    order: 2;
+    margin-top: 0.5rem; /* 10px */
+    order: 2; /* Pindahkan nav links ke bawah search form */
   }
   .nav-links li {
     margin-left: 0;
-    margin: 0 10px;
+    margin: 0 0.6rem; /* 10px */
   }
-
-  /* Dark mode toggle di mobile */
-  .dark-mode-toggle {
-    margin: 10px auto 0; /* Pusatkan di mobile, di bawah search form */
-  }
-
 
   .video-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-unit); /* 20px */
   }
 
   .page-title, .section-title, .category-title-header, .search-results-title {
-      text-align: center;
-      display: block;
-      width: 100%;
+    font-size: clamp(1.8em, 5vw, 2.5em);
+    text-align: center;
+    display: block;
+    width: 100%;
   }
   .category-title {
-      text-align: center;
-      display: block;
-      width: 100%;
-      padding-right: 0;
+    font-size: clamp(1.6em, 4vw, 2em);
+    text-align: center;
+    display: block;
+    width: 100%;
+    padding-right: 0;
   }
 
   .view-all-button-container {
@@ -711,32 +819,81 @@ footer {
   .video-meta {
     flex-direction: column;
     align-items: flex-start;
-    gap: 5px;
-  }
-  .categories-list-page {
-    padding: 15px;
-    /* margin: 15px auto; */ /* Removed for full width */
+    gap: 0.3rem; /* 5px */
   }
   .category-list {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--spacing-unit); /* 15px */
   }
   .category-item {
-    padding: 20px;
+    padding: var(--spacing-unit); /* 20px */
+  }
+  .tags-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.8rem;
+  }
+  .tag-card {
+    min-height: 70px;
+    font-size: 1em;
+    padding: 0.8rem;
+  }
+  .video-title { /* For detail page */
+    font-size: 2rem; /* Adjusted for smaller screens */
+  }
+  .video-description {
+    font-size: 1rem;
+  }
+  .video-tags-container h2 {
+    font-size: 1.3em;
   }
 }
 
-@media (max-width: 480px) {
-  .video-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 480px) { /* Small mobile devices */
+  :root {
+    --spacing-unit: 0.9rem; /* Slightly smaller base spacing */
   }
+
+  main {
+    padding: var(--spacing-unit);
+    margin: var(--spacing-unit) auto;
+  }
+
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.6rem; }
+  h3 { font-size: 1.3rem; }
+
+  .hero-section h1 { font-size: 2.2em; }
+  .hero-section p { font-size: 1.1em; }
+
+  .video-grid {
+    grid-template-columns: 1fr; /* Single column for very small screens */
+    padding: 0;
+  }
+  .video-card-thumbnail {
+    height: 220px; /* Taller on single column to fill space */
+  }
+  .video-info {
+    padding: var(--spacing-unit);
+  }
+  .video-title { /* For detail page */
+    font-size: 1.8rem; /* Further adjusted for smallest screens */
+  }
+
   .pagination {
-    padding: 10px;
-    gap: 8px;
+    padding: 0.6rem;
+    gap: 0.5rem;
   }
   .pagination-link {
-    min-width: 35px;
-    height: 35px;
-    font-size: 0.9em;
+    min-width: 32px;
+    height: 32px;
+    font-size: 0.8em;
+  }
+
+  .tags-grid {
+    grid-template-columns: 1fr; /* Single column for tags on tiny screens */
+  }
+  .tag-card {
+    min-height: 60px;
+    font-size: 1.1em;
   }
 }
