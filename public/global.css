@@ -1,38 +1,38 @@
 /*
-  src/styles/global.css
-
-  Ini adalah file CSS global Anda yang akan diimpor di BaseLayout.astro.
-  Semua gaya dasar, variabel CSS, dan gaya umum untuk komponen
-  serta halaman akan ditempatkan di sini.
+ * src/styles/global.css
+ *
+ * Ini adalah file CSS global Anda yang akan diimpor di BaseLayout.astro.
+ * Semua gaya dasar, variabel CSS, dan gaya umum untuk komponen
+ * serta halaman akan ditempatkan di sini.
 */
 
 :root {
-  /* Warna */
-  --primary-color: #a300ba; /* Ungu cerah, untuk tautan, judul utama */
-  --secondary-color: #b0b0b0; /* Abu-abu sedang, untuk teks sekunder */
-  --accent-color: #ff5722; /* Oranye, untuk tombol aksi atau highlight */
+  /* Warna Default (Light Mode) */
+  --primary-color: #a300ba;
+  --secondary-color: #6c757d;
+  --accent-color: #ff5722;
 
-  --background-color-body: #1a1a2e; /* Biru gelap keunguan untuk latar belakang halaman utama */
-  --background-color-main-content: #20203f; /* Sedikit lebih terang dari body untuk konten utama/card wrapper */
-  --text-color: #e0e0e0; /* Putih keabu-abuan untuk teks utama */
-  --text-color-light: #b0b0b0; /* Abu-abu lebih terang untuk teks sekunder/meta */
+  --background-color-body: #ffffff;
+  --background-color-main-content: #f8f9fa;
+  --text-color: #212529;
+  --text-color-light: #6c757d;
 
-  --border-color: #333355; /* Garis pemisah yang halus di tema gelap */
-  --card-bg: #2b2b52; /* Latar belakang card yang sedikit lebih terang dari main content */
+  --border-color: #dee2e6;
+  --card-bg: #ffffff;
 
-  --hover-color-light: #3a3a6b; /* Hover state untuk elemen ringan seperti card */
-  --hover-color-dark: #8c009d; /* Hover state untuk primary color */
-  --active-color: #7e008d; /* Warna aktif/klik untuk primary */
+  --hover-color-light: #e9ecef;
+  --hover-color-dark: #8c009d;
+  --active-color: #7e008d;
 
-  /* Shadows */
-  --shadow-light: 0 2px 5px rgba(0,0,0,0.4);
-  --shadow-medium: 0 5px 15px rgba(0,0,0,0.5);
-  --shadow-strong: 0 10px 25px rgba(0,0,0,0.6);
+  /* Shadows (Disarankan disesuaikan untuk light mode jika diperlukan) */
+  --shadow-light: 0 2px 5px rgba(0,0,0,0.1);
+  --shadow-medium: 0 5px 15px rgba(0,0,0,0.15);
+  --shadow-strong: 0 10px 25px rgba(0,0,0,0.2);
 
   /* Spasi/Ukuran Font Dasar */
-  --spacing-unit: 1rem; /* Umumnya 16px */
-  --font-body: 'Inter', sans-serif; /* Menggunakan Inter sebagai font utama */
-  --font-heading: 'Inter', sans-serif; /* Menggunakan Inter juga untuk heading */
+  --spacing-unit: 1rem; /* Tetapkan 1rem = 16px (default browser) */
+  --font-body: 'Inter', sans-serif;
+  --font-heading: 'Inter', sans-serif;
 
   /* Border Radii */
   --border-radius-small: 4px;
@@ -40,8 +40,31 @@
   --border-radius-large: 12px;
 
   /* Max Widths */
-  --max-width-content: 1200px; /* Lebar maksimum untuk konten utama */
-  --max-width-text: 750px; /* Lebar maksimum untuk blok teks panjang agar mudah dibaca */
+  --max-width-content: 1200px;
+  --max-width-text: 750px;
+}
+
+/* --- Dark Mode Variables --- */
+body.dark-mode {
+  --primary-color: #a300ba;
+  --secondary-color: #b0b0b0;
+  --accent-color: #ff5722;
+
+  --background-color-body: #1a1a2e;
+  --background-color-main-content: #20203f;
+  --text-color: #e0e0e0;
+  --text-color-light: #b0b0b0;
+
+  --border-color: #333355;
+  --card-bg: #2b2b52;
+
+  --hover-color-light: #3a3a6b;
+  --hover-color-dark: #8c009d;
+  --active-color: #7e008d;
+
+  --shadow-light: 0 2px 5px rgba(0,0,0,0.4);
+  --shadow-medium: 0 5px 15px rgba(0,0,0,0.5);
+  --shadow-strong: 0 10px 25px rgba(0,0,0,0.6);
 }
 
 /* --- Base Styles --- */
@@ -52,6 +75,9 @@
 }
 
 html {
+  /* Pastikan ukuran font dasar HTML adalah 16px (default)
+     Ini penting agar 1rem selalu = 16px, dan clamp() bekerja konsisten. */
+  font-size: 100%; /* Setara dengan 16px */
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   -moz-text-size-adjust: 100%;
@@ -60,47 +86,53 @@ html {
 
 body {
   font-family: var(--font-body);
-  font-size: var(--spacing-unit); /* 1rem base font size */
+  /* Gunakan var(--spacing-unit) yang sudah 1rem, agar konsisten dengan basis 16px */
+  font-size: var(--spacing-unit);
   line-height: 1.6;
   background-color: var(--background-color-body);
   color: var(--text-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  display: flex; /* Untuk sticky footer */
-  flex-direction: column; /* Untuk sticky footer */
-  min-height: 100vh; /* Untuk sticky footer */
-  overflow-x: hidden; /* Mencegah scroll horizontal */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* --- Global Typography --- */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  color: var(--text-color); /* Umumnya teks berwarna terang */
+  color: var(--text-color);
   line-height: 1.2;
   margin-top: calc(var(--spacing-unit) * 2);
   margin-bottom: var(--spacing-unit);
+  transition: color 0.3s ease;
 }
 
 /* Menggunakan clamp() untuk responsivitas ukuran font yang proporsional */
 h1 {
-  font-size: clamp(2.8rem, 5vw, 4rem); /* Min: 2.8rem, Ideal: 5vw, Max: 4rem */
+  /* Min: 2.8rem (44.8px), Ideal: 5vw (skala berdasarkan lebar viewport), Max: 4rem (64px) */
+  font-size: clamp(2.8rem, 5vw, 4rem);
   font-weight: 800;
-  color: var(--primary-color); /* H1 seringkali lebih baik jika menggunakan warna primer */
+  color: var(--primary-color);
 }
 h2 {
-  font-size: clamp(2rem, 4vw, 3.2rem); /* Min: 2rem, Ideal: 4vw, Max: 3.2rem */
+  /* Min: 2rem (32px), Ideal: 4vw, Max: 3.2rem (51.2px) */
+  font-size: clamp(2rem, 4vw, 3.2rem);
   font-weight: 700;
 }
 h3 {
-  font-size: clamp(1.6rem, 3vw, 2.5rem); /* Min: 1.6rem, Ideal: 3vw, Max: 2.5rem */
+  /* Min: 1.6rem (25.6px), Ideal: 3vw, Max: 2.5rem (40px) */
+  font-size: clamp(1.6rem, 3vw, 2.5rem);
   font-weight: 600;
 }
 h4 {
-  font-size: clamp(1.3rem, 2.5vw, 2rem); /* Min: 1.3rem, Ideal: 2.5vw, Max: 2rem */
+  font-size: clamp(1.3rem, 2.5vw, 2rem);
   font-weight: 600;
 }
 h5 {
-  font-size: 1.2rem; /* H5 ke bawah bisa statis atau clamp yang lebih kecil */
+  font-size: 1.2rem;
   font-weight: 500;
 }
 h6 {
@@ -119,12 +151,12 @@ a {
 }
 
 a:hover {
-  color: var(--hover-color-dark); /* Slightly darker primary on hover */
+  color: var(--hover-color-dark);
   text-decoration: underline;
 }
 
 /* --- Global Buttons & Forms --- */
-button, .button { /* Menjadikan .button juga ikut styling ini */
+button, .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -137,7 +169,7 @@ button, .button { /* Menjadikan .button juga ikut styling ini */
   color: white;
   background-color: var(--primary-color);
   transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
-  text-decoration: none; /* Untuk .button class */
+  text-decoration: none;
 }
 
 button:hover, .button:hover {
@@ -167,13 +199,13 @@ textarea {
   width: 100%;
   padding: 0.75rem 1rem;
   margin-bottom: var(--spacing-unit);
-  background-color: var(--card-bg); /* Darker input fields, using card-bg for consistency */
+  background-color: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-small);
   color: var(--text-color);
   font-family: var(--font-body);
   font-size: var(--spacing-unit);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease, color 0.3s ease;
 }
 
 input[type="search"]::placeholder,
@@ -181,7 +213,7 @@ input[type="text"]::placeholder,
 input[type="email"]::placeholder,
 input[type="password"]::placeholder,
 textarea::placeholder {
-  color: var(--text-color-light); /* Placeholder color for dark theme */
+  color: var(--text-color-light);
 }
 
 input[type="search"]:focus,
@@ -191,24 +223,25 @@ input[type="password"]:focus,
 textarea:focus {
   border-color: var(--primary-color);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(163, 0, 186, 0.3); /* Focus ring primary color */
+  box-shadow: 0 0 0 3px rgba(163, 0, 186, 0.3);
 }
 
 /* --- Header & Navigasi --- */
 header {
-  background-color: var(--card-bg); /* Darker header */
+  background-color: var(--card-bg);
   padding: var(--spacing-unit) 0;
   box-shadow: var(--shadow-medium);
   position: sticky;
   top: 0;
   z-index: 1000;
   border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .main-nav {
   max-width: var(--max-width-content);
   margin: 0 auto;
-  padding: 0 calc(var(--spacing-unit) * 1.5); /* 20px */
+  padding: 0 calc(var(--spacing-unit) * 1.5);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -216,11 +249,12 @@ header {
 }
 
 .logo {
-  color: var(--text-color); /* Logo color */
+  color: var(--text-color);
   text-decoration: none;
   font-size: 1.8rem;
   font-weight: bold;
   white-space: nowrap;
+  transition: color 0.3s ease;
 }
 
 .logo:hover {
@@ -230,9 +264,9 @@ header {
 .search-form {
   display: flex;
   flex-grow: 1;
-  margin: 0 var(--spacing-unit); /* Reduced margin for desktop */
+  margin: 0 var(--spacing-unit);
   max-width: 400px;
-  order: 0; /* Default order, will change in media query */
+  order: 0;
 }
 
 .search-form input[type="search"] {
@@ -242,7 +276,7 @@ header {
   border-radius: var(--border-radius-medium) 0 0 var(--border-radius-medium);
   font-size: 1rem;
   outline: none;
-  background-color: var(--background-color-body); /* Slightly darker for search input */
+  background-color: var(--background-color-body);
   color: var(--text-color);
 }
 
@@ -255,7 +289,7 @@ header {
 }
 
 .search-form button:hover {
-  background-color: #e04e1f; /* Darker accent on hover */
+  background-color: #e04e1f;
 }
 
 .nav-links {
@@ -264,26 +298,26 @@ header {
   padding: 0;
   display: flex;
   align-items: center;
-  order: 0; /* Default order */
+  order: 0;
 }
 
 .nav-links li {
-  margin-left: calc(var(--spacing-unit) * 1.25); /* 20px */
+  margin-left: calc(var(--spacing-unit) * 1.25);
 }
 
 .nav-links a {
-  color: var(--text-color); /* Nav links color */
+  color: var(--text-color);
   font-weight: 500;
-  padding: 0.5rem 0; /* Adjust padding for better clickable area */
+  padding: 0.5rem 0;
   transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .nav-links a:hover {
-  color: var(--primary-color); /* Primary color on hover */
+  color: var(--primary-color);
   text-decoration: none;
 }
 
-.nav-links a.active { /* If you have an active state for nav links */
+.nav-links a.active {
   color: var(--primary-color);
   font-weight: 600;
 }
@@ -292,20 +326,22 @@ header {
 /* --- General Page Layout --- */
 main {
   max-width: var(--max-width-content);
-  margin: calc(var(--spacing-unit) * 2) auto; /* 30px */
-  padding: calc(var(--spacing-unit) * 1.5); /* 20px */
-  background-color: var(--background-color-main-content); /* Main content area background */
+  margin: calc(var(--spacing-unit) * 2) auto;
+  padding: calc(var(--spacing-unit) * 1.5);
+  background-color: var(--background-color-main-content);
   border-radius: var(--border-radius-large);
   box-shadow: var(--shadow-medium);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* --- Breadcrumbs --- */
 .breadcrumb {
-  margin-bottom: var(--spacing-unit); /* 20px */
-  font-size: 0.9em;
+  margin-bottom: var(--spacing-unit);
+  font-size: 0.9em; /* Menggunakan em di sini relatif terhadap font-size body (1rem) */
   color: var(--text-color-light);
   padding: var(--spacing-unit) 0;
   border-bottom: 1px solid var(--border-color);
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 .breadcrumb ol {
@@ -322,9 +358,10 @@ main {
 }
 
 .breadcrumb a {
-  color: var(--secondary-color); /* Breadcrumb links slightly desaturated */
+  color: var(--secondary-color);
   text-decoration: none;
   white-space: nowrap;
+  transition: color 0.3s ease;
 }
 
 .breadcrumb a:hover {
@@ -333,38 +370,40 @@ main {
 }
 
 .breadcrumb .separator {
-  margin: 0 0.5rem; /* 8px */
+  margin: 0 0.5rem;
   color: var(--border-color);
+  transition: color 0.3s ease;
 }
 
 .breadcrumb li:last-child span {
   font-weight: 600;
-  color: var(--text-color); /* Current page bold and brighter */
+  color: var(--text-color);
+  transition: color 0.3s ease;
 }
 
 
 /* --- Page / Section Titles --- */
-/* Font size and color are now inherited from h1, h2, etc. where applicable.
-   These classes handle layout and decorative elements. */
 .page-title, .section-title, .category-title-header, .search-results-title {
   text-align: center;
-  margin-bottom: calc(var(--spacing-unit) * 1.5); /* 30px */
+  margin-bottom: calc(var(--spacing-unit) * 1.5);
   border-bottom: 3px solid var(--accent-color);
-  padding-bottom: var(--spacing-unit); /* 15px */
+  padding-bottom: var(--spacing-unit);
   display: inline-block;
   width: 100%;
   box-sizing: border-box;
+  transition: border-color 0.3s ease;
 }
 
-.category-title { /* Untuk judul kategori di halaman utama */
+.category-title {
   text-align: left;
-  margin-bottom: calc(var(--spacing-unit) * 1.25); /* 25px */
-  color: var(--text-color); /* Default text color */
+  margin-bottom: calc(var(--spacing-unit) * 1.25);
+  color: var(--text-color);
   position: relative;
-  padding-bottom: 0.5rem; /* 10px */
+  padding-bottom: 0.5rem;
   border-bottom: 2px solid var(--accent-color);
   display: inline-block;
-  padding-right: var(--spacing-unit); /* 15px */
+  padding-right: var(--spacing-unit);
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 .category-title .category-link {
@@ -382,25 +421,26 @@ main {
   color: var(--text-color-light);
   display: block;
   margin-top: 5px;
+  transition: color 0.3s ease;
 }
 
 /* --- Video Grid (Used on many pages) --- */
 .video-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: calc(var(--spacing-unit) * 1.5); /* 25px */
-  margin-bottom: calc(var(--spacing-unit) * 2.5); /* 40px */
+  gap: calc(var(--spacing-unit) * 1.5);
+  margin-bottom: calc(var(--spacing-unit) * 2.5);
 }
 
 /* --- Video Card Component --- */
 .video-card {
   display: flex;
   flex-direction: column;
-  background-color: var(--card-bg); /* Darker card background */
+  background-color: var(--card-bg);
   border-radius: var(--border-radius-medium);
   overflow: hidden;
   box-shadow: var(--shadow-medium);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
   text-decoration: none;
   color: inherit;
   position: relative;
@@ -409,12 +449,12 @@ main {
 .video-card:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-strong);
-  background-color: var(--hover-color-light); /* Subtle background change on hover */
+  background-color: var(--hover-color-light);
 }
 
 .thumbnail-container {
   width: 100%;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  padding-bottom: 56.25%;
   position: relative;
   overflow: hidden;
 }
@@ -433,11 +473,11 @@ main {
   transform: scale(1.05);
 }
 
-.duration { /* If you decide to add it back to JSON */
+.duration {
   position: absolute;
   bottom: 8px;
   right: 8px;
-  background-color: rgba(0, 0, 0, 0.8); /* Slightly darker for better contrast */
+  background-color: rgba(0, 0, 0, 0.8);
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
@@ -445,14 +485,13 @@ main {
 }
 
 .video-info {
-  padding: var(--spacing-unit); /* 15px */
+  padding: var(--spacing-unit);
 }
 
 .video-title {
-  /* This .video-title is for the video cards, not the H1 on the detail page */
   font-size: 1.1em;
   margin-top: 0;
-  margin-bottom: 0.5rem; /* 8px */
+  margin-bottom: 0.5rem;
   color: var(--text-color);
   line-height: 1.4;
   overflow: hidden;
@@ -460,28 +499,30 @@ main {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  transition: color 0.3s ease;
 }
 
 .video-category {
   font-size: 0.9em;
-  color: var(--text-color-light); /* More subtle category text */
-  margin-bottom: 0.5rem; /* 5px */
+  color: var(--text-color-light);
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
 }
 
 /* --- Homepage (Index) --- */
 .hero-section {
   text-align: center;
-  margin-bottom: calc(var(--spacing-unit) * 2.5); /* 40px */
-  padding: calc(var(--spacing-unit) * 2.5) calc(var(--spacing-unit) * 1.25); /* 40px 20px */
-  background: linear-gradient(135deg, var(--primary-color), #6a057e); /* Gradient for hero */
+  margin-bottom: calc(var(--spacing-unit) * 2.5);
+  padding: calc(var(--spacing-unit) * 2.5) calc(var(--spacing-unit) * 1.25);
+  background: linear-gradient(135deg, var(--primary-color), #6a057e);
   color: white;
   border-radius: var(--border-radius-large);
   box-shadow: var(--shadow-medium);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .hero-section h1 {
-  /* This h1 will inherit its size from the global h1 rule */
-  margin-bottom: 0.5rem; /* 10px */
+  margin-bottom: 0.5rem;
   line-height: 1.2;
   color: white; /* Override h1 global color for hero section */
 }
@@ -495,11 +536,11 @@ main {
 
 .latest-videos-section,
 .all-categories-section {
-  margin-top: calc(var(--spacing-unit) * 3); /* 50px */
+  margin-top: calc(var(--spacing-unit) * 3);
 }
 
 .category-group {
-  margin-bottom: calc(var(--spacing-unit) * 3.5); /* 60px */
+  margin-bottom: calc(var(--spacing-unit) * 3.5);
 }
 
 .no-videos-overall, .no-videos-in-category, .no-videos-found, .no-categories, .no-tags-message {
@@ -507,20 +548,21 @@ main {
   text-align: center;
   font-size: 1.2em;
   color: var(--text-color-light);
-  padding: calc(var(--spacing-unit) * 2.5) 0; /* 50px */
-  background-color: var(--card-bg); /* Use card-bg for consistency */
+  padding: calc(var(--spacing-unit) * 2.5) 0;
+  background-color: var(--card-bg);
   border-radius: var(--border-radius-medium);
   box-shadow: var(--shadow-light);
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .view-all-button-container {
   text-align: right;
-  margin-top: var(--spacing-unit); /* 20px */
+  margin-top: var(--spacing-unit);
 }
 
 .view-all-button {
   display: inline-block;
-  padding: 0.75rem 1.25rem; /* 10px 20px */
+  padding: 0.75rem 1.25rem;
   background-color: var(--accent-color);
   color: white;
   text-decoration: none;
@@ -531,7 +573,7 @@ main {
 }
 
 .view-all-button:hover {
-  background-color: #e04e1f; /* Darker accent on hover */
+  background-color: #e04e1f;
   transform: translateY(-2px);
   box-shadow: var(--shadow-medium);
 }
@@ -545,11 +587,11 @@ main {
 .video-player-container {
   position: relative;
   width: 100%;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  padding-bottom: 56.25%;
   background-color: #000;
   border-radius: var(--border-radius-large);
   overflow: hidden;
-  margin-bottom: calc(var(--spacing-unit) * 1.5); /* 24px */
+  margin-bottom: calc(var(--spacing-unit) * 1.5);
   box-shadow: var(--shadow-medium);
 }
 
@@ -564,51 +606,52 @@ main {
 
 /* Override .video-title from video-card for the H1 on the detail page.
    This H1 will inherit its base size from the global h1 rule. */
-main.video-detail-page .video-title { /* More specific selector for the main video title (H1) */
-  font-size: clamp(2.2rem, 4vw, 3.2rem); /* Make it distinct but still responsive */
+main.video-detail-page .video-title {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
   margin-top: calc(var(--spacing-unit) * 1.5);
   margin-bottom: var(--spacing-unit);
-  color: var(--primary-color); /* Highlight video title with primary color */
+  color: var(--primary-color);
   line-height: 1.2;
-  text-align: left; /* Ensure it's left-aligned by default */
-  border-bottom: none; /* Remove any inherited borders */
+  text-align: left;
+  border-bottom: none;
   padding-bottom: 0;
 }
 
 .video-description {
   font-size: 1.1rem;
-  color: var(--text-color-light); /* Description text is lighter */
+  color: var(--text-color-light);
   line-height: 1.7;
-  margin-bottom: calc(var(--spacing-unit) * 2); /* Increased margin */
-  max-width: var(--max-width-text); /* Limit description width for readability */
+  margin-bottom: calc(var(--spacing-unit) * 2);
+  max-width: var(--max-width-text);
+  transition: color 0.3s ease;
 }
 
 .video-tags-container {
-  margin-top: calc(var(--spacing-unit) * 2); /* 32px */
+  margin-top: calc(var(--spacing-unit) * 2);
   border-top: 1px solid var(--border-color);
-  padding-top: calc(var(--spacing-unit) * 1.25); /* 20px */
+  padding-top: calc(var(--spacing-unit) * 1.25);
+  transition: border-color 0.3s ease;
 }
 
 .video-tags-container h2 {
-  /* This h2 for "Tags" will inherit its base size from the global h2 rule.
-     Adjust if you need a slightly different size for this specific h2. */
-  font-size: clamp(1.4rem, 2.5vw, 2rem); /* A bit smaller than a typical h2 */
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
   color: var(--text-color);
   margin-top: 0;
-  margin-bottom: var(--spacing-unit); /* 16px */
+  margin-bottom: var(--spacing-unit);
+  transition: color 0.3s ease;
 }
 
 .tags-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem; /* 12px */
+  gap: 0.75rem;
 }
 
 .tag-item {
   display: inline-block;
   background-color: var(--primary-color);
   color: white;
-  padding: 0.5rem 0.9rem; /* 8px 15px */
+  padding: 0.5rem 0.9rem;
   border-radius: 20px;
   text-decoration: none;
   font-size: 0.9em;
@@ -621,21 +664,20 @@ main.video-detail-page .video-title { /* More specific selector for the main vid
 }
 
 .related-videos-section {
-    margin-top: calc(var(--spacing-unit) * 3); /* Add spacing above related videos */
+    margin-top: calc(var(--spacing-unit) * 3);
 }
 
-/* The .section-title inside .related-videos-section will inherit from global h2.
-   We just need to ensure its layout/decorative styles are correct. */
 .related-videos-section .section-title {
-    color: var(--text-color); /* Default text color, not primary for sub-section */
-    text-align: left; /* Ensure it's left-aligned on desktop */
-    margin-top: calc(var(--spacing-unit) * 2); /* Space from above */
+    color: var(--text-color);
+    text-align: left;
+    margin-top: calc(var(--spacing-unit) * 2);
     margin-bottom: calc(var(--spacing-unit) * 1.5);
-    border-bottom: 2px solid var(--accent-color); /* Thinner border */
+    border-bottom: 2px solid var(--accent-color);
     padding-bottom: 0.5rem;
-    display: inline-block; /* For border to wrap text */
+    display: inline-block;
     padding-right: var(--spacing-unit);
-    width: auto; /* Not full width by default */
+    width: auto;
+    transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 
@@ -645,12 +687,13 @@ main.video-detail-page .video-title { /* More specific selector for the main vid
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.75rem; /* 10px */
-  margin-top: calc(var(--spacing-unit) * 2); /* 30px */
-  padding: var(--spacing-unit); /* 15px */
-  background-color: var(--background-color-main-content); /* Background for pagination */
+  gap: 0.75rem;
+  margin-top: calc(var(--spacing-unit) * 2);
+  padding: var(--spacing-unit);
+  background-color: var(--background-color-main-content);
   border-radius: var(--border-radius-large);
   box-shadow: var(--shadow-light);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .pagination-link {
@@ -659,13 +702,13 @@ main.video-detail-page .video-title { /* More specific selector for the main vid
   align-items: center;
   min-width: 40px;
   height: 40px;
-  padding: 0 0.6rem; /* 10px */
+  padding: 0 0.6rem;
   text-decoration: none;
   color: var(--primary-color);
-  background-color: var(--card-bg); /* Pagination link background */
+  background-color: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-small);
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease, border-color 0.3s ease;
   font-weight: 500;
 }
 
@@ -684,14 +727,14 @@ main.video-detail-page .video-title { /* More specific selector for the main vid
 }
 
 .pagination-link.active:hover {
-  transform: none; /* No transform on active hover */
+  transform: none;
 }
 
 /* --- Category List (category/index.astro) --- */
 .category-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: calc(var(--spacing-unit) * 1.5); /* 25px */
+  gap: calc(var(--spacing-unit) * 1.5);
 }
 
 .category-item {
@@ -699,34 +742,35 @@ main.video-detail-page .video-title { /* More specific selector for the main vid
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: var(--card-bg); /* Darker category item background */
+  background-color: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-medium);
-  padding: calc(var(--spacing-unit) * 1.5); /* 25px */
+  padding: calc(var(--spacing-unit) * 1.5);
   text-align: center;
   text-decoration: none;
   color: var(--text-color);
   box-shadow: var(--shadow-light);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 .category-item:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-medium);
-  background-color: var(--hover-color-light); /* Subtle background change on hover */
+  background-color: var(--hover-color-light);
 }
 
 .category-item-title {
-  font-size: 1.6em; /* Keep this specific as it's a component title */
+  font-size: 1.6em;
   color: var(--primary-color);
   margin-top: 0;
-  margin-bottom: 0.6rem; /* 10px */
+  margin-bottom: 0.6rem;
 }
 
 .category-item-count {
   font-size: 1.1em;
-  color: var(--text-color-light); /* More subtle count text */
+  color: var(--text-color-light);
   margin: 0;
+  transition: color 0.3s ease;
 }
 
 /* --- Tags Grid (tags/index.astro) --- */
@@ -743,22 +787,22 @@ main.video-detail-page .video-title { /* More specific selector for the main vid
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: var(--spacing-unit); /* 16px */
-  background-color: var(--card-bg); /* Darker tag card background */
+  padding: var(--spacing-unit);
+  background-color: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-medium);
   text-decoration: none;
-  color: var(--primary-color); /* Tags themselves are primary color */
+  color: var(--primary-color);
   font-weight: bold;
   font-size: 1.1em;
   text-align: center;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out, background-color 0.3s ease, border-color 0.3s ease;
   min-height: 80px;
   box-shadow: var(--shadow-light);
 }
 
 .tag-card:hover {
-  background-color: var(--hover-color-light); /* Subtle background change on hover */
+  background-color: var(--hover-color-light);
   border-color: var(--primary-color);
   box-shadow: var(--shadow-medium);
   transform: translateY(-2px);
@@ -767,27 +811,26 @@ main.video-detail-page .video-title { /* More specific selector for the main vid
 
 /* --- Footer --- */
 footer {
-  background-color: var(--card-bg); /* Darker footer background */
-  color: var(--text-color-light); /* Lighter text for footer */
+  background-color: var(--card-bg);
+  color: var(--text-color-light);
   text-align: center;
-  padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 1.25); /* 1.5rem 20px */
-  margin-top: auto; /* Push footer to the bottom for sticky behavior */
+  padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 1.25);
+  margin-top: auto;
   font-size: 0.9rem;
   border-top: 1px solid var(--border-color);
   box-shadow: var(--shadow-medium);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* --- Responsiveness --- */
 @media (max-width: 992px) { /* Tablet landscape and larger phones */
   main {
-    padding: var(--spacing-unit); /* 15px */
-    margin: var(--spacing-unit) auto; /* 20px */
+    padding: var(--spacing-unit);
+    margin: var(--spacing-unit) auto;
   }
 
-  /* Headings will scale automatically due to clamp(), no need to override specific sizes here */
-
-  .hero-section h1 { /* Override specific h1 style for hero on smaller screens */
-    font-size: clamp(2.2em, 5vw, 3.5em); /* Slightly smaller than desktop */
+  .hero-section h1 {
+    font-size: clamp(2.2em, 5vw, 3.5em);
   }
 
   .hero-section p {
@@ -796,12 +839,12 @@ footer {
 
   .video-grid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--spacing-unit); /* 20px */
+    gap: var(--spacing-unit);
   }
 
   .category-list {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: var(--spacing-unit); /* 15px */
+    gap: var(--spacing-unit);
   }
 }
 
@@ -811,40 +854,37 @@ footer {
     align-items: flex-start;
   }
   .logo {
-    margin-bottom: 0.5rem; /* 10px */
+    margin-bottom: 0.5rem;
     width: 100%;
     text-align: center;
   }
   .search-form {
     width: 100%;
-    margin: 0.5rem 0; /* 10px */
-    order: 1; /* Pindahkan search form ke atas di mobile */
+    margin: 0.5rem 0;
+    order: 1;
   }
   .nav-links {
     width: 100%;
     justify-content: center;
-    margin-top: 0.5rem; /* 10px */
-    order: 2; /* Pindahkan nav links ke bawah search form */
+    margin-top: 0.5rem;
+    order: 2;
   }
   .nav-links li {
     margin-left: 0;
-    margin: 0 0.6rem; /* 10px */
+    margin: 0 0.6rem;
   }
 
   .video-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: var(--spacing-unit); /* 20px */
+    gap: var(--spacing-unit);
   }
 
   .page-title, .section-title, .category-title-header, .search-results-title {
-    /* These will still inherit from h1/h2/etc. global rules, but we center them here */
     text-align: center;
-    display: block; /* Ensure it takes full width */
+    display: block;
     width: 100%;
-    /* Clamp() will handle font size for these classes via their h tag */
   }
   .category-title {
-    /* This will inherit from h2/h3. Centering and width adjustment for mobile. */
     text-align: center;
     display: block;
     width: 100%;
@@ -857,10 +897,10 @@ footer {
 
   .category-list {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: var(--spacing-unit); /* 15px */
+    gap: var(--spacing-unit);
   }
   .category-item {
-    padding: var(--spacing-unit); /* 20px */
+    padding: var(--spacing-unit);
   }
   .tags-grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -872,31 +912,28 @@ footer {
     padding: 0.8rem;
   }
 
-  /* Specific adjustments for video detail page on smaller screens */
-  main.video-detail-page .video-title {
-    text-align: center; /* Center the main video title on mobile */
+  .video-detail-page .video-title {
+    text-align: center;
   }
   .video-tags-container h2 {
-    font-size: clamp(1.2rem, 3vw, 1.5rem); /* Adjust size for "Tags:" heading */
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
   }
   .related-videos-section .section-title {
-    text-align: center; /* Center "Video Terkait" title on mobile */
-    width: 100%; /* Ensure it takes full width on mobile */
+    text-align: center;
+    width: 100%;
     padding-right: 0;
   }
 }
 
 @media (max-width: 480px) { /* Small mobile devices */
   :root {
-    --spacing-unit: 0.9rem; /* Slightly smaller base spacing */
+    --spacing-unit: 0.9rem;
   }
 
   main {
     padding: var(--spacing-unit);
     margin: var(--spacing-unit) auto;
   }
-
-  /* Headings will continue to scale down via clamp() */
 
   .hero-section h1 {
     font-size: clamp(1.8em, 6vw, 2.5em);
@@ -906,12 +943,8 @@ footer {
   }
 
   .video-grid {
-    grid-template-columns: 1fr; /* Single column for very small screens */
+    grid-template-columns: 1fr;
     padding: 0;
-  }
-  .video-card-thumbnail {
-    /* Removed specific height here as object-fit: cover handles it.
-       If you need a fixed height, consider using a min-height instead. */
   }
   .video-info {
     padding: var(--spacing-unit);
@@ -928,7 +961,7 @@ footer {
   }
 
   .tags-grid {
-    grid-template-columns: 1fr; /* Single column for tags on tiny screens */
+    grid-template-columns: 1fr;
   }
   .tag-card {
     min-height: 60px;
