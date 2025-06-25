@@ -5,7 +5,7 @@
 import Layout from '../../layouts/BaseLayout.astro';
 import { getAllVideos, type VideoData } from '../../utils/data.ts';
 import { slugify } from '../../utils/slugify.ts';
-import { nama, desk, url } from '../../utils/site.ts'; // Opsional, jika digunakan untuk meta
+import { nama, url } from '../../utils/site.ts'; // Opsional, jika digunakan untuk meta
 export const prerender = true;
 
 // Ambil semua tags unik saat build time
@@ -27,7 +27,7 @@ allVideos.forEach(video => {
 const sortedTags = Array.from(uniqueTags).sort((a, b) => a.localeCompare(b));
 
 const breadcrumbs = [
-  { name: 'Beranda', url: '/' },
+  { name: 'Home', url: '/' },
   { name: 'Semua Tags', url: '/tags' },
 ];
 
@@ -72,7 +72,7 @@ let preconnectDomains: string[] = [];
     ) : (
       <div class="tags-grid">
         {sortedTags.map(tag => (
-          <a href={`/cari/${slugify(tag)}/1`} class="tag-card">
+          <a href={`/video/${slugify(tag)}/1`} class="tag-card">
             {tag}
           </a>
         ))}

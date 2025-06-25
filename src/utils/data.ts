@@ -7,8 +7,13 @@ export interface VideoData {
   description: string;
   category: string;
   thumbnail: string;
+  thumbnailWidth: number;
+  thumbnailHeight: number;
+  datePublished?: string;
+  dateModified?: string;
   embedUrl: string;
   tags: string; // Tipe data diubah menjadi string
+  previewUrl?: string;
 }
 
 export async function getAllVideos(): Promise<VideoData[]> {

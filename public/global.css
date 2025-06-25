@@ -1,7 +1,7 @@
 :root {
-  --primary-color: #767a96;
-  --secondary-color: #babdc0;
-  --accent-color: #bcbdc7;
+  --primary-color: #03050e;
+  --secondary-color: #000203;
+  --accent-color: #404ff3;
   --background-color-body: #F9F9F9;
   --background-color-main-content: #FFFFFF;
   --text-color: #212121;
@@ -15,11 +15,17 @@
   --shadow-medium: 0 3px 6px rgba(0,0,0,0.12);
   --shadow-strong: 0 6px 12px rgba(0,0,0,0.18);
   --spacing-unit: 1rem;
-  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  --font-heading: -apple-system, BlinkMacMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-body: -apple-system, BlinkMacMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-heading: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   --border-radius-small: 2px;
   --border-radius-medium: 4px;
   --border-radius-large: 8px;
+
+  /* Theme variables for easy mapping */
+  --theme-background: var(--background-color-main-content);
+  --text-color-heading: var(--text-color);
+  --text-color-body: var(--text-color);
+  --button-text-color: white; /* Default button text color */
 }
 
 body.dark-mode {
@@ -38,6 +44,12 @@ body.dark-mode {
   --shadow-light: 0 1px 2px rgba(0,0,0,0.4);
   --shadow-medium: 0 3px 6px rgba(0,0,0,0.5);
   --shadow-strong: 0 6px 12px rgba(0,0,0,0.6);
+
+  /* Dark mode specific theme variables */
+  --theme-background: var(--background-color-main-content);
+  --text-color-heading: var(--text-color);
+  --text-color-body: var(--text-color-light);
+  --button-text-color: var(--text-color); /* Adjust if buttons should be darker in dark mode */
 }
 
 * {
@@ -454,8 +466,51 @@ main {
   transition: transform 0.3s ease;
 }
 
+.video-thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease;
+}
+
+.video-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0; /* Default tersembunyi */
+  transition: opacity 0.3s ease-in-out;
+}
+
+.video-card:has(.video-preview):hover .video-thumbnail {
+  opacity: 0; /* Thumbnail menghilang */
+}
+
+.video-card:has(.video-preview):hover .video-preview {
+  opacity: 1; /* Video pratinjau muncul */
+}
+
 .video-card:hover .thumbnail-container img {
   transform: scale(1.05);
+}
+
+.video-card.video-preview-error .video-preview {
+  display: none !important; /* Sembunyikan video preview */
+}
+
+/* Penting: Pastikan saat hover pada kartu yang error, thumbnail TIDAK berubah */
+.video-card.video-preview-error:hover .video-thumbnail {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+}
+
+.video-card.video-preview-error:hover .video-preview {
+  opacity: 0 !important; /* Tetap tersembunyi */
+  display: none !important;
 }
 
 .duration {
@@ -475,7 +530,7 @@ main {
 
 /* --- Start of VideoCard.astro specific CSS added to global.css --- */
 .video-title {
-  font-size: 1.05em;
+  font-size: 1.05rem;
   margin-top: 0;
   margin-bottom: 0.5rem;
   color: var(--text-color);
@@ -589,10 +644,10 @@ main {
 }
 
 main.video-detail-page .video-title {
-  font-size: 1.5rem;
+  font-size: 1.05rem;
   font-weight: 600;
   color: var(--text-color);
-  margin-top: calc(var(--spacing-unit) * 1.5);
+  margin-top: calc(var(--spacing-unit) * 0.2);
   margin-bottom: var(--spacing-unit);
   line-height: 1.2;
   text-align: left;
@@ -762,6 +817,89 @@ footer {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* --- Start of New CSS for Short Video Page (src/pages/shorts/[id].astro) --- */
+.short-video-page {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background-color: var(--theme-background);
+  border-radius: var(--border-radius-medium);
+  box-shadow: var(--shadow-small);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.short-video-page .breadcrumb {
+    /* Override default main breadcrumb styles if needed, or let them inherit */
+    padding-left: 0;
+    padding-right: 0;
+    border-bottom: none; /* Remove border from the main breadcrumb */
+    margin-bottom: 1rem;
+}
+.short-video-page .breadcrumb ol {
+    justify-content: center; /* Center breadcrumbs on short video page */
+}
+
+
+.video-container {
+  width: 100%;
+  max-width: 400px; /* Lebar maksimum yang lebih cocok untuk video vertikal */
+  margin: 0 auto 1.5rem auto; /* Pusatkan dan beri jarak bawah */
+  aspect-ratio: 9 / 16; /* Rasio aspek khas vertikal video pendek */
+  background-color: black;
+  border-radius: var(--border-radius-small);
+  overflow: hidden;
+  box-shadow: var(--shadow-medium); /* Menambahkan bayangan ke kontainer video */
+}
+
+.main-short-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* agar video tidak terpotong dalam wadah */
+  display: block; /* Menghilangkan spasi ekstra di bawah video */
+}
+
+.short-video-title {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  margin-top: 1rem; /* Adjust margin-top to separate from video container */
+  margin-bottom: 0.5rem;
+  color: var(--text-color-heading);
+  text-align: center;
+  line-height: 1.2;
+  transition: color 0.3s ease;
+}
+
+.short-video-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-color-body);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.link-to-full-video {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.link-to-full-video a {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-color);
+  color: var(--button-text-color);
+  text-decoration: none;
+  border-radius: var(--border-radius-small);
+  transition: background-color 0.3s ease;
+}
+
+.link-to-full-video a:hover {
+  background-color: var(--hover-color-dark); /* Menggunakan hover-color-dark dari variabel */
+  transform: translateY(-2px); /* Menambahkan efek hover */
+  box-shadow: var(--shadow-light); /* Menambahkan efek bayangan */
+}
+/* --- End of New CSS for Short Video Page --- */
+
+
 @media (max-width: 992px) {
   main {
     padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
@@ -822,6 +960,14 @@ footer {
   .category-list {
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: calc(var(--spacing-unit) * 0.8);
+  }
+
+  /* Responsive for short video page */
+  .short-video-title {
+    font-size: 2rem;
+  }
+  .short-video-description {
+    font-size: 0.95rem;
   }
 }
 
@@ -896,7 +1042,7 @@ footer {
     font-size: 0.7rem;
   }
   main.video-detail-page h6 {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
   }
   .related-videos-section .section-title {
     font-size: 0.95rem;
@@ -941,6 +1087,17 @@ footer {
     min-height: 60px;
     font-size: 0.9em;
     padding: 0.6rem;
+  }
+
+  /* Responsive for short video page */
+  .short-video-title {
+    font-size: 1.8rem;
+  }
+  .short-video-description {
+    font-size: 0.9rem;
+  }
+  .video-container {
+      max-width: 300px; /* Make it narrower on smaller screens */
   }
 }
 
@@ -998,7 +1155,6 @@ footer {
   .related-videos-section .section-title {
     font-size: 0.85rem;
   }
-
   .video-grid {
     grid-template-columns: 1fr;
     padding: 0;
@@ -1024,5 +1180,16 @@ footer {
     min-height: 50px;
     font-size: 0.8em;
     padding: 0.5rem;
+  }
+
+  /* Responsive for short video page */
+  .short-video-title {
+    font-size: 1.5rem;
+  }
+  .short-video-description {
+    font-size: 0.85rem;
+  }
+  .video-container {
+      max-width: 100%; /* Full width on very small screens */
   }
 }

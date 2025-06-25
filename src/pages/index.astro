@@ -3,191 +3,145 @@
 import Layout from '../layouts/BaseLayout.astro';
 import VideoCard from '../components/VideoCard.astro';
 import { slugify } from '../utils/slugify';
-import { getAllVideos, type VideoData } from '../utils/data'; // Import type juga
+import { getAllVideos, type VideoData } from '../utils/data';
 import { nama, desk, url } from '../utils/site.ts';
-// Ini memberitahu Astro untuk membuat HTML statis untuk halaman ini saat build
 export const prerender = true;
 
-// Ambil semua video dari fungsi utilitas yang diimpor
-// Ini akan berjalan di server pada waktu build.
-const allVideos: VideoData[] = await getAllVideos(); // Gunakan type VideoData
+const allVideos: VideoData[] = await getAllVideos();
 
-// --- LOGIKA UNTUK 10 VIDEO TERBARU SECARA KESELURUHAN ---
-// Asumsi: video terbaru adalah 10 video terakhir yang ditambahkan ke JSON (baris terakhir)
-const numberOfLatestVideos = 15;
-const latestVideos = allVideos.slice(-numberOfLatestVideos).reverse(); // Ambil 10 terakhir dan reverse agar terbaru di depan
-
-// Kelompokkan video berdasarkan category dan batasi hingga 10 per category
 const videosByCategory: { [key: string]: VideoData[] } = {};
+const numberOfVideosPerCategory = 15;
 
 allVideos.forEach(video => {
-  if (!videosByCategory[video.category]) {
-    videosByCategory[video.category] = [];
-  }
-  // Hanya tambahkan jika jumlah video untuk category tersebut belum mencapai 10
-  // Asumsi: allVideos sudah unik berdasarkan ID, jadi tidak perlu isVideoAlreadyAdded check
-  if (videosByCategory[video.category].length < 15) {
-    videosByCategory[video.category].push(video);
-  }
+  if (!videosByCategory[video.category]) {
+    videosByCategory[video.category] = [];
+  }
+  if (videosByCategory[video.category].length < numberOfVideosPerCategory) {
+    videosByCategory[video.category].push(video);
+  }
 });
 
-// Urutkan category secara alfabetis untuk tampilan yang konsisten
 const sortedCategories = Object.keys(videosByCategory).sort();
 
-// Mendapatkan domain unik dari URL thumbnail dan embedUrl untuk preconnect
+const numberOfRandomVideos = 15;
+
+const categoryVideoIds = new Set(
+  Object.values(videosByCategory).flat().map(v => v.id)
+);
+
+const videosForRandomSelection = allVideos.filter(video =>
+  !categoryVideoIds.has(video.id)
+);
+
+const randomVideos = videosForRandomSelection
+  .sort(() => 0.5 - Math.random())
+  .slice(0, numberOfRandomVideos);
+
 const allDomains = new Set<string>();
 
-// Periksa latestVideos
-latestVideos.forEach(video => {
-  try {
-    if (video.thumbnail) {
-      allDomains.add(new URL(video.thumbnail).origin);
-    }
-    if (video.embedUrl) {
-      allDomains.add(new URL(video.embedUrl).origin);
-    }
-  } catch (e) {
-    console.error(`[ERROR] URL thumbnail/video tidak valid untuk video ID ${video.id} (latestVideos):`, e);
-  }
+Object.values(videosByCategory).flat().forEach(video => {
+  try {
+    if (video.thumbnail) {
+      allDomains.add(new URL(video.thumbnail).origin);
+    }
+    if (video.embedUrl) {
+      allDomains.add(new URL(video.embedUrl).origin);
+    }
+  } catch (e) {
+    console.error(`[ERROR] URL thumbnail/video tidak valid untuk video ID ${video.id} (videosByCategory):`, e);
+  }
 });
 
-// Periksa videosByCategory
-Object.values(videosByCategory).flat().forEach(video => {
-  try {
-    if (video.thumbnail) {
-      allDomains.add(new URL(video.thumbnail).origin);
-    }
-    if (video.embedUrl) {
-      allDomains.add(new URL(video.embedUrl).origin);
-    }
-  } catch (e) {
-    console.error(`[ERROR] URL thumbnail/video tidak valid untuk video ID ${video.id} (videosByCategory):`, e);
-  }
+randomVideos.forEach(video => {
+  try {
+    if (video.thumbnail) {
+      allDomains.add(new URL(video.thumbnail).origin);
+    }
+    if (video.embedUrl) {
+      allDomains.add(new URL(video.embedUrl).origin);
+    }
+  } catch (e) {
+    console.error(`[ERROR] URL thumbnail/video tidak valid untuk video ID ${video.id} (randomVideos):`, e);
+  }
 });
 
 const preconnectDomains = Array.from(allDomains);
 
-// Breadcrumb data untuk halaman utama
 const breadcrumbs = [
-  { name: 'Home', url: '/' },
+  { name: 'Home', url: '/' },
 ];
 
-// --- DATA UNTUK JSON-LD SCHEMA ---
-const currentUrl = url; // Ambil URL situs dari utils/site.ts
-const siteName = nama; // Ambil nama situs dari utils/site.ts
-const siteDescription = desk; // Ambil deskripsi situs dari utils/site.ts
+const currentUrl = url;
+const siteName = nama;
+const siteDescription = desk;
 
-// JSON-LD WebSite Schema
-const websiteSchema = {
-  "@context": "http://schema.org",
-  "@type": "WebSite",
-  "name": siteName,
-  "url": currentUrl,
-  "description": siteDescription,
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": `${currentUrl}/cari/{search_term_string}`, // Sesuaikan dengan URL pencarian Anda
-    "query-input": "required name=search_term_string"
-  }
-};
 
-// JSON-LD Organization Schema
-const organizationSchema = {
-  "@context": "http://schema.org",
-  "@type": "Organization",
-  "name": siteName,
-  "url": currentUrl,
-  "logo": `${currentUrl}/logo.png`, // Ganti dengan URL logo Anda yang sebenarnya
-  "description": siteDescription,
-  "sameAs": [
-    // Tambahkan tautan ke profil media sosial Anda (opsional)
-    // "https://twitter.com/yourprofile",
-    // "https://facebook.com/yourpage"
-  ]
-};
-
-// Gabungkan schema ke dalam satu array jika ingin ditampilkan di satu script tag
-const jsonLdSchemas = [
-  websiteSchema,
-  organizationSchema
-];
 ---
 
 <Layout
-  title={`${nama} - Video Bokep Indo Terbaru`}
-  description="Temukan berbagai video bokep indonesia mulai bokep bocil sampai ngentot tante!"
-  preconnectDomains={preconnectDomains}
-  siteName={siteName} // Pastikan ini diteruskan ke Layout
-  siteUrl={currentUrl} // Pastikan ini diteruskan ke Layout
+  title={`${nama} - Video Bokep Indo Terbaru`}
+  description={siteDescription}
+  preconnectDomains={preconnectDomains}
+  siteName={siteName}
+  siteUrl={currentUrl}
 >
-  {/* JSON-LD Schema Script */}
-  <script type="application/ld+json" set:html={JSON.stringify(jsonLdSchemas)} />
 
-  {/* Microdata untuk WebPage */}
-  <main class="home-page" itemscope itemtype="http://schema.org/WebPage">
+  <main class="home-page" itemscope itemtype="http://schema.org/WebPage">
     <meta itemprop="url" content={currentUrl} />
     <meta itemprop="name" content={`${nama} - Video Bokep Indo Terbaru`} />
-    <meta itemprop="description" content="Temukan berbagai video bokep indonesia mulai bokep bocil sampai ngentot tante!" />
+    <meta itemprop="description" content={desk} />
     <div itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content={siteName} />
-      {/* Jika Anda memiliki logo, tambahkan di sini */}
       <div itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
         <meta itemprop="url" content={`${currentUrl}/logo.png`} />
-        {/* <meta itemprop="width" content="600" /> */}
-        {/* <meta itemprop="height" content="60" /> */}
       </div>
     </div>
-    <meta itemprop="datePublished" content="2023-01-01T00:00:00Z" /> {/* Tanggal publikasi situs Anda */}
-    <meta itemprop="dateModified" content={new Date().toISOString()} /> {/* Tanggal terakhir diupdate, atau dynamic jika ada */}
+    <meta itemprop="datePublished" content="2025-06-21T00:00:00Z" />
+    <meta itemprop="dateModified" content={new Date().toISOString()} />
 
-    <section class="hero-section">
-      <h1 itemprop="headline">Selamat Datang di {nama}!</h1>
-      <p itemprop="description">Video bokep indonesia mulai bokep bocil sampai ngentot tante. Tonton sekarang juga!</p>
-    </section>
+    <section class="hero-section">
+      <h1 itemprop="headline">Selamat Datang di {nama}!</h1>
+      <p itemprop="description">{desk} Tonton Sekarang Juga!</p>
+    </section>
 
-    {/* --- SEKSI BARU UNTUK 10 VIDEO TERBARU --- */}
-    {latestVideos.length > 0 && (
-      <section class="latest-videos-section">
-        <h2 class="section-title">Video Terbaru</h2>
-        <div class="video-grid">
-          {latestVideos.map((video) => (
-            <VideoCard video={video} />
-          ))}
-        </div>
-      </section>
-    )}
+      <section class="random-videos-section">
+    {randomVideos.length > 0 && (
+        <h2 class="section-title">Video Pilihan</h2><div class="video-grid">
+          {randomVideos.map((video) => (
+            <VideoCard video={video} />
+          ))}
+        </div>
+      </section>
+    )}
 
-    <section class="all-categories-section">
-      {sortedCategories.length === 0 ? (
-        <p class="no-videos-overall">Belum ada video yang tersedia di portal ini.</p>
-      ) : (
-        sortedCategories.map(categoryName => (
-          <div class="category-group">
-            <h2 class="category-title">
-              {/* Penting: arahkan ke halaman 1 paginasi kategori */}
-              <a href={`/category/${slugify(categoryName)}/1`} class="category-link">
-                {categoryName} &rarr;
-              </a>
-            </h2>
-            <div class="video-grid">
-              {videosByCategory[categoryName].length === 0 ? (
-                <p class="no-videos-in-category">Tidak ada video dalam kategori ini.</p>
-              ) : (
-                videosByCategory[categoryName].map((video) => (
-                  <VideoCard video={video} />
-                ))
-              )}
-            </div>
-            {/* Tampilkan tombol "Lihat Semua" jika ada lebih dari 10 video di kategori tersebut */}
-            {allVideos.filter(v => v.category === categoryName).length > 15 && (
-              <div class="view-all-button-container">
-                {/* Penting: arahkan ke halaman 1 paginasi kategori */}
-                <a href={`/category/${slugify(categoryName)}/1`} class="view-all-button">Lihat Semua di kategori {categoryName}</a>
-              </div>
-            )}
-          </div>
-        ))
-      )}
-    </section>
-  </main>
+    <section class="all-categories-section">
+      {sortedCategories.length === 0 ? (
+        <p class="no-videos-overall">Belum ada video yang tersedia di portal ini.</p>
+      ) : (
+        sortedCategories.map(categoryName => (
+          <div class="category-group">
+            <h2 class="category-title">
+              <a href={`/category/${slugify(categoryName)}/1`} class="category-link">
+                {categoryName} &rarr;</a>
+            </h2>
+            <div class="video-grid">
+              {videosByCategory[categoryName].length === 0 ? (
+                <p class="no-videos-in-category">Tidak ada video dalam kategori ini.</p>
+              ) : (
+                videosByCategory[categoryName].map((video) => (
+                  <VideoCard video={video} />
+                ))
+              )}
+            </div>
+            {allVideos.filter(v => v.category === categoryName).length > numberOfVideosPerCategory && (
+              <div class="view-all-button-container">
+                <a href={`/category/${slugify(categoryName)}/1`} class="view-all-button">Lihat Semua di kategori {categoryName}</a>
+              </div>
+            )}
+          </div>
+        ))
+      )}
+    </section>
+
+  </main>
 </Layout>

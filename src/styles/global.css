@@ -1,50 +1,57 @@
-/*
-  src/styles/global.css
-
-  Ini adalah file CSS global Anda yang akan diimpor di BaseLayout.astro.
-  Semua gaya dasar, variabel CSS, dan gaya umum untuk komponen
-  serta halaman akan ditempatkan di sini.
-*/
-
 :root {
-  /* Warna */
-  --primary-color: #a300ba; /* Ungu cerah, untuk tautan, judul utama */
-  --secondary-color: #b0b0b0; /* Abu-abu sedang, untuk teks sekunder */
-  --accent-color: #ff5722; /* Oranye, untuk tombol aksi atau highlight */
+  --primary-color: #03050e;
+  --secondary-color: #000203;
+  --accent-color: #404ff3;
+  --background-color-body: #F9F9F9;
+  --background-color-main-content: #FFFFFF;
+  --text-color: #212121;
+  --text-color-light: #030303;
+  --border-color: #E0E0E0;
+  --card-bg: #FFFFFF;
+  --hover-color-light: #F0F0F0;
+  --hover-color-dark: #303F9F;
+  --active-color: #283593;
+  --shadow-light: 0 1px 2px rgba(0,0,0,0.08);
+  --shadow-medium: 0 3px 6px rgba(0,0,0,0.12);
+  --shadow-strong: 0 6px 12px rgba(0,0,0,0.18);
+  --spacing-unit: 1rem;
+  --font-body: -apple-system, BlinkMacMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-heading: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --border-radius-small: 2px;
+  --border-radius-medium: 4px;
+  --border-radius-large: 8px;
 
-  --background-color-body: #1a1a2e; /* Biru gelap keunguan untuk latar belakang halaman utama */
-  --background-color-main-content: #20203f; /* Sedikit lebih terang dari body untuk konten utama/card wrapper */
-  --text-color: #e0e0e0; /* Putih keabu-abuan untuk teks utama */
-  --text-color-light: #b0b0b0; /* Abu-abu lebih terang untuk teks sekunder/meta */
-
-  --border-color: #333355; /* Garis pemisah yang halus di tema gelap */
-  --card-bg: #2b2b52; /* Latar belakang card yang sedikit lebih terang dari main content */
-
-  --hover-color-light: #3a3a6b; /* Hover state untuk elemen ringan seperti card */
-  --hover-color-dark: #8c009d; /* Hover state untuk primary color */
-  --active-color: #7e008d; /* Warna aktif/klik untuk primary */
-
-  /* Shadows */
-  --shadow-light: 0 2px 5px rgba(0,0,0,0.4);
-  --shadow-medium: 0 5px 15px rgba(0,0,0,0.5);
-  --shadow-strong: 0 10px 25px rgba(0,0,0,0.6);
-
-  /* Spasi/Ukuran Font Dasar */
-  --spacing-unit: 1rem; /* Umumnya 16px */
-  --font-body: 'Inter', sans-serif; /* Menggunakan Inter sebagai font utama */
-  --font-heading: 'Inter', sans-serif; /* Menggunakan Inter juga untuk heading */
-
-  /* Border Radii */
-  --border-radius-small: 4px;
-  --border-radius-medium: 8px;
-  --border-radius-large: 12px;
-
-  /* Max Widths */
-  --max-width-content: 1200px; /* Lebar maksimum untuk konten utama */
-  --max-width-text: 750px; /* Lebar maksimum untuk blok teks panjang agar mudah dibaca */
+  /* Theme variables for easy mapping */
+  --theme-background: var(--background-color-main-content);
+  --text-color-heading: var(--text-color);
+  --text-color-body: var(--text-color);
+  --button-text-color: white; /* Default button text color */
 }
 
-/* --- Base Styles --- */
+body.dark-mode {
+  --primary-color: #6c6375;
+  --secondary-color: #B0B0B0;
+  --accent-color: #3a3939;
+  --background-color-body: #181818;
+  --background-color-main-content: #000000;
+  --text-color: #E0E0E0;
+  --text-color-light: #A0A0A0;
+  --border-color: #080000;
+  --card-bg: #030000;
+  --hover-color-light: #050000;
+  --hover-color-dark: #6C7DD7;
+  --active-color: #7986CB;
+  --shadow-light: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-medium: 0 3px 6px rgba(0,0,0,0.5);
+  --shadow-strong: 0 6px 12px rgba(0,0,0,0.6);
+
+  /* Dark mode specific theme variables */
+  --theme-background: var(--background-color-main-content);
+  --text-color-heading: var(--text-color);
+  --text-color-body: var(--text-color-light);
+  --button-text-color: var(--text-color); /* Adjust if buttons should be darker in dark mode */
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -52,6 +59,7 @@
 }
 
 html {
+  font-size: 100%;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   -moz-text-size-adjust: 100%;
@@ -60,33 +68,54 @@ html {
 
 body {
   font-family: var(--font-body);
-  font-size: var(--spacing-unit); /* 1rem base font size */
+  font-size: var(--spacing-unit);
   line-height: 1.6;
   background-color: var(--background-color-body);
   color: var(--text-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  display: flex; /* Untuk sticky footer */
-  flex-direction: column; /* Untuk sticky footer */
-  min-height: 100vh; /* Untuk sticky footer */
-  overflow-x: hidden; /* Mencegah scroll horizontal */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* --- Global Typography --- */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   color: var(--text-color);
   line-height: 1.2;
-  margin-top: calc(var(--spacing-unit) * 2);
+  margin-top: calc(var(--spacing-unit) * 1.5);
   margin-bottom: var(--spacing-unit);
+  transition: color 0.3s ease;
 }
 
-h1 { font-size: 2.8rem; font-weight: 800; }
-h2 { font-size: 2.2rem; font-weight: 700; }
-h3 { font-size: 1.7rem; font-weight: 600; }
-h4 { font-size: 1.4rem; font-weight: 600; }
-h5 { font-size: 1.2rem; font-weight: 500; }
-h6 { font-size: 1rem; font-weight: 500; }
+h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--primary-color);
+}
+h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+h4 {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+h5 {
+  font-size: 1rem;
+  font-weight: 500;
+}
+h6 {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-color-light);
+}
 
 p {
   margin-bottom: var(--spacing-unit);
@@ -99,12 +128,11 @@ a {
 }
 
 a:hover {
-  color: var(--hover-color-dark); /* Slightly darker primary on hover */
+  color: var(--hover-color-dark);
   text-decoration: underline;
 }
 
-/* --- Global Buttons & Forms --- */
-button, .button { /* Menjadikan .button juga ikut styling ini */
+button, .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -117,7 +145,10 @@ button, .button { /* Menjadikan .button juga ikut styling ini */
   color: white;
   background-color: var(--primary-color);
   transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
-  text-decoration: none; /* Untuk .button class */
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: none;
 }
 
 button:hover, .button:hover {
@@ -138,7 +169,6 @@ button:hover, .button:hover {
   box-shadow: var(--shadow-light);
 }
 
-/* Forms */
 input[type="search"],
 input[type="text"],
 input[type="email"],
@@ -147,13 +177,13 @@ textarea {
   width: 100%;
   padding: 0.75rem 1rem;
   margin-bottom: var(--spacing-unit);
-  background-color: var(--background-color-card); /* Darker input fields */
+  background-color: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-small);
   color: var(--text-color);
   font-family: var(--font-body);
   font-size: var(--spacing-unit);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease, color 0.3s ease;
 }
 
 input[type="search"]::placeholder,
@@ -161,7 +191,7 @@ input[type="text"]::placeholder,
 input[type="email"]::placeholder,
 input[type="password"]::placeholder,
 textarea::placeholder {
-    color: var(--text-color-light); /* Placeholder color for dark theme */
+  color: var(--text-color-light);
 }
 
 input[type="search"]:focus,
@@ -171,24 +201,24 @@ input[type="password"]:focus,
 textarea:focus {
   border-color: var(--primary-color);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(163, 0, 186, 0.3); /* Focus ring primary color */
+  box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.3);
 }
 
-/* --- Header & Navigasi --- */
 header {
-  background-color: var(--background-color-card); /* Darker header */
-  padding: var(--spacing-unit) 0;
+  background-color: var(--card-bg);
+  padding: 0.2rem 0;
   box-shadow: var(--shadow-medium);
-  position: sticky;
+  position: static;
   top: 0;
   z-index: 1000;
   border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .main-nav {
-  max-width: var(--max-width-content);
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 calc(var(--spacing-unit) * 1.5); /* 20px */
+  padding: 0 calc(var(--spacing-unit) * 1.5);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -196,11 +226,12 @@ header {
 }
 
 .logo {
-  color: var(--text-color); /* Logo color */
+  color: var(--text-color);
   text-decoration: none;
   font-size: 1.8rem;
   font-weight: bold;
   white-space: nowrap;
+  transition: color 0.3s ease;
 }
 
 .logo:hover {
@@ -210,19 +241,19 @@ header {
 .search-form {
   display: flex;
   flex-grow: 1;
-  margin: 0 var(--spacing-unit); /* Reduced margin for desktop */
+  margin: 0 var(--spacing-unit);
   max-width: 400px;
-  order: 0; /* Default order, will change in media query */
+  order: 0;
 }
 
 .search-form input[type="search"] {
   flex-grow: 1;
   padding: 0.65rem 1rem;
-  border: none;
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius-medium) 0 0 var(--border-radius-medium);
   font-size: 1rem;
   outline: none;
-  background-color: var(--background-color-body); /* Slightly darker for search input */
+  background-color: var(--background-color-body);
   color: var(--text-color);
 }
 
@@ -232,10 +263,16 @@ header {
   border-radius: 0 var(--border-radius-medium) var(--border-radius-medium) 0;
   font-weight: bold;
   padding: 0.65rem 1rem;
+  text-transform: none;
+  letter-spacing: unset;
+  box-shadow: none;
+  border: 1px solid var(--accent-color);
 }
 
 .search-form button:hover {
-  background-color: #e04e1f; /* Darker accent on hover */
+  background-color: #CC0000;
+  transform: none;
+  box-shadow: none;
 }
 
 .nav-links {
@@ -244,48 +281,50 @@ header {
   padding: 0;
   display: flex;
   align-items: center;
-  order: 0; /* Default order */
+  order: 0;
 }
 
 .nav-links li {
-  margin-left: calc(var(--spacing-unit) * 1.25); /* 20px */
+  margin-left: calc(var(--spacing-unit) * 1.25);
 }
 
 .nav-links a {
-  color: var(--text-color); /* Nav links color */
+  color: var(--text-color);
   font-weight: 500;
-  padding: 0.5rem 0; /* Adjust padding for better clickable area */
+  padding: 0.5rem 0;
   transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .nav-links a:hover {
-  color: var(--primary-color); /* Primary color on hover */
+  color: var(--primary-color);
   text-decoration: none;
 }
 
-.nav-links a.active { /* If you have an active state for nav links */
+.nav-links a.active {
   color: var(--primary-color);
   font-weight: 600;
 }
 
-
-/* --- General Page Layout --- */
 main {
-  max-width: var(--max-width-content);
-  margin: calc(var(--spacing-unit) * 2) auto; /* 30px */
-  padding: calc(var(--spacing-unit) * 1.5); /* 20px */
-  background-color: var(--background-color-main-content); /* Main content area background */
-  border-radius: var(--border-radius-large);
+  width: 100%;
+  margin: 0;
+  padding: calc(var(--spacing-unit) * 0) calc(var(--spacing-unit) * 1);
+  background-color: var(--background-color-main-content);
   box-shadow: var(--shadow-medium);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: var(--border-radius-large);
 }
 
-/* --- Breadcrumbs --- */
 .breadcrumb {
-  margin-bottom: var(--spacing-unit); /* 20px */
+  margin-bottom: var(--spacing-unit);
   font-size: 0.9em;
   color: var(--text-color-light);
   padding: var(--spacing-unit) 0;
   border-bottom: 1px solid var(--border-color);
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 .breadcrumb ol {
@@ -302,9 +341,10 @@ main {
 }
 
 .breadcrumb a {
-  color: var(--secondary-color); /* Breadcrumb links slightly desaturated */
+  color: var(--secondary-color);
   text-decoration: none;
   white-space: nowrap;
+  transition: color 0.3s ease;
 }
 
 .breadcrumb a:hover {
@@ -313,39 +353,56 @@ main {
 }
 
 .breadcrumb .separator {
-  margin: 0 0.5rem; /* 8px */
+  margin: 0 0.5rem;
   color: var(--border-color);
+  transition: color 0.3s ease;
 }
 
 .breadcrumb li:last-child span {
   font-weight: 600;
-  color: var(--text-color); /* Current page bold and brighter */
+  color: var(--text-color);
+  transition: color 0.3s ease;
 }
 
-
-/* --- Page / Section Titles --- */
-.page-title, .section-title, .category-title-header, .search-results-title {
-  font-size: clamp(2em, 4vw, 3.5em);
-  color: var(--primary-color); /* Titles use primary color for emphasis */
+.page-title, .category-title-header, .search-results-title {
   text-align: center;
-  margin-bottom: calc(var(--spacing-unit) * 1.5); /* 30px */
+  margin-bottom: calc(var(--spacing-unit) * 1.2);
   border-bottom: 3px solid var(--accent-color);
-  padding-bottom: var(--spacing-unit); /* 15px */
+  padding-bottom: var(--spacing-unit);
   display: inline-block;
   width: 100%;
   box-sizing: border-box;
+  transition: border-color 0.3s ease;
 }
 
-.category-title { /* Untuk judul kategori di halaman utama */
-  font-size: clamp(1.8em, 3.5vw, 2.5em);
+.section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
   text-align: left;
-  margin-bottom: calc(var(--spacing-unit) * 1.25); /* 25px */
+  margin-top: calc(var(--spacing-unit) * 1.5);
+  margin-bottom: calc(var(--spacing-unit) * 1);
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 0.5rem;
+  display: inline-block;
+  padding-right: var(--spacing-unit);
+  width: auto;
+  transition: color 0.3s ease, border-color 0.3s ease;
+  color: var(--text-color);
+}
+
+.category-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-top: calc(var(--spacing-unit) * 1.5);
+  margin-bottom: calc(var(--spacing-unit) * 1);
+  text-align: left;
   color: var(--text-color);
   position: relative;
-  padding-bottom: 0.5rem; /* 10px */
+  padding-bottom: 0.5rem;
   border-bottom: 2px solid var(--accent-color);
   display: inline-block;
-  padding-right: var(--spacing-unit); /* 15px */
+  padding-right: var(--spacing-unit);
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 .category-title .category-link {
@@ -363,25 +420,24 @@ main {
   color: var(--text-color-light);
   display: block;
   margin-top: 5px;
+  transition: color 0.3s ease;
 }
 
-/* --- Video Grid (Used on many pages) --- */
 .video-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: calc(var(--spacing-unit) * 1.5); /* 25px */
-  margin-bottom: calc(var(--spacing-unit) * 2.5); /* 40px */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: calc(var(--spacing-unit) * 1.2);
+  margin-bottom: calc(var(--spacing-unit) * 2);
 }
 
-/* --- Video Card Component --- */
 .video-card {
   display: flex;
   flex-direction: column;
-  background-color: var(--card-bg); /* Darker card background */
+  background-color: var(--card-bg);
   border-radius: var(--border-radius-medium);
   overflow: hidden;
   box-shadow: var(--shadow-medium);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
   text-decoration: none;
   color: inherit;
   position: relative;
@@ -390,12 +446,12 @@ main {
 .video-card:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-strong);
-  background-color: var(--hover-color-light); /* Subtle background change on hover */
+  background-color: var(--hover-color-light);
 }
 
 .thumbnail-container {
   width: 100%;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  padding-bottom: 56.25%;
   position: relative;
   overflow: hidden;
 }
@@ -410,15 +466,58 @@ main {
   transition: transform 0.3s ease;
 }
 
+.video-thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease;
+}
+
+.video-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0; /* Default tersembunyi */
+  transition: opacity 0.3s ease-in-out;
+}
+
+.video-card:has(.video-preview):hover .video-thumbnail {
+  opacity: 0; /* Thumbnail menghilang */
+}
+
+.video-card:has(.video-preview):hover .video-preview {
+  opacity: 1; /* Video pratinjau muncul */
+}
+
 .video-card:hover .thumbnail-container img {
   transform: scale(1.05);
 }
 
-.duration { /* If you decide to add it back to JSON */
+.video-card.video-preview-error .video-preview {
+  display: none !important; /* Sembunyikan video preview */
+}
+
+/* Penting: Pastikan saat hover pada kartu yang error, thumbnail TIDAK berubah */
+.video-card.video-preview-error:hover .video-thumbnail {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+}
+
+.video-card.video-preview-error:hover .video-preview {
+  opacity: 0 !important; /* Tetap tersembunyi */
+  display: none !important;
+}
+
+.duration {
   position: absolute;
   bottom: 8px;
   right: 8px;
-  background-color: rgba(0, 0, 0, 0.8); /* Slightly darker for better contrast */
+  background-color: rgba(0, 0, 0, 0.8);
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
@@ -426,13 +525,14 @@ main {
 }
 
 .video-info {
-  padding: var(--spacing-unit); /* 15px */
+  padding: var(--spacing-unit);
 }
 
+/* --- Start of VideoCard.astro specific CSS added to global.css --- */
 .video-title {
-  font-size: 1.1em;
+  font-size: 1.05rem;
   margin-top: 0;
-  margin-bottom: 0.5rem; /* 8px */
+  margin-bottom: 0.5rem;
   color: var(--text-color);
   line-height: 1.4;
   overflow: hidden;
@@ -440,67 +540,71 @@ main {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  transition: color 0.3s ease;
 }
 
 .video-category {
-  font-size: 0.9em;
-  color: var(--text-color-light); /* More subtle category text */
-  margin-bottom: 0.5rem; /* 5px */
+  font-size: 0.85em;
+  color: var(--text-color-light);
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
 }
+/* --- End of VideoCard.astro specific CSS added to global.css --- */
 
-/* --- Homepage (Index) --- */
 .hero-section {
   text-align: center;
-  margin-bottom: calc(var(--spacing-unit) * 2.5); /* 40px */
-  padding: calc(var(--spacing-unit) * 2.5) calc(var(--spacing-unit) * 1.25); /* 40px 20px */
-  background: linear-gradient(135deg, var(--primary-color), #6a057e); /* Gradient for hero */
+  margin-bottom: calc(var(--spacing-unit) * 2);
+  padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 1.25);
+  background: linear-gradient(135deg, var(--primary-color), #4CAF50);
   color: white;
   border-radius: var(--border-radius-large);
   box-shadow: var(--shadow-medium);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .hero-section h1 {
-  font-size: clamp(2.5em, 5vw, 4em);
-  margin-bottom: 0.5rem; /* 10px */
+  margin-bottom: 0.5rem;
   line-height: 1.2;
   color: white;
+  font-size: 2.2rem;
 }
 
 .hero-section p {
-  font-size: clamp(1em, 2.5vw, 1.5em);
+  font-size: 1.1rem;
   opacity: 0.9;
-  max-width: var(--max-width-text);
+  max-width: 750px;
   margin: 0 auto;
 }
 
 .latest-videos-section,
 .all-categories-section {
-  margin-top: calc(var(--spacing-unit) * 3); /* 50px */
+  margin-top: calc(var(--spacing-unit) * 2.5);
 }
 
 .category-group {
-  margin-bottom: calc(var(--spacing-unit) * 3.5); /* 60px */
+  margin-bottom: calc(var(--spacing-unit) * 3);
 }
 
 .no-videos-overall, .no-videos-in-category, .no-videos-found, .no-categories, .no-tags-message {
   grid-column: 1 / -1;
   text-align: center;
-  font-size: 1.2em;
+  font-size: 1.1em;
   color: var(--text-color-light);
-  padding: calc(var(--spacing-unit) * 2.5) 0; /* 50px */
-  background-color: var(--background-color-card);
+  padding: calc(var(--spacing-unit) * 2) 0;
+  background-color: var(--card-bg);
   border-radius: var(--border-radius-medium);
   box-shadow: var(--shadow-light);
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .view-all-button-container {
   text-align: right;
-  margin-top: var(--spacing-unit); /* 20px */
+  margin-top: var(--spacing-unit);
 }
 
 .view-all-button {
   display: inline-block;
-  padding: 0.75rem 1.25rem; /* 10px 20px */
+  padding: 0.75rem 1.25rem;
   background-color: var(--accent-color);
   color: white;
   text-decoration: none;
@@ -511,24 +615,22 @@ main {
 }
 
 .view-all-button:hover {
-  background-color: #e04e1f; /* Darker accent on hover */
+  background-color: #CC0000;
   transform: translateY(-2px);
   box-shadow: var(--shadow-medium);
 }
 
-/* --- Video Detail Page (Specific Styles) --- */
 .video-detail-page {
-  /* No specific styles needed here, uses `main`'s styles */
 }
 
 .video-player-container {
   position: relative;
   width: 100%;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  padding-bottom: 56.25%;
   background-color: #000;
   border-radius: var(--border-radius-large);
   overflow: hidden;
-  margin-bottom: calc(var(--spacing-unit) * 1.5); /* 24px */
+  margin-bottom: calc(var(--spacing-unit) * 1.2);
   box-shadow: var(--shadow-medium);
 }
 
@@ -541,272 +643,425 @@ main {
   border: none;
 }
 
-.video-title { /* Updated to specifically target the H1 on the detail page */
-  font-size: 2.5rem; /* Slightly larger for main video title */
-  margin-top: calc(var(--spacing-unit) * 1.5);
+main.video-detail-page .video-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-top: calc(var(--spacing-unit) * 0.2);
   margin-bottom: var(--spacing-unit);
-  color: var(--primary-color); /* Highlight video title with primary color */
   line-height: 1.2;
+  text-align: left;
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
-.video-description { /* Updated to target the P for description */
-  font-size: 1.1rem;
-  color: var(--text-color-light); /* Description text is lighter */
-  line-height: 1.7;
-  margin-bottom: calc(var(--spacing-unit) * 2); /* Increased margin */
-  max-width: var(--max-width-text); /* Limit description width for readability */
+.video-description {
+  font-size: 1em;
+  color: var(--text-color-light);
+  line-height: 1.6;
+  margin-bottom: calc(var(--spacing-unit) * 1.5);
+  max-width: 750px;
+  transition: color 0.3s ease;
 }
 
 .video-tags-container {
-  margin-top: calc(var(--spacing-unit) * 2); /* 32px */
+  margin-top: calc(var(--spacing-unit) * 1.8);
   border-top: 1px solid var(--border-color);
-  padding-top: calc(var(--spacing-unit) * 1.25); /* 20px */
+  padding-top: calc(var(--spacing-unit) * 1);
+  transition: border-color 0.3s ease;
 }
 
-.video-tags-container h2 {
-  font-size: 1.5em;
+main.video-detail-page h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
   color: var(--text-color);
   margin-top: 0;
-  margin-bottom: var(--spacing-unit); /* 16px */
+  margin-bottom: var(--spacing-unit);
+  transition: color 0.3s ease;
+}
+
+main.video-detail-page h3 {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+main.video-detail-page h4 {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+main.video-detail-page h5 {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+main.video-detail-page h6 {
+  font-size: 0.7rem;
+  font-weight: 500;
 }
 
 .tags-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem; /* 12px */
+  gap: 0.6rem;
 }
 
 .tag-item {
   display: inline-block;
-  background-color: var(--primary-color);
-  color: white;
-  padding: 0.5rem 0.9rem; /* 8px 15px */
-  border-radius: 20px;
-  text-decoration: none;
-  font-size: 0.9em;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  background-color: transparent;
+  color: var(--text-color-light);
+  font-size: 0.85em;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+  margin-right: 0.6rem;
+  margin-bottom: 0.6rem;
 }
 
 .tag-item:hover {
-  background-color: var(--hover-color-dark);
-  transform: translateY(-2px);
+  color: var(--primary-color);
+  text-decoration: underline;
+  background-color: transparent;
+  transform: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+body.dark-mode .tag-item {
+  color: var(--text-color-light);
+}
+
+body.dark-mode .tag-item:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
 }
 
 .related-videos-section {
-    margin-top: calc(var(--spacing-unit) * 3); /* Add spacing above related videos */
+  margin-top: calc(var(--spacing-unit) * 2.5);
 }
 
 .related-videos-section .section-title {
-    /* Inherits .section-title styles, which are already good */
-    margin-bottom: calc(var(--spacing-unit) * 1.5);
+  color: var(--text-color);
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: left;
+  margin-top: calc(var(--spacing-unit) * 1.5);
+  margin-bottom: calc(var(--spacing-unit) * 1);
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 0.5rem;
+  display: inline-block;
+  padding-right: var(--spacing-unit);
+  width: auto;
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Removed `.video-meta` as it was not present in the HTML snippet provided for the video detail page.
-   If you add meta info (like date, author) back, you can use these styles.
-*/
-
-/* --- Pagination --- */
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.75rem; /* 10px */
-  margin-top: calc(var(--spacing-unit) * 2); /* 30px */
-  padding: var(--spacing-unit); /* 15px */
-  background-color: var(--background-color-main-content); /* Background for pagination */
+  gap: 0.6rem;
+  margin-top: calc(var(--spacing-unit) * 1.5);
+  padding: calc(var(--spacing-unit) * 0.8);
+  background-color: var(--background-color-main-content);
   border-radius: var(--border-radius-large);
   box-shadow: var(--shadow-light);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .pagination-link {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 40px;
-  height: 40px;
-  padding: 0 0.6rem; /* 10px */
-  text-decoration: none;
-  color: var(--primary-color);
-  background-color: var(--card-bg); /* Pagination link background */
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-small);
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
-  font-weight: 500;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 0.5rem;
+  font-size: 0.9em;
 }
 
-.pagination-link:hover {
-  background-color: var(--primary-color);
-  color: white;
-  transform: translateY(-2px);
-}
-
-.pagination-link.active {
-  background-color: var(--primary-color);
-  color: white;
-  font-weight: bold;
-  border-color: var(--primary-color);
-  cursor: default;
-}
-
-.pagination-link.active:hover {
-  transform: none; /* No transform on active hover */
-}
-
-/* --- Category List (category/index.astro) --- */
 .category-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: calc(var(--spacing-unit) * 1.5); /* 25px */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: calc(var(--spacing-unit) * 1);
 }
 
 .category-item {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--card-bg); /* Darker category item background */
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-medium);
-  padding: calc(var(--spacing-unit) * 1.5); /* 25px */
-  text-align: center;
-  text-decoration: none;
-  color: var(--text-color);
-  box-shadow: var(--shadow-light);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-}
-
-.category-item:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-medium);
-  background-color: var(--hover-color-light); /* Subtle background change on hover */
+  padding: calc(var(--spacing-unit) * 1.2);
 }
 
 .category-item-title {
-  font-size: 1.6em;
-  color: var(--primary-color);
-  margin-top: 0;
-  margin-bottom: 0.6rem; /* 10px */
+  font-size: 1.4em;
 }
 
 .category-item-count {
-  font-size: 1.1em;
-  color: var(--text-color-light); /* More subtle count text */
-  margin: 0;
+  font-size: 1em;
 }
 
-/* --- Tags Grid (tags/index.astro) --- */
 .tags-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: var(--spacing-unit);
-  padding: var(--spacing-unit);
-  justify-content: center;
-  margin-bottom: calc(var(--spacing-unit) * 2);
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.6rem;
+  padding: calc(var(--spacing-unit) * 0.8);
+  margin-bottom: calc(var(--spacing-unit) * 1.5);
 }
 
 .tag-card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: var(--spacing-unit); /* 16px */
-  background-color: var(--card-bg); /* Darker tag card background */
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-medium);
-  text-decoration: none;
-  color: var(--primary-color); /* Tags themselves are primary color */
-  font-weight: bold;
-  font-size: 1.1em;
-  text-align: center;
-  transition: all 0.2s ease-in-out;
-  min-height: 80px;
-  box-shadow: var(--shadow-light);
+  padding: 0.8rem;
+  font-size: 1em;
+  min-height: 70px;
 }
 
-.tag-card:hover {
-  background-color: var(--hover-color-light); /* Subtle background change on hover */
-  border-color: var(--primary-color);
-  box-shadow: var(--shadow-medium);
-  transform: translateY(-2px);
-}
-
-
-/* --- Footer --- */
 footer {
-  background-color: var(--background-color-card); /* Darker footer background */
-  color: var(--text-color-light); /* Lighter text for footer */
+  background-color: var(--card-bg);
+  color: var(--text-color-light);
   text-align: center;
-  padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 1.25); /* 1.5rem 20px */
-  margin-top: auto; /* Push footer to the bottom for sticky behavior */
-  font-size: 0.9rem;
+  padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 1.25);
+  margin-top: auto;
+  font-size: 0.8rem;
   border-top: 1px solid var(--border-color);
   box-shadow: var(--shadow-medium);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* --- Responsiveness --- */
-@media (max-width: 992px) { /* Tablet landscape and larger phones */
+/* --- Start of New CSS for Short Video Page (src/pages/shorts/[id].astro) --- */
+.short-video-page {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background-color: var(--theme-background);
+  border-radius: var(--border-radius-medium);
+  box-shadow: var(--shadow-small);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.short-video-page .breadcrumb {
+    /* Override default main breadcrumb styles if needed, or let them inherit */
+    padding-left: 0;
+    padding-right: 0;
+    border-bottom: none; /* Remove border from the main breadcrumb */
+    margin-bottom: 1rem;
+}
+.short-video-page .breadcrumb ol {
+    justify-content: center; /* Center breadcrumbs on short video page */
+}
+
+
+.video-container {
+  width: 100%;
+  max-width: 400px; /* Lebar maksimum yang lebih cocok untuk video vertikal */
+  margin: 0 auto 1.5rem auto; /* Pusatkan dan beri jarak bawah */
+  aspect-ratio: 9 / 16; /* Rasio aspek khas vertikal video pendek */
+  background-color: black;
+  border-radius: var(--border-radius-small);
+  overflow: hidden;
+  box-shadow: var(--shadow-medium); /* Menambahkan bayangan ke kontainer video */
+}
+
+.main-short-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* agar video tidak terpotong dalam wadah */
+  display: block; /* Menghilangkan spasi ekstra di bawah video */
+}
+
+.short-video-title {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  margin-top: 1rem; /* Adjust margin-top to separate from video container */
+  margin-bottom: 0.5rem;
+  color: var(--text-color-heading);
+  text-align: center;
+  line-height: 1.2;
+  transition: color 0.3s ease;
+}
+
+.short-video-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-color-body);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.link-to-full-video {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.link-to-full-video a {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-color);
+  color: var(--button-text-color);
+  text-decoration: none;
+  border-radius: var(--border-radius-small);
+  transition: background-color 0.3s ease;
+}
+
+.link-to-full-video a:hover {
+  background-color: var(--hover-color-dark); /* Menggunakan hover-color-dark dari variabel */
+  transform: translateY(-2px); /* Menambahkan efek hover */
+  box-shadow: var(--shadow-light); /* Menambahkan efek bayangan */
+}
+/* --- End of New CSS for Short Video Page --- */
+
+
+@media (max-width: 992px) {
   main {
-    padding: var(--spacing-unit); /* 15px */
-    margin: var(--spacing-unit) auto; /* 20px */
+    padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
+    border-radius: var(--border-radius-large);
   }
 
-  h1 { font-size: 2.5rem; }
-  h2 { font-size: 2rem; }
-  h3 { font-size: 1.5rem; }
-
-  .hero-section h1 { font-size: 3.5em; }
-  .hero-section p { font-size: 1.3em; }
+  h1 {
+    font-size: 2rem;
+  }
+  h2 {
+    font-size: 1.6rem;
+  }
+  h3 {
+    font-size: 1.3rem;
+  }
+  h4 {
+    font-size: 1.05rem;
+  }
+  h5 {
+    font-size: 0.9rem;
+  }
+  h6 {
+    font-size: 0.8rem;
+  }
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+  .hero-section p {
+    font-size: 1rem;
+  }
+  main.video-detail-page .video-title {
+    font-size: 1.3rem;
+  }
+  main.video-detail-page h2 {
+    font-size: 1.1rem;
+  }
+  main.video-detail-page h3 {
+    font-size: 0.95rem;
+  }
+  main.video-detail-page h4 {
+    font-size: 0.85rem;
+  }
+  main.video-detail-page h5 {
+    font-size: 0.75rem;
+  }
+  main.video-detail-page h6 {
+    font-size: 0.65rem;
+  }
+  .related-videos-section .section-title {
+    font-size: 1.1rem;
+  }
 
   .video-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--spacing-unit); /* 20px */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--spacing-unit);
   }
 
   .category-list {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: var(--spacing-unit); /* 15px */
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: calc(var(--spacing-unit) * 0.8);
+  }
+
+  /* Responsive for short video page */
+  .short-video-title {
+    font-size: 2rem;
+  }
+  .short-video-description {
+    font-size: 0.95rem;
   }
 }
 
-@media (max-width: 768px) { /* Tablet portrait and larger phones */
+@media (max-width: 768px) {
   .main-nav {
     flex-direction: column;
     align-items: flex-start;
   }
   .logo {
-    margin-bottom: 0.5rem; /* 10px */
+    margin-bottom: 0.5rem;
     width: 100%;
     text-align: center;
   }
   .search-form {
     width: 100%;
-    margin: 0.5rem 0; /* 10px */
-    order: 1; /* Pindahkan search form ke atas di mobile */
+    margin: 0.5rem 0;
+    order: 1;
   }
   .nav-links {
     width: 100%;
     justify-content: center;
-    margin-top: 0.5rem; /* 10px */
-    order: 2; /* Pindahkan nav links ke bawah search form */
+    margin-top: 0.5rem;
+    order: 2;
   }
   .nav-links li {
     margin-left: 0;
-    margin: 0 0.6rem; /* 10px */
+    margin: 0 0.6rem;
+  }
+
+  main {
+    padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 1.5);
+  }
+
+  h1 {
+    font-size: 1.7rem;
+  }
+  h2 {
+    font-size: 1.4rem;
+  }
+  h3 {
+    font-size: 1.15rem;
+  }
+  h4 {
+    font-size: 0.95rem;
+  }
+  h5 {
+    font-size: 0.85rem;
+  }
+  h6 {
+    font-size: 0.75rem;
+  }
+  .hero-section h1 {
+    font-size: 1.8rem;
+  }
+  .hero-section p {
+    font-size: 0.9rem;
+  }
+  main.video-detail-page .video-title {
+    font-size: 1.15rem;
+    text-align: center;
+  }
+  main.video-detail-page h2 {
+    font-size: 0.95rem;
+  }
+  main.video-detail-page h3 {
+    font-size: 0.85rem;
+  }
+  main.video-detail-page h4 {
+    font-size: 0.75rem;
+  }
+  main.video-detail-page h5 {
+    font-size: 0.7rem;
+  }
+  main.video-detail-page h6 {
+    font-size: 0.65rem;
+  }
+  .related-videos-section .section-title {
+    font-size: 0.95rem;
+    text-align: center;
+    width: 100%;
+    padding-right: 0;
   }
 
   .video-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: var(--spacing-unit); /* 20px */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: calc(var(--spacing-unit) * 0.8);
   }
 
   .page-title, .section-title, .category-title-header, .search-results-title {
-    font-size: clamp(1.8em, 5vw, 2.5em);
     text-align: center;
     display: block;
     width: 100%;
   }
   .category-title {
-    font-size: clamp(1.6em, 4vw, 2em);
     text-align: center;
     display: block;
     width: 100%;
@@ -816,84 +1071,125 @@ footer {
   .view-all-button-container {
     text-align: center;
   }
-  .video-meta {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.3rem; /* 5px */
-  }
+
   .category-list {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: var(--spacing-unit); /* 15px */
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: calc(var(--spacing-unit) * 0.6);
   }
   .category-item {
-    padding: var(--spacing-unit); /* 20px */
+    padding: calc(var(--spacing-unit) * 0.8);
   }
   .tags-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 0.8rem;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.5rem;
   }
   .tag-card {
-    min-height: 70px;
-    font-size: 1em;
-    padding: 0.8rem;
+    min-height: 60px;
+    font-size: 0.9em;
+    padding: 0.6rem;
   }
-  .video-title { /* For detail page */
-    font-size: 2rem; /* Adjusted for smaller screens */
+
+  /* Responsive for short video page */
+  .short-video-title {
+    font-size: 1.8rem;
   }
-  .video-description {
-    font-size: 1rem;
+  .short-video-description {
+    font-size: 0.9rem;
   }
-  .video-tags-container h2 {
-    font-size: 1.3em;
+  .video-container {
+      max-width: 300px; /* Make it narrower on smaller screens */
   }
 }
 
-@media (max-width: 480px) { /* Small mobile devices */
+@media (max-width: 480px) {
   :root {
-    --spacing-unit: 0.9rem; /* Slightly smaller base spacing */
+    --spacing-unit: 0.85rem;
   }
 
   main {
     padding: var(--spacing-unit);
-    margin: var(--spacing-unit) auto;
   }
 
-  h1 { font-size: 2rem; }
-  h2 { font-size: 1.6rem; }
-  h3 { font-size: 1.3rem; }
-
-  .hero-section h1 { font-size: 2.2em; }
-  .hero-section p { font-size: 1.1em; }
-
+  h1 {
+    font-size: 1.5rem;
+  }
+  h2 {
+    font-size: 1.25rem;
+  }
+  h3 {
+    font-size: 1rem;
+  }
+  h4 {
+    font-size: 0.85rem;
+  }
+  h5 {
+    font-size: 0.75rem;
+  }
+  h6 {
+    font-size: 0.65rem;
+  }
+  .hero-section h1 {
+    font-size: 1.5rem;
+  }
+  .hero-section p {
+    font-size: 0.85rem;
+  }
+  main.video-detail-page .video-title {
+    font-size: 1rem;
+  }
+  main.video-detail-page h2 {
+    font-size: 0.85rem;
+  }
+  main.video-detail-page h3 {
+    font-size: 0.75rem;
+  }
+  main.video-detail-page h4 {
+    font-size: 0.65rem;
+  }
+  main.video-detail-page h5 {
+    font-size: 0.6rem;
+  }
+  main.video-detail-page h6 {
+    font-size: 0.55rem;
+  }
+  .related-videos-section .section-title {
+    font-size: 0.85rem;
+  }
   .video-grid {
-    grid-template-columns: 1fr; /* Single column for very small screens */
+    grid-template-columns: 1fr;
     padding: 0;
-  }
-  .video-card-thumbnail {
-    height: 220px; /* Taller on single column to fill space */
   }
   .video-info {
     padding: var(--spacing-unit);
   }
-  .video-title { /* For detail page */
-    font-size: 1.8rem; /* Further adjusted for smallest screens */
-  }
 
   .pagination {
-    padding: 0.6rem;
-    gap: 0.5rem;
+    padding: 0.5rem;
+    gap: 0.4rem;
   }
   .pagination-link {
-    min-width: 32px;
-    height: 32px;
-    font-size: 0.8em;
+    min-width: 30px;
+    height: 30px;
+    font-size: 0.7em;
   }
 
   .tags-grid {
-    grid-template-columns: 1fr; /* Single column for tags on tiny screens */
+    grid-template-columns: 1fr;
   }
   .tag-card {
-    min-height: 60px;
-    font-size: 1.1em;
+    min-height: 50px;
+    font-size: 0.8em;
+    padding: 0.5rem;
+  }
+
+  /* Responsive for short video page */
+  .short-video-title {
+    font-size: 1.5rem;
+  }
+  .short-video-description {
+    font-size: 0.85rem;
+  }
+  .video-container {
+      max-width: 100%; /* Full width on very small screens */
   }
 }

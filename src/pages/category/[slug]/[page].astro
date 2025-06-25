@@ -4,12 +4,13 @@ import Layout from '../../../layouts/BaseLayout.astro';
 import VideoCard from '../../../components/VideoCard.astro';
 import { getAllVideos, type VideoData } from '../../../utils/data';
 import { slugify } from '../../../utils/slugify';
+import { nama } from '../../../utils/site.ts';
 
 export const prerender = true;
 
 export async function getStaticPaths() {
   const allVideos: VideoData[] = await getAllVideos();
-  const videosPerPage = 30;
+  const videosPerPage = 40;
 
   const paths = [];
   const categories: { [key: string]: VideoData[] } = {};
@@ -66,21 +67,21 @@ export async function getStaticPaths() {
 const { categoryName, currentPage, totalPages, videos: paginatedVideos, preconnectDomains } = Astro.props;
 
 const breadcrumbs = [
-  { name: 'Beranda', url: '/' },
-  { name: 'Kategori', url: '/category/' },
+  { name: 'Home', url: '/' },
+  { name: 'Category', url: '/category/' },
   { name: categoryName, url: `/category/${slugify(categoryName)}/1` },
   { name: `Halaman ${currentPage}`, url: `/category/${slugify(categoryName)}/${currentPage}` },
 ];
 ---
 
 <Layout
-  title={`${categoryName} | Halaman ${currentPage} | BokepOrgasme`}
-  description={`Kumpulan video kategori ${categoryName}, halaman ${currentPage}.`}
+  title={`${categoryName} | Halaman ${currentPage} | ${nama}`}
+  description={`Kumpulan video Category ${categoryName}, halaman ${currentPage} di ${nama}.`}
   preconnectDomains={preconnectDomains}
 >
   <main class="category-page" itemscope itemtype="http://schema.org/CollectionPage">
-    <meta itemprop="name" content={`${categoryName} - Halaman ${currentPage}`} />
-    <meta itemprop="description" content={`Kumpulan video kategori ${categoryName}, halaman ${currentPage}.`} />
+    <meta itemprop="name" content={`${categoryName} - Halaman ${currentPage} di ${nama}`} />
+    <meta itemprop="description" content={`Kumpulan video kategori ${categoryName}, halaman ${currentPage} di ${nama}.`} />
     <meta itemprop="url" content={Astro.url.href} />
     {/* Jika ada gambar representatif untuk kategori ini, tambahkan itemprop="image" */}
     {/* <link itemprop="image" href="/path/to/category-image.jpg" /> */}

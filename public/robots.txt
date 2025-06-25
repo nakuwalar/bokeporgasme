@@ -1,4 +1,12 @@
 User-agent: *
-Disallow:
+Disallow: /?s=*
+Disallow: /?q=*
+Disallow: /search/*
 
-Sitemap: https://bokeporgasme.pages.dev/sitemap.xml
+
+Allow: /video/*
+Allow: /category/*
+
+
+
+Sitemap: https://bokepjilbabsmp.pages.dev/sitemap.xml
